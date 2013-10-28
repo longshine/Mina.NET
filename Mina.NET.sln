@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mina.NET", "Mina.NET\Mina.NET.csproj", "{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GettingStarted", "GettingStarted", "{9AA23412-94F7-4DEB-BB38-EEBB6260A7CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeServer", "Mina.Example\GettingStarted\TimeServer\TimeServer.csproj", "{18ABDB3D-FF4E-4EB9-912A-902EE739D127}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mina.Test", "Mina.Test\Mina.Test.csproj", "{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D16BDB21-16E3-4FC6-8126-E008C13319DA}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		Mina.NET.vsmdi = Mina.NET.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Mina.NET.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|x86.ActiveCfg = Release|Any CPU
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Debug|x86.ActiveCfg = Debug|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Debug|x86.Build.0 = Debug|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Release|Any CPU.ActiveCfg = Release|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Release|Mixed Platforms.Build.0 = Release|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Release|x86.ActiveCfg = Release|x86
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Release|x86.Build.0 = Release|x86
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9AA23412-94F7-4DEB-BB38-EEBB6260A7CA} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127} = {9AA23412-94F7-4DEB-BB38-EEBB6260A7CA}
+	EndGlobalSection
+EndGlobal
