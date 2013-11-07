@@ -81,15 +81,9 @@ namespace Mina.Core.Session
             get { return _closeFuture; }
         }
 
-        public EndPoint LocalEndPoint
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public abstract EndPoint LocalEndPoint { get; }
 
-        public EndPoint RemoteEndPoint
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public abstract EndPoint RemoteEndPoint { get; }
 
         public IoSessionAttributeMap AttributeMap
         {

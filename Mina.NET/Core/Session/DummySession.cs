@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Mina.Core.Filterchain;
 using Mina.Core.Service;
 using Mina.Core.Write;
@@ -41,6 +42,16 @@ namespace Mina.Core.Session
             get { return _filterChain; }
         }
 
+        public override EndPoint LocalEndPoint
+        {
+            get { return AnonymousEndPoint.Instance; }
+        }
+
+        public override EndPoint RemoteEndPoint
+        {
+            get { return AnonymousEndPoint.Instance; }
+        }
+
         public void SetHandler(IoHandler handler)
         {
             _handler = handler;
@@ -55,6 +66,11 @@ namespace Mina.Core.Session
             public override void Bind(System.Net.EndPoint localEP)
             {
                 throw new NotSupportedException();
+            }
+
+            public override void Unbind()
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -118,6 +134,18 @@ namespace Mina.Core.Session
             protected override void DoSetAll(IoSessionConfig config)
             {
                 // Do nothing
+            }
+        }
+
+        class AnonymousEndPoint : EndPoint
+        {
+            public static AnonymousEndPoint Instance = new AnonymousEndPoint();
+
+            private AnonymousEndPoint() { }
+
+            public override String ToString()
+            {
+                return "?";
             }
         }
     }

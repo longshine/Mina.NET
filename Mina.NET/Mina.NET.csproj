@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}</ProjectGuid>
+    <ProjectGuid>{28ABBF94-0584-4254-A8B4-4843E6F4E867}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mina</RootNamespace>

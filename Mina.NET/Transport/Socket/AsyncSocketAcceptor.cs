@@ -8,6 +8,7 @@ using Mina.Core.Write;
 using Mina.Core.Session;
 using System.Collections.Concurrent;
 using Mina.Core.Filterchain;
+using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
@@ -20,7 +21,7 @@ namespace Mina.Transport.Socket
         private BufferManager _bufferManager;
         private Pool<SocketAsyncEventArgsBuffer> _readWritePool;
 
-        private ConcurrentQueue<SocketSession> _newSessions = new ConcurrentQueue<SocketSession>();
+        private System.Collections.Concurrent.ConcurrentQueue<SocketSession> _newSessions = new System.Collections.Concurrent.ConcurrentQueue<SocketSession>();
 
         public AsyncSocketAcceptor()
             : this(1024)
@@ -41,6 +42,12 @@ namespace Mina.Transport.Socket
             _listenSocket.Listen(_backlog);
 
             StartAccept(null);
+        }
+
+        public override void Unbind()
+        {
+            _listenSocket.Close();
+            _listenSocket = null;
         }
 
         private void InitBuffer()
@@ -90,14 +97,22 @@ namespace Mina.Transport.Socket
 
         private void ProcessAccept(SocketAsyncEventArgs e)
         {
-            SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();
-            SocketSession session = new SocketSession(this, this, e.AcceptSocket, readBuffer);
+            if (e.SocketError == SocketError.Success)
+            {
+                SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();
+                SocketSession session = new SocketSession(this, this, e.AcceptSocket, readBuffer);
 
-            InitSession(session, null, null);
-            session.Processor.Add(session);
+                InitSession(session, null, null);
+                session.Processor.Add(session);
 
-            // Accept the next connection request
-            StartAccept(e);
+                // Accept the next connection request
+                StartAccept(e);
+            }
+            else if (e.SocketError != SocketError.OperationAborted
+                && e.SocketError != SocketError.Interrupted)
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(new SocketException((Int32)e.SocketError));
+            }
         }
 
         public Boolean ReuseAddress { get; set; }
@@ -113,6 +128,8 @@ namespace Mina.Transport.Socket
             get { return _maxConnections; }
             set { _maxConnections = value; }
         }
+
+        #region IoProcessor
 
         public void Add(SocketSession session)
         {
@@ -130,7 +147,11 @@ namespace Mina.Transport.Socket
 
         public void Remove(SocketSession session)
         {
-            throw new NotImplementedException();
+            ClearWriteRequestQueue(session);
+            session.Socket.Close();
+            IoServiceSupport support = session.Service as IoServiceSupport;
+            if (support != null)
+                support.FireSessionDestroyed(session);
         }
 
         public void Write(SocketSession session, IWriteRequest writeRequest)
@@ -145,6 +166,56 @@ namespace Mina.Transport.Socket
         {
             // TODO send data
             session.Flush();
+        }
+
+        private void ClearWriteRequestQueue(SocketSession session)
+        {
+            IWriteRequestQueue writeRequestQueue = session.WriteRequestQueue;
+            IWriteRequest req;
+            List<IWriteRequest> failedRequests = new List<IWriteRequest>();
+
+            if ((req = writeRequestQueue.Poll(session)) != null)
+            {
+                IoBuffer buf = req.Message as IoBuffer;
+                if (buf != null)
+                { 
+                    // The first unwritten empty buffer must be
+                    // forwarded to the filter chain.
+                    if (buf.HasRemaining)
+                    {
+                        buf.Reset();
+                        failedRequests.Add(req);
+                    }
+                    else
+                    {
+                        session.FilterChain.FireMessageSent(req);
+                    }
+                }
+                else
+                {
+                    failedRequests.Add(req);
+                }
+
+                // Discard others.
+                while ((req = writeRequestQueue.Poll(session)) != null)
+                {
+                    failedRequests.Add(req);
+                }
+            }
+
+            // Create an exception and notify.
+            if (failedRequests.Count > 0)
+            {
+                WriteToClosedSessionException cause = new WriteToClosedSessionException(failedRequests);
+
+                foreach (IWriteRequest r in failedRequests)
+                {
+                    //session.DecreaseScheduledBytesAndMessages(r);
+                    r.Future.Exception = cause;
+                }
+
+                session.FilterChain.FireExceptionCaught(cause);
+            }
         }
 
         void IoProcessor.Write(IoSession session, IWriteRequest writeRequest)
@@ -166,5 +237,7 @@ namespace Mina.Transport.Socket
         {
             Remove((SocketSession)session);
         }
+
+        #endregion
     }
 }

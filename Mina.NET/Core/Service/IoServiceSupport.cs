@@ -6,5 +6,6 @@ namespace Mina.Core.Service
     {
         void FireServiceActivated();
         void FireSessionCreated(IoSession session);
+        void FireSessionDestroyed(IoSession session);
     }
 }

@@ -44,5 +44,13 @@ namespace Mina.Core.Service
         IoSessionDataStructureFactory SessionDataStructureFactory { get; set; }
 
         IEnumerable<IWriteFuture> Broadcast(Object message);
+
+        event Action<IoSession> SessionCreated;
+        event Action<IoSession> SessionOpened;
+        event Action<IoSession> SessionClosed;
+        event Action<IoSession, IdleStatus> SessionIdle;
+        event Action<IoSession, Exception> ExceptionCaught;
+        event Action<IoSession, Object> MessageReceived;
+        event Action<IoSession, Object> MessageSent;
     }
 }

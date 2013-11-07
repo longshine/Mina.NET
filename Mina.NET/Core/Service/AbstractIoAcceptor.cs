@@ -10,5 +10,6 @@ namespace Mina.Core.Service
         { }
 
         public abstract void Bind(EndPoint localEP);
+        public abstract void Unbind();
     }
 }

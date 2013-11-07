@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Mina.Core.Session;
-using Mina.Core.Service;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using Mina.Core.Buffer;
 using Mina.Core.Filterchain;
-using System.Threading;
+using Mina.Core.Service;
+using Mina.Core.Session;
 using Mina.Core.Write;
 
 namespace Mina.Transport.Socket
@@ -47,6 +45,21 @@ namespace Mina.Transport.Socket
         public override IoFilterChain FilterChain
         {
             get { return _filterChain; }
+        }
+
+        public override EndPoint LocalEndPoint
+        {
+            get { return _socket.LocalEndPoint; }
+        }
+
+        public override EndPoint RemoteEndPoint
+        {
+            get { return _socket.RemoteEndPoint; }
+        }
+
+        public System.Net.Sockets.Socket Socket
+        {
+            get { return _socket; }
         }
 
         public void Start()
@@ -137,8 +150,14 @@ namespace Mina.Transport.Socket
                     _readBuffer.Position = e.BytesTransferred;
                     _readBuffer.Flip();
                     FilterChain.FireMessageReceived(_readBuffer);
+
+                    BeginReceive();
                 }
-                BeginReceive();
+                else
+                {
+                    // closed
+                    Processor.Remove(this);
+                }
             }
         }
 

@@ -8,5 +8,6 @@ namespace Mina.Core.Service
     public interface IoAcceptor : IoService
     {
         void Bind(EndPoint localEP);
+        void Unbind();
     }
 }

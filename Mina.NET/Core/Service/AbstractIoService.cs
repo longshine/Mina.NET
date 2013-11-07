@@ -6,13 +6,14 @@ using Mina.Core.Future;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Mina.Core.Buffer;
+using Mina.Util;
 
 namespace Mina.Core.Service
 {
     /// <summary>
     /// Base implementation of <see cref="IoService"/>s.
     /// </summary>
-    public abstract class AbstractIoService : IoService, IoServiceSupport
+    public abstract class AbstractIoService : IoService, IoServiceSupport, IoHandler
     {
         private Int32 _active = 0;
         private DateTime _activationTime;
@@ -23,11 +24,22 @@ namespace Mina.Core.Service
 
         private ConcurrentDictionary<Int64, IoSession> _managedSessions = new ConcurrentDictionary<Int64, IoSession>();
 
-        public event Action Activated;
+        public event Action<IoService> Activated;
+        public event Action<IoService, IdleStatus> Idle;
+        public event Action<IoService> Deactivated;
+        public event Action<IoSession> SessionCreated;
+        public event Action<IoSession> SessionOpened;
+        public event Action<IoSession> SessionClosed;
+        public event Action<IoSession> SessionDestroyed;
+        public event Action<IoSession, IdleStatus> SessionIdle;
+        public event Action<IoSession, Exception> ExceptionCaught;
+        public event Action<IoSession, Object> MessageReceived;
+        public event Action<IoSession, Object> MessageSent;
 
         public AbstractIoService(IoSessionConfig sessionConfig)
         {
             _sessionConfig = sessionConfig;
+            _handler = this;
         }
 
         public IoHandler Handler
@@ -107,17 +119,6 @@ namespace Mina.Core.Service
             GC.SuppressFinalize(this);
         }
 
-        protected void OnActivated()
-        {
-            if (Interlocked.CompareExchange(ref _active, 1, 0) > 0)
-                // The instance is already active
-                return;
-            _activationTime = DateTime.Now;
-            Action act = Activated;
-            if (act != null)
-                act();
-        }
-
         protected void InitSession(IoSession session, IoFuture future, Action<IoSession, IoFuture> initializeSession)
         {
             AbstractIoSession s = session as AbstractIoSession;
@@ -154,7 +155,11 @@ namespace Mina.Core.Service
         
         void IoServiceSupport.FireServiceActivated()
         {
-            throw new NotImplementedException();
+            if (Interlocked.CompareExchange(ref _active, 1, 0) > 0)
+                // The instance is already active
+                return;
+            _activationTime = DateTime.Now;
+            SaveInvoke(Activated, this);
         }
 
         void IoServiceSupport.FireSessionCreated(IoSession session)
@@ -168,7 +173,90 @@ namespace Mina.Core.Service
             filterChain.FireSessionCreated();
             filterChain.FireSessionOpened();
 
-            // TODO OnSessionCreated();
+            SaveInvoke(SessionCreated, session);
+        }
+
+        void IoServiceSupport.FireSessionDestroyed(IoSession session)
+        {
+            IoSession s;
+            if (!_managedSessions.TryRemove(session.Id, out s))
+                return;
+
+            // Fire session events.
+            session.FilterChain.FireSessionClosed();
+
+            SaveInvoke(SessionDestroyed, session);
+        }
+
+        private void SaveInvoke<T>(Action<T> act, T obj)
+        {
+            if (act != null)
+            {
+                foreach (Delegate d in act.GetInvocationList())
+                {
+                    try
+                    {
+                        ((Action<T>)d)(obj);
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionMonitor.Instance.ExceptionCaught(e);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region IoHandler
+
+        void IoHandler.SessionCreated(IoSession session)
+        {
+            Action<IoSession> act = SessionCreated;
+            if (act != null)
+                act(session);
+        }
+
+        void IoHandler.SessionOpened(IoSession session)
+        {
+            Action<IoSession> act = SessionOpened;
+            if (act != null)
+                act(session);
+        }
+
+        void IoHandler.SessionClosed(IoSession session)
+        {
+            Action<IoSession> act = SessionClosed;
+            if (act != null)
+                act(session);
+        }
+
+        void IoHandler.SessionIdle(IoSession session, IdleStatus status)
+        {
+            Action<IoSession, IdleStatus> act = SessionIdle;
+            if (act != null)
+                act(session, status);
+        }
+
+        void IoHandler.ExceptionCaught(IoSession session, Exception cause)
+        {
+            Action<IoSession, Exception> act = ExceptionCaught;
+            if (act != null)
+                act(session, cause);
+        }
+
+        void IoHandler.MessageReceived(IoSession session, Object message)
+        {
+            Action<IoSession, Object> act = MessageReceived;
+            if (act != null)
+                act(session, message);
+        }
+
+        void IoHandler.MessageSent(IoSession session, Object message)
+        {
+            Action<IoSession, Object> act = MessageSent;
+            if (act != null)
+                act(session, message);
         }
 
         #endregion

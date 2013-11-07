@@ -16,6 +16,11 @@ namespace Mina.Core.Write
             _requests = AsRequestList(request);
         }
 
+        public WriteException(IEnumerable<IWriteRequest> requests)
+        {
+            _requests = AsRequestList(requests);
+        }
+
         public IWriteRequest Request
         {
             get { return _requests[0]; }
@@ -33,6 +38,14 @@ namespace Mina.Core.Write
             List<IWriteRequest> requests = new List<IWriteRequest>(1);
             requests.Add(request);
             return requests.AsReadOnly();
+        }
+
+        private static IList<IWriteRequest> AsRequestList(IEnumerable<IWriteRequest> requests)
+        {
+            if (requests == null)
+                throw new ArgumentNullException("request");
+            List<IWriteRequest> newRequests = new List<IWriteRequest>(requests);
+            return newRequests.AsReadOnly();
         }
     }
 }
