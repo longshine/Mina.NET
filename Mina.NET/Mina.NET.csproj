@@ -130,6 +130,7 @@
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBuffer.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBufferAllocator.cs" />
     <Compile Include="Transport\Socket\SocketSession.cs" />
+    <Compile Include="Util\DelegateUtils.cs" />
     <Compile Include="Util\ExceptionMonitor.cs" />
     <Compile Include="Util\IQueue.cs" />
   </ItemGroup>

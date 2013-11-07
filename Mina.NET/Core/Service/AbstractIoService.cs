@@ -159,7 +159,7 @@ namespace Mina.Core.Service
                 // The instance is already active
                 return;
             _activationTime = DateTime.Now;
-            SaveInvoke(Activated, this);
+            DelegateUtils.SaveInvoke(Activated, this);
         }
 
         void IoServiceSupport.FireSessionCreated(IoSession session)
@@ -173,7 +173,7 @@ namespace Mina.Core.Service
             filterChain.FireSessionCreated();
             filterChain.FireSessionOpened();
 
-            SaveInvoke(SessionCreated, session);
+            DelegateUtils.SaveInvoke(SessionCreated, session);
         }
 
         void IoServiceSupport.FireSessionDestroyed(IoSession session)
@@ -185,25 +185,7 @@ namespace Mina.Core.Service
             // Fire session events.
             session.FilterChain.FireSessionClosed();
 
-            SaveInvoke(SessionDestroyed, session);
-        }
-
-        private void SaveInvoke<T>(Action<T> act, T obj)
-        {
-            if (act != null)
-            {
-                foreach (Delegate d in act.GetInvocationList())
-                {
-                    try
-                    {
-                        ((Action<T>)d)(obj);
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionMonitor.Instance.ExceptionCaught(e);
-                    }
-                }
-            }
+            DelegateUtils.SaveInvoke(SessionDestroyed, session);
         }
 
         #endregion
