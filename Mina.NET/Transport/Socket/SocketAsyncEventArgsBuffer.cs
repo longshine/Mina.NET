@@ -51,7 +51,12 @@ namespace Mina.Transport.Socket
 
         public override IoBuffer Get(Byte[] dst, Int32 offset, Int32 length)
         {
-            throw new NotImplementedException();
+            CheckBounds(offset, length, dst.Length);
+            if (length > Remaining)
+                throw new BufferUnderflowException();
+            Array.Copy(_socketAsyncEventArgs.Buffer, Offset(Position), dst, offset, length);
+            Position += length;
+            return this;
         }
 
         public override Byte Get(Int32 index)
