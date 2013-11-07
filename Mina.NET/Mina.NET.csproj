@@ -67,6 +67,7 @@
     <Compile Include="Core\Future\IReadFuture.cs" />
     <Compile Include="Core\Future\DefaultReadFuture.cs" />
     <Compile Include="Core\Service\IoProcessor.cs" />
+    <Compile Include="Core\Service\IoServiceStatistics.cs" />
     <Compile Include="Core\Service\IoServiceSupport.cs" />
     <Compile Include="Core\Session\AttributeKey.cs" />
     <Compile Include="Core\Session\DefaultIoSessionAttributeMap.cs" />

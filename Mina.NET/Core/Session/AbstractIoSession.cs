@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Net;
 using System.Threading;
+using Mina.Core.Buffer;
 using Mina.Core.Filterchain;
 using Mina.Core.Future;
 using Mina.Core.Service;
@@ -417,6 +417,8 @@ namespace Mina.Core.Session
             _lastReadTime = currentTime;
             Interlocked.Exchange(ref _idleCountForBoth, 0);
             Interlocked.Exchange(ref _idleCountForRead, 0);
+
+            this.Service.Statistics.IncreaseReadBytes(increment, currentTime);
         }
 
         public void IncreaseReadMessages(DateTime currentTime)
@@ -425,9 +427,11 @@ namespace Mina.Core.Session
             _lastReadTime = currentTime;
             Interlocked.Exchange(ref _idleCountForBoth, 0);
             Interlocked.Exchange(ref _idleCountForRead, 0);
+
+            this.Service.Statistics.IncreaseReadMessages(currentTime);
         }
 
-        public void IncreaseWrittenBytes(Int64 increment, DateTime currentTime)
+        public void IncreaseWrittenBytes(Int32 increment, DateTime currentTime)
         {
             if (increment <= 0)
                 return;
@@ -436,12 +440,40 @@ namespace Mina.Core.Session
             _lastWriteTime = currentTime;
             Interlocked.Exchange(ref _idleCountForBoth, 0);
             Interlocked.Exchange(ref _idleCountForWrite, 0);
+
+            this.Service.Statistics.IncreaseWrittenBytes(increment, currentTime);
+            IncreaseScheduledWriteBytes(-increment);
         }
 
         public void IncreaseWrittenMessages(IWriteRequest request, DateTime currentTime)
         {
+            IoBuffer buf = request.Message as IoBuffer;
+            if (buf != null && buf.HasRemaining)
+                return;
+
             _writtenMessages++;
             _lastWriteTime = currentTime;
+
+            this.Service.Statistics.IncreaseWrittenMessages(currentTime);
+            DecreaseScheduledWriteMessages();
+        }
+
+        public void IncreaseScheduledWriteBytes(Int32 increment)
+        {
+            Interlocked.Add(ref _scheduledWriteBytes, increment);
+            this.Service.Statistics.IncreaseScheduledWriteBytes(increment);
+        }
+
+        public void IncreaseScheduledWriteMessages()
+        {
+            Interlocked.Increment(ref _scheduledWriteMessages);
+            this.Service.Statistics.IncreaseScheduledWriteMessages();
+        }
+
+        public void DecreaseScheduledWriteMessages()
+        {
+            Interlocked.Decrement(ref _scheduledWriteMessages);
+            this.Service.Statistics.DecreaseScheduledWriteMessages();
         }
 
         public void UpdateThroughput(DateTime currentTime, Boolean force)

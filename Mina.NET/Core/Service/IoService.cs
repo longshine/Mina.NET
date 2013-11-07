@@ -52,5 +52,10 @@ namespace Mina.Core.Service
         event Action<IoSession, Exception> ExceptionCaught;
         event Action<IoSession, Object> MessageReceived;
         event Action<IoSession, Object> MessageSent;
+
+        /// <summary>
+        /// Gets the IoServiceStatistics object for this service.
+        /// </summary>
+        IoServiceStatistics Statistics { get; }
     }
 }

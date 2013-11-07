@@ -67,10 +67,9 @@ namespace Mina.Core.Filterchain
 
         public void FireMessageReceived(Object message)
         {
-            if (message is IoBuffer)
-            { 
-                // TODO increase read bytes
-            }
+            IoBuffer buf = message as IoBuffer;
+            if (buf != null)
+                _session.IncreaseReadBytes(buf.Remaining, DateTime.Now);
 
             CallNextMessageReceived(_head, _session, message);
         }
@@ -504,9 +503,29 @@ namespace Mina.Core.Filterchain
 
         class HeadFilter : IoFilterAdapter
         {
-            public override void FilterWrite(INextFilter nextFilter, IoSession session, Write.IWriteRequest writeRequest)
+            public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
             {
-                // TODO Maintain counters.
+                AbstractIoSession s = session as AbstractIoSession;
+                if (s != null)
+                {
+                    // Maintain counters.
+                    IoBuffer buffer = writeRequest.Message as IoBuffer;
+                    if (buffer != null)
+                    {
+                        // I/O processor implementation will call buffer.Reset()
+                        // it after the write operation is finished, because
+                        // the buffer will be specified with messageSent event.
+                        buffer.Mark();
+                        Int32 remaining = buffer.Remaining;
+                        if (remaining == 0)
+                            // Zero-sized buffer means the internal message delimiter
+                            s.IncreaseScheduledWriteMessages();
+                        else
+                            s.IncreaseScheduledWriteBytes(remaining);
+                    }
+                    else
+                        s.IncreaseScheduledWriteMessages();
+                }
 
                 IWriteRequestQueue writeRequestQueue = session.WriteRequestQueue;
 
@@ -569,7 +588,7 @@ namespace Mina.Core.Filterchain
                         finally
                         {
                             session.FilterChain.Clear();
-                            // TODO isUseReadOperation
+                            // TODO IsUseReadOperation
                         }
                     }
                 }
@@ -583,19 +602,21 @@ namespace Mina.Core.Filterchain
             public override void ExceptionCaught(INextFilter nextFilter, IoSession session, Exception cause)
             {
                 session.Handler.ExceptionCaught(session, cause);
-                // TODO isUseReadOperation
+                // TODO IsUseReadOperation
             }
 
             public override void MessageReceived(INextFilter nextFilter, IoSession session, object message)
             {
-                AbstractIoSession s = (AbstractIoSession)session;
-                IoBuffer buf = message as IoBuffer;
-                if (buf == null)
-                    s.IncreaseReadMessages(DateTime.Now);
-                // TODO increaseReadMessages
+                AbstractIoSession s = session as AbstractIoSession;
+                if (s != null)
+                {
+                    IoBuffer buf = message as IoBuffer;
+                    if (buf == null || !buf.HasRemaining)
+                        s.IncreaseReadMessages(DateTime.Now);
+                }
 
                 session.Handler.MessageReceived(session, message);
-                // TODO isUseReadOperation
+                // TODO IsUseReadOperation
             }
 
             public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)

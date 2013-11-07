@@ -19,6 +19,7 @@ namespace Mina.Core.Service
         private DateTime _activationTime;
         private IoHandler _handler;
         private readonly IoSessionConfig _sessionConfig;
+        private readonly IoServiceStatistics _stats;
         private IoFilterChainBuilder _filterChainBuilder = new DefaultIoFilterChainBuilder();
         private IoSessionDataStructureFactory _sessionDataStructureFactory = new DefaultIoSessionDataStructureFactory();
 
@@ -40,6 +41,7 @@ namespace Mina.Core.Service
         {
             _sessionConfig = sessionConfig;
             _handler = this;
+            _stats = new IoServiceStatistics(this);
         }
 
         public IoHandler Handler
@@ -92,6 +94,11 @@ namespace Mina.Core.Service
             get { return _activationTime; }
         }
 
+        public IoServiceStatistics Statistics
+        {
+            get { return _stats; }
+        }
+
         public IEnumerable<IWriteFuture> Broadcast(Object message)
         {
             List<IWriteFuture> answer = new List<IWriteFuture>(_managedSessions.Count);
@@ -141,7 +148,7 @@ namespace Mina.Core.Service
         /// Implement this method to perform additional tasks required for session
         /// initialization. Do not call this method directly.
         /// </summary>
-        protected void FinishSessionInitialization0(IoSession session, IoFuture future)
+        protected virtual void FinishSessionInitialization0(IoSession session, IoFuture future)
         {
             // Do nothing. Extended class might add some specific code 
         }
@@ -159,6 +166,9 @@ namespace Mina.Core.Service
                 // The instance is already active
                 return;
             _activationTime = DateTime.Now;
+            _stats.LastReadTime = _activationTime;
+            _stats.LastWriteTime = _activationTime;
+            _stats.LastThroughputCalculationTime = _activationTime;
             DelegateUtils.SaveInvoke(Activated, this);
         }
 
