@@ -247,7 +247,7 @@ namespace Mina.Filter.Codec.TextLine
 
         private Context GetContext(IoSession session)
         {
-            Context ctx = (Context)session.GetAttribute(CONTEXT);
+            Context ctx = session.GetAttribute<Context>(CONTEXT);
             if (ctx == null)
             {
                 ctx = new Context(this);

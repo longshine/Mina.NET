@@ -39,6 +39,7 @@ namespace Mina.Core.Session
         EndPoint RemoteEndPoint { get; }
         IWriteFuture Write(Object message);
         ICloseFuture Close();
+        T GetAttribute<T>(Object key);
         Object GetAttribute(Object key);
         Object SetAttribute(Object key, Object value);
         Object RemoveAttribute(Object key);

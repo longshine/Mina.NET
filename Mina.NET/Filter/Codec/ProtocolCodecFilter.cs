@@ -213,7 +213,7 @@ namespace Mina.Filter.Codec
 
         private IProtocolDecoderOutput GetDecoderOut(IoSession session, INextFilter nextFilter)
         {
-            IProtocolDecoderOutput output = (IProtocolDecoderOutput)session.GetAttribute(DECODER_OUT);
+            IProtocolDecoderOutput output = session.GetAttribute<IProtocolDecoderOutput>(DECODER_OUT);
 
             if (output == null)
             {
@@ -227,7 +227,7 @@ namespace Mina.Filter.Codec
 
         private IProtocolEncoderOutput GetEncoderOut(IoSession session, INextFilter nextFilter, IWriteRequest writeRequest)
         {
-            IProtocolEncoderOutput output = (IProtocolEncoderOutput)session.GetAttribute(ENCODER_OUT);
+            IProtocolEncoderOutput output = session.GetAttribute<IProtocolEncoderOutput>(ENCODER_OUT);
 
             if (output == null)
             {

@@ -178,6 +178,16 @@ namespace Mina.Core.Session
             return _attributes.GetAttribute(this, key, defaultValue);
         }
 
+        public T GetAttribute<T>(Object key)
+        {
+            return GetAttribute<T>(key, default(T));
+        }
+
+        public T GetAttribute<T>(Object key, T defaultValue)
+        {
+            return (T)_attributes.GetAttribute(this, key, defaultValue);
+        }
+
         public Object SetAttribute(Object key, Object value)
         {
             return _attributes.SetAttribute(this, key, value);
