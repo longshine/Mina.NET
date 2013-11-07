@@ -81,6 +81,7 @@
     <Compile Include="Core\Write\WriteToClosedSessionException.cs" />
     <Compile Include="Filter\Codec\AbstractProtocolDecoderOutput.cs" />
     <Compile Include="Filter\Codec\AbstractProtocolEncoderOutput.cs" />
+    <Compile Include="Filter\Codec\CumulativeProtocolDecoder.cs" />
     <Compile Include="Filter\Codec\IProtocolCodecFactory.cs" />
     <Compile Include="Filter\Codec\IProtocolDecoder.cs" />
     <Compile Include="Filter\Codec\IProtocolDecoderOutput.cs" />
