@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Mina.Util
 {
-    public interface IQueue<T>
+    public interface IQueue<T> : IEnumerable<T>
     {
         Boolean Empty { get; }
         void Enqueue(T item);

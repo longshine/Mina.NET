@@ -301,6 +301,13 @@ namespace Mina.Core.Buffer
             return AsReadOnlyBuffer0();
         }
 
+        public IoBuffer Skip(Int32 size)
+        {
+            AutoExpand0(size);
+            Position = Position + size;
+            return this;
+        }
+
         public IoBuffer Put(Byte b)
         {
             AutoExpand0(1);

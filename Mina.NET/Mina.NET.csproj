@@ -99,6 +99,10 @@
     <Compile Include="Filter\Codec\TextLine\TextLineCodecFactory.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineDecoder.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineEncoder.cs" />
+    <Compile Include="Filter\ErrorGenerating\ErrorGeneratingFilter.cs" />
+    <Compile Include="Filter\Firewall\BlacklistFilter.cs" />
+    <Compile Include="Filter\Firewall\ConnectionThrottleFilter.cs" />
+    <Compile Include="Filter\Firewall\Subnet.cs" />
     <Compile Include="Filter\Logging\LoggingFilter.cs" />
     <Compile Include="Filter\Logging\LogLevel.cs" />
     <Compile Include="Filter\Util\NoopFilter.cs" />

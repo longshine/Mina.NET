@@ -15,6 +15,7 @@ namespace Mina.Core.Session
         private volatile IoHandler _handler = new IoHandlerAdapter();
         private readonly IoProcessor<DummySession> _processor;
         private readonly IoFilterChain _filterChain;
+        private volatile EndPoint _remoteAddress = AnonymousEndPoint.Instance;
 
         public DummySession()
             : base(new DummyService(new DummyConfig()))
@@ -49,7 +50,12 @@ namespace Mina.Core.Session
 
         public override EndPoint RemoteEndPoint
         {
-            get { return AnonymousEndPoint.Instance; }
+            get { return _remoteAddress; }
+        }
+
+        public void SetRemoteEndPoint(EndPoint ep)
+        {
+            _remoteAddress = ep;
         }
 
         public void SetHandler(IoHandler handler)
