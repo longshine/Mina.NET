@@ -278,6 +278,155 @@ namespace Mina.Core.Buffer
             return IoBufferHexDumper.GetHexdump(this, lengthLimit);
         }
 
+        /// <summary>
+        /// Returns true if this buffer contains a data which has a data
+        /// length as a prefix and the buffer has remaining data as enough as
+        /// specified in the data length field.
+        /// <remarks>
+        /// Please notes that using this method can allow DoS (Denial of Service)
+        /// attack in case the remote peer sends too big data length value.
+        /// It is recommended to use <see cref="PrefixedDataAvailable(Int32 prefixLength, Int32 maxDataLength)"/> instead.
+        /// </remarks>
+        /// </summary>
+        /// <param name="prefixLength">the length of the prefix field (1, 2, or 4)</param>
+        /// <returns>true if data available</returns>
+        public Boolean PrefixedDataAvailable(Int32 prefixLength)
+        {
+            return PrefixedDataAvailable(prefixLength, Int32.MaxValue);
+        }
+
+        /// <summary>
+        /// Returns true if this buffer contains a data which has a data
+        /// length as a prefix and the buffer has remaining data as enough as
+        /// specified in the data length field.
+        /// </summary>
+        /// <param name="prefixLength">the length of the prefix field (1, 2, or 4)</param>
+        /// <param name="maxDataLength">the allowed maximum of the read data length</param>
+        /// <returns>true if data available</returns>
+        public Boolean PrefixedDataAvailable(Int32 prefixLength, Int32 maxDataLength)
+        {
+            if (Remaining < prefixLength)
+                return false;
+
+            Int32 dataLength;
+            switch (prefixLength)
+            {
+                case 1:
+                    dataLength = Get(Position) & 0xff;
+                    break;
+                case 2:
+                    dataLength = GetInt16(Position) & 0xffff;
+                    break;
+                case 4:
+                    dataLength = GetInt32(Position);
+                    break;
+                default:
+                    throw new ArgumentException("Expect prefixLength (1,2,4) but " + prefixLength);
+            }
+
+            if (dataLength < 0 || dataLength > maxDataLength)
+            {
+                throw new BufferDataException("dataLength: " + dataLength);
+            }
+
+            return Remaining - prefixLength >= dataLength;
+        }
+
+        /// <summary>
+        /// Reads a string which has a length field before the actual encoded string.
+        /// </summary>
+        /// <param name="prefixLength">the length of the length field (1, 2, or 4)</param>
+        /// <param name="encoding">the encoding of the string</param>
+        /// <returns>the prefixed string</returns>
+        public String GetPrefixedString(Int32 prefixLength, Encoding encoding)
+        { 
+            if (!PrefixedDataAvailable(prefixLength))
+                throw new BufferUnderflowException();
+
+            Int32 dataLength = 0;
+            switch (prefixLength)
+            {
+                case 1:
+                    dataLength = Get() & 0xff;
+                    break;
+                case 2:
+                    dataLength = GetInt16() & 0xffff;
+                    break;
+                case 4:
+                    dataLength = GetInt32();
+                    break;
+            }
+
+            if (dataLength == 0)
+                return String.Empty;
+
+            Byte[] bytes = new Byte[dataLength];
+            Get(bytes, 0, dataLength);
+            return encoding.GetString(bytes, 0, dataLength);
+        }
+
+        /// <summary>
+        /// Writes the string into this buffer which has a prefixLength field
+        /// before the actual encoded string.
+        /// </summary>
+        /// <param name="value">the string to write</param>
+        /// <param name="prefixLength">the length of the length field (1, 2, or 4)</param>
+        /// <param name="encoding">the encoding of the string</param>
+        public IoBuffer PutPrefixedString(String value, Int32 prefixLength, Encoding encoding)
+        {
+            Int32 maxLength;
+            switch (prefixLength)
+            {
+                case 1:
+                    maxLength = 255;
+                    break;
+                case 2:
+                    maxLength = 65535;
+                    break;
+                case 4:
+                    maxLength = Int32.MaxValue;
+                    break;
+                default:
+                    throw new ArgumentException("prefixLength: " + prefixLength);
+            }
+
+            if (value.Length > maxLength)
+                throw new ArgumentException("The specified string is too long.");
+
+            if (value.Length == 0)
+            {
+                switch (prefixLength)
+                {
+                    case 1:
+                        Put((Byte)0);
+                        break;
+                    case 2:
+                        PutInt16((Int16)0);
+                        break;
+                    case 4:
+                        PutInt32(0);
+                        break;
+                }
+                return this;
+            }
+
+            Byte[] bytes = encoding.GetBytes(value);
+            switch (prefixLength)
+            {
+                case 1:
+                    Put((Byte)bytes.Length);
+                    break;
+                case 2:
+                    PutInt16((Int16)bytes.Length);
+                    break;
+                case 4:
+                    PutInt32(bytes.Length);
+                    break;
+            }
+            Put(bytes);
+            return this;
+        }
+
         public abstract Byte Get();
         public abstract Byte Get(Int32 index);
         public abstract IoBuffer Get(Byte[] dst, Int32 offset, Int32 length);

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Buffer\Buffer.cs" />
+    <Compile Include="Core\Buffer\BufferDataException.cs" />
     <Compile Include="Core\Buffer\BufferUnderflowException.cs" />
     <Compile Include="Core\Buffer\ByteBuffer.cs" />
     <Compile Include="Core\Buffer\ByteBufferAllocator.cs" />
@@ -88,6 +89,9 @@
     <Compile Include="Filter\Codec\IProtocolDecoderOutput.cs" />
     <Compile Include="Filter\Codec\IProtocolEncoder.cs" />
     <Compile Include="Filter\Codec\IProtocolEncoderOutput.cs" />
+    <Compile Include="Filter\Codec\PrefixedString\PrefixedStringCodecFactory.cs" />
+    <Compile Include="Filter\Codec\PrefixedString\PrefixedStringDecoder.cs" />
+    <Compile Include="Filter\Codec\PrefixedString\PrefixedStringEncoder.cs" />
     <Compile Include="Filter\Codec\ProtocolCodecException.cs" />
     <Compile Include="Filter\Codec\ProtocolCodecFilter.cs" />
     <Compile Include="Filter\Codec\ProtocolCodecSession.cs" />
