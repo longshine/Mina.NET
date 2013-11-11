@@ -50,7 +50,7 @@ namespace Mina.Filter.Firewall
             {
                 if (log.IsWarnEnabled)
                     log.Warn("Connections coming in too fast; closing.");
-                session.Close();
+                session.Close(true);
             }
             base.SessionCreated(nextFilter, session);
         }

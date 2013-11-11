@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Mina.Core.Buffer;
@@ -23,6 +24,7 @@ namespace Mina.Core.Session
         private readonly IoHandler _handler;
         private IoSessionAttributeMap _attributes;
         private IWriteRequestQueue _writeRequestQueue;
+        private IWriteRequest _currentWriteRequest;
         private readonly DateTime _creationTime;
         private volatile Boolean _closing;
         private readonly ICloseFuture _closeFuture;
@@ -99,6 +101,12 @@ namespace Mina.Core.Session
                     throw new InvalidOperationException();
                 return _writeRequestQueue;
             }
+        }
+
+        public IWriteRequest CurrentWriteRequest
+        {
+            get { return _currentWriteRequest; }
+            set { _currentWriteRequest = value; }
         }
 
         public void SetWriteRequestQueue(IWriteRequestQueue queue)
@@ -346,51 +354,116 @@ namespace Mina.Core.Session
         {
             switch (status)
             {
+                case IdleStatus.BothIdle:
+                    return _idleCountForBoth > 0;
                 case IdleStatus.ReaderIdle:
                     return _idleCountForRead > 0;
                 case IdleStatus.WriterIdle:
                     return _idleCountForWrite > 0;
-                case IdleStatus.BothIdle:
-                    return _idleCountForBoth > 0;
                 default:
                     throw new ArgumentException("status");
             }
         }
 
-        public Boolean IsReaderIdle()
+        public Boolean IsReaderIdle
         {
-            return IsIdle(IdleStatus.ReaderIdle);
+            get { return IsIdle(IdleStatus.ReaderIdle); }
         }
 
-        public Boolean IsWriterIdle()
+        public Boolean IsWriterIdle
         {
-            return IsIdle(IdleStatus.WriterIdle);
+            get { return IsIdle(IdleStatus.WriterIdle); }
         }
 
-        public Boolean IsBothIdle()
+        public Boolean IsBothIdle
         {
-            return IsIdle(IdleStatus.BothIdle);
+            get { return IsIdle(IdleStatus.BothIdle); }
         }
 
         public Int32 GetIdleCount(IdleStatus status)
         {
+            if (Config.GetIdleTime(status) == 0)
+            {
+                switch (status)
+                {
+                    case IdleStatus.BothIdle:
+                        Interlocked.Exchange(ref _idleCountForBoth, 0);
+                        break;
+                    case IdleStatus.ReaderIdle:
+                        Interlocked.Exchange(ref _idleCountForRead, 0);
+                        break;
+                    case IdleStatus.WriterIdle:
+                        Interlocked.Exchange(ref _idleCountForWrite, 0);
+                        break;
+                }
+            }
+
             switch (status)
             {
+                case IdleStatus.BothIdle:
+                    return _idleCountForBoth;
                 case IdleStatus.ReaderIdle:
                     return _idleCountForRead;
                 case IdleStatus.WriterIdle:
                     return _idleCountForWrite;
-                case IdleStatus.BothIdle:
-                    return _idleCountForBoth;
                 default:
                     throw new ArgumentException("status");
             }
+        }
+
+        public Int32 BothIdleCount
+        {
+            get { return GetIdleCount(IdleStatus.BothIdle); }
+        }
+
+        public Int32 ReaderIdleCount
+        {
+            get { return GetIdleCount(IdleStatus.ReaderIdle); }
+        }
+
+        public Int32 WriterIdleCount
+        {
+            get { return GetIdleCount(IdleStatus.WriterIdle); }
+        }
+
+        public DateTime GetLastIdleTime(IdleStatus status)
+        {
+            switch (status)
+            {
+                case IdleStatus.BothIdle:
+                    return _lastIdleTimeForBoth;
+                case IdleStatus.ReaderIdle:
+                    return _lastIdleTimeForRead;
+                case IdleStatus.WriterIdle:
+                    return _lastIdleTimeForWrite;
+                default:
+                    throw new ArgumentException("status");
+            }
+        }
+
+        public DateTime LastBothIdleTime
+        {
+            get { return GetLastIdleTime(IdleStatus.BothIdle); }
+        }
+
+        public DateTime LastReaderIdleTime
+        {
+            get { return GetLastIdleTime(IdleStatus.ReaderIdle); }
+        }
+
+        public DateTime LastWriterIdleTime
+        {
+            get { return GetLastIdleTime(IdleStatus.WriterIdle); }
         }
 
         public void IncreaseIdleCount(IdleStatus status, DateTime currentTime)
         {
             switch (status)
             {
+                case IdleStatus.BothIdle:
+                    Interlocked.Increment(ref _idleCountForBoth);
+                    _lastIdleTimeForBoth = currentTime;
+                    break;
                 case IdleStatus.ReaderIdle:
                     Interlocked.Increment(ref _idleCountForRead);
                     _lastIdleTimeForRead = currentTime;
@@ -398,10 +471,6 @@ namespace Mina.Core.Session
                 case IdleStatus.WriterIdle:
                     Interlocked.Increment(ref _idleCountForWrite);
                     _lastIdleTimeForWrite = currentTime;
-                    break;
-                case IdleStatus.BothIdle:
-                    Interlocked.Increment(ref _idleCountForBoth);
-                    _lastIdleTimeForBoth = currentTime;
                     break;
                 default:
                     throw new ArgumentException("status");
@@ -478,9 +547,9 @@ namespace Mina.Core.Session
 
         public void UpdateThroughput(DateTime currentTime, Boolean force)
         {
-            Int64 interval = (Int64)(currentTime - _lastThroughputCalculationTime).TotalMilliseconds;
+            UInt64 interval = (UInt64)(currentTime - _lastThroughputCalculationTime).TotalMilliseconds;
 
-            Int64 minInterval = Config.ThroughputCalculationIntervalInMillis;
+            UInt64 minInterval = Config.ThroughputCalculationIntervalInMillis;
             if ((minInterval == 0) || (interval < minInterval))
             {
                 if (!force)
@@ -516,14 +585,65 @@ namespace Mina.Core.Session
         #endregion
 
         /// <summary>
+        /// Fires a {@link IoEventType#SESSION_IDLE} event to any applicable sessions in the specified collection.
+        /// </summary>
+        /// <param name="sessions"></param>
+        /// <param name="currentTime"></param>
+        public static void NotifyIdleness(IEnumerable<IoSession> sessions, DateTime currentTime)
+        {
+            foreach (IoSession s in sessions)
+            {
+                NotifyIdleSession(s, currentTime);
+            }
+        }
+
+        public static void NotifyIdleSession(IoSession session, DateTime currentTime)
+        {
+            NotifyIdleSession(session, currentTime, IdleStatus.BothIdle, session.LastIoTime);
+            NotifyIdleSession(session, currentTime, IdleStatus.ReaderIdle, session.LastReadTime);
+            NotifyIdleSession(session, currentTime, IdleStatus.WriterIdle, session.LastWriteTime);
+            NotifyWriteTimeout(session, currentTime);
+        }
+
+        private static void NotifyIdleSession(IoSession session, DateTime currentTime, IdleStatus status, DateTime lastIoTime)
+        {
+            UInt64 idleTime = session.Config.GetIdleTimeInMillis(status);
+            DateTime lastIdleTime = session.GetLastIdleTime(status);
+            if (lastIoTime < lastIdleTime)
+                lastIoTime = lastIdleTime;
+
+            if ((idleTime > 0) && ((currentTime - lastIoTime).TotalMilliseconds >= idleTime))
+                session.FilterChain.FireSessionIdle(status);
+        }
+
+        private static void NotifyWriteTimeout(IoSession session, DateTime currentTime)
+        {
+            UInt64 writeTimeout = session.Config.WriteTimeoutInMillis;
+            if ((writeTimeout > 0) && ((currentTime - session.LastWriteTime).TotalMilliseconds >= writeTimeout)
+                    && !session.WriteRequestQueue.IsEmpty(session))
+            {
+                IWriteRequest request = session.CurrentWriteRequest;
+                if (request != null)
+                {
+                    session.CurrentWriteRequest = null;
+                    WriteTimeoutException cause = new WriteTimeoutException(request);
+                    request.Future.Exception = cause;
+                    session.FilterChain.FireExceptionCaught(cause);
+                    // WriteException is an IOException, so we close the session.
+                    session.Close(true);
+                }
+            }
+        }
+
+        /// <summary>
         /// A queue which handles the CLOSE request.
         /// </summary>
         class CloseAwareWriteQueue : IWriteRequestQueue
         {
-            private readonly IoSession _session;
+            private readonly AbstractIoSession _session;
             private readonly IWriteRequestQueue _queue;
 
-            public CloseAwareWriteQueue(IoSession session, IWriteRequestQueue queue)
+            public CloseAwareWriteQueue(AbstractIoSession session, IWriteRequestQueue queue)
             {
                 _session = session;
                 _queue = queue;

@@ -9,17 +9,22 @@ using Mina.Core.Session;
 using System.Collections.Concurrent;
 using Mina.Core.Filterchain;
 using Mina.Util;
+using System.Threading;
 
 namespace Mina.Transport.Socket
 {
     public class AsyncSocketAcceptor : AbstractIoAcceptor, ISocketAcceptor, IoProcessor<SocketSession>
     {
+        const Int32 IdleCheckingInterval = 1000;
+
         private System.Net.Sockets.Socket _listenSocket;
         private Int32 _backlog = 100;
         private Int32 _maxConnections;
 
         private BufferManager _bufferManager;
         private Pool<SocketAsyncEventArgsBuffer> _readWritePool;
+        private DateTime _lastIdleCheckTime;
+        private Timer _idleTimer;
 
         private System.Collections.Concurrent.ConcurrentQueue<SocketSession> _newSessions = new System.Collections.Concurrent.ConcurrentQueue<SocketSession>();
 
@@ -31,6 +36,7 @@ namespace Mina.Transport.Socket
             : base(new DefaultSocketSessionConfig())
         {
             _maxConnections = maxConnections;
+            _idleTimer = new Timer(NotifyIdleSessions);
         }
 
         public override void Bind(EndPoint localEP)
@@ -42,10 +48,14 @@ namespace Mina.Transport.Socket
             _listenSocket.Listen(_backlog);
 
             StartAccept(null);
+
+            _idleTimer.Change(0, IdleCheckingInterval);
         }
 
         public override void Unbind()
         {
+            _idleTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
             _listenSocket.Close();
             _listenSocket = null;
         }
@@ -82,7 +92,7 @@ namespace Mina.Transport.Socket
                 // socket must be cleared since the context object is being reused
                 acceptEventArg.AcceptSocket = null;
             }
-
+            
             bool willRaiseEvent = _listenSocket.AcceptAsync(acceptEventArg);
             if (!willRaiseEvent)
             {
@@ -127,6 +137,11 @@ namespace Mina.Transport.Socket
         {
             get { return _maxConnections; }
             set { _maxConnections = value; }
+        }
+
+        private void NotifyIdleSessions(Object state)
+        {
+            AbstractIoSession.NotifyIdleness(ManagedSessions.Values, DateTime.Now);
         }
 
         #region IoProcessor

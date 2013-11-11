@@ -38,7 +38,7 @@ namespace Mina.Core.Session
         EndPoint LocalEndPoint { get; }
         EndPoint RemoteEndPoint { get; }
         IWriteFuture Write(Object message);
-        ICloseFuture Close();
+        ICloseFuture Close(Boolean rightNow);
         T GetAttribute<T>(Object key);
         Object GetAttribute(Object key);
         Object SetAttribute(Object key, Object value);
@@ -50,6 +50,11 @@ namespace Mina.Core.Session
         void SuspendWrite();
         void ResumeRead();
         void ResumeWrite();
+
+        /// <summary>
+        /// Gets or sets the <see cref="IWriteRequest"/> which is being processed by <see cref="IoService"/>.
+        /// </summary>
+        IWriteRequest CurrentWriteRequest { get; set; }
 
         Int64 ReadBytes { get; }
         Int64 WrittenBytes { get; }
@@ -64,9 +69,10 @@ namespace Mina.Core.Session
         DateTime LastReadTime { get; }
         DateTime LastWriteTime { get; }
         Boolean IsIdle(IdleStatus status);
-        Boolean IsReaderIdle();
-        Boolean IsWriterIdle();
-        Boolean IsBothIdle();
+        Boolean IsReaderIdle { get; }
+        Boolean IsWriterIdle { get; }
+        Boolean IsBothIdle { get; }
         Int32 GetIdleCount(IdleStatus status);
+        DateTime GetLastIdleTime(IdleStatus status);
     }
 }

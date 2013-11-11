@@ -156,7 +156,7 @@ namespace Mina.Filter.Firewall
         {
             if (log.IsWarnEnabled)
                 log.Warn("Remote address in the blacklist; closing.");
-            session.Close();
+            session.Close(true);
         }
 
         private Boolean IsBlocked(IoSession session)

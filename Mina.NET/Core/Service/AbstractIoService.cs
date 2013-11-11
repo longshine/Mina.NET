@@ -55,6 +55,11 @@ namespace Mina.Core.Service
             }
         }
 
+        public IDictionary<Int64, IoSession> ManagedSessions
+        {
+            get { return _managedSessions; }
+        }
+
         public IoSessionConfig SessionConfig
         {
             get { return _sessionConfig; }

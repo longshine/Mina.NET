@@ -17,6 +17,10 @@ namespace Mina.Core.Service
         /// </summary>
         IoHandler Handler { get; set; }
         /// <summary>
+        /// Gets the map of all sessions which are currently managed by this service.
+        /// </summary>
+        IDictionary<Int64, IoSession> ManagedSessions { get; }
+        /// <summary>
         /// Returns a value of whether or not this service is active.
         /// </summary>
         Boolean Active { get; }
