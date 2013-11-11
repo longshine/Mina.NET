@@ -126,6 +126,7 @@ namespace Mina.Transport.Socket
         {
             if (e.SocketError == SocketError.Success)
             {
+                this.IncreaseWrittenBytes(e.BytesTransferred, DateTime.Now);
                 // TODO e.BytesTransferred == 0
                 BeginSend();
             }

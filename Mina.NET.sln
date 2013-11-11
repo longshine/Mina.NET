@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mina.NET", "Mina.NET\Mina.NET.csproj", "{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mina.NET", "Mina.NET\Mina.NET.csproj", "{28ABBF94-0584-4254-A8B4-4843E6F4E867}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}"
 EndProject
@@ -31,16 +31,16 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}.Release|x86.ActiveCfg = Release|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{28ABBF94-0584-4254-A8B4-4843E6F4E867}.Release|x86.ActiveCfg = Release|Any CPU
 		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{18ABDB3D-FF4E-4EB9-912A-902EE739D127}.Debug|Mixed Platforms.Build.0 = Debug|x86

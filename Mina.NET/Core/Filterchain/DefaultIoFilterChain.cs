@@ -53,7 +53,15 @@ namespace Mina.Core.Filterchain
 
         public void FireSessionClosed()
         {
-            // TODO update future
+            // update future
+            try
+            {
+                _session.CloseFuture.Closed = true;
+            }
+            catch (Exception e)
+            {
+                FireExceptionCaught(e);
+            }
 
             // And start the chain.
             CallNextSessionClosed(_head, _session);
@@ -78,7 +86,14 @@ namespace Mina.Core.Filterchain
         {
             _session.IncreaseWrittenMessages(request, DateTime.Now);
 
-            // TODO set future
+            try
+            {
+                request.Future.Written = true;
+            }
+            catch (Exception e)
+            {
+                FireExceptionCaught(e);
+            }
 
             if (!request.Encoded)
             {
