@@ -7,6 +7,7 @@ namespace Mina.Core.Write
     /// <summary>
     /// An exception which is thrown when one or more write operations were failed.
     /// </summary>
+    [Serializable]
     public class WriteException : IOException
     {
         private readonly IList<IWriteRequest> _requests;
@@ -20,6 +21,11 @@ namespace Mina.Core.Write
         {
             _requests = AsRequestList(requests);
         }
+
+        protected WriteException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
 
         public IWriteRequest Request
         {

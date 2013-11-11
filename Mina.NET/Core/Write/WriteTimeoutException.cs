@@ -4,21 +4,21 @@ using System.Collections.Generic;
 namespace Mina.Core.Write
 {
     /// <summary>
-    /// An exception which is thrown when one or more write operations were
-    /// attempted on a closed session.
+    /// An exception which is thrown when write buffer is not flushed for
+    /// <see cref="IoSessionConfig.WriteTimeout"/> seconds.
     /// </summary>
     [Serializable]
-    public class WriteToClosedSessionException : WriteException
+    public class WriteTimeoutException : WriteException
     {
-        public WriteToClosedSessionException(IWriteRequest request)
+        public WriteTimeoutException(IWriteRequest request)
             : base(request)
         { }
 
-        public WriteToClosedSessionException(IEnumerable<IWriteRequest> requests)
+        public WriteTimeoutException(IEnumerable<IWriteRequest> requests)
             : base(requests)
         { }
 
-        protected WriteToClosedSessionException(
+        protected WriteTimeoutException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
