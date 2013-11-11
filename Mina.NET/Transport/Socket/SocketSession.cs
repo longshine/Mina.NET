@@ -7,6 +7,7 @@ using Mina.Core.Filterchain;
 using Mina.Core.Service;
 using Mina.Core.Session;
 using Mina.Core.Write;
+using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
@@ -153,13 +154,17 @@ namespace Mina.Transport.Socket
                     FilterChain.FireMessageReceived(_readBuffer);
 
                     BeginReceive();
-                }
-                else
-                {
-                    // closed
-                    Processor.Remove(this);
+
+                    return;
                 }
             }
+            else
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(new SocketException((Int32)e.SocketError));
+            }
+
+            // closed
+            Processor.Remove(this);
         }
 
         class SessionConfigImpl : AbstractSocketSessionConfig
