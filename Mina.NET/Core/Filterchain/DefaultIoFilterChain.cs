@@ -227,6 +227,12 @@ namespace Mina.Core.Filterchain
             return null;
         }
 
+        public INextFilter GetNextFilter(IoFilter filter)
+        {
+            IEntry e = GetEntry(filter);
+            return e == null ? null : e.NextFilter;
+        }
+
         public IEnumerable<IEntry> GetAll()
         {
             List<IEntry> list = new List<IEntry>();

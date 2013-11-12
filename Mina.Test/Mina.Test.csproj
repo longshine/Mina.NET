@@ -58,7 +58,7 @@
     <Compile Include="Core\DefaultIoFilterChainBuilderTest.cs" />
     <Compile Include="Core\FutureTest.cs" />
     <Compile Include="Core\IoFilterChainTest.cs" />
-    <Compile Include="Core\UnitTest1.cs" />
+    <Compile Include="Filter\Buffer\BufferedWriteFilterTest.cs" />
     <Compile Include="Filter\Codec\CumulativeProtocolDecoderTest.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineDecoderTest.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineEncoderTest.cs" />

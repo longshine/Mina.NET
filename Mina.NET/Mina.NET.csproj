@@ -82,6 +82,7 @@
     <Compile Include="Core\Write\WriteRequestWrapper.cs" />
     <Compile Include="Core\Write\WriteTimeoutException.cs" />
     <Compile Include="Core\Write\WriteToClosedSessionException.cs" />
+    <Compile Include="Filter\Buffer\BufferedWriteFilter.cs" />
     <Compile Include="Filter\Codec\AbstractProtocolDecoderOutput.cs" />
     <Compile Include="Filter\Codec\AbstractProtocolEncoderOutput.cs" />
     <Compile Include="Filter\Codec\CumulativeProtocolDecoder.cs" />

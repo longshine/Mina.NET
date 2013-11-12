@@ -89,6 +89,11 @@ namespace Mina.Transport.Socket
             throw new NotImplementedException();
         }
 
+        public override void Free()
+        {
+            // TODO free buffer?
+        }
+
         protected override IoBuffer Slice0()
         {
             throw new NotImplementedException();

@@ -431,6 +431,7 @@ namespace Mina.Core.Buffer
         public abstract Byte Get(Int32 index);
         public abstract IoBuffer Get(Byte[] dst, Int32 offset, Int32 length);
         public abstract ArraySegment<Byte> GetRemaining();
+        public abstract void Free();
 
         public IoBuffer Slice()
         {

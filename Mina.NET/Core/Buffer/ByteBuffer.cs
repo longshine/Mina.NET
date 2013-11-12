@@ -146,6 +146,11 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        public override void Free()
+        {
+            // do nothing
+        }
+
         protected override IoBuffer Slice0()
         {
             return new ByteBuffer(this, _hb, -1, 0, Remaining, Remaining, Position + _offset);

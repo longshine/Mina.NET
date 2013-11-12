@@ -30,6 +30,7 @@ namespace Mina.Core.Filterchain
         IEntry GetEntry(String name);
         IEntry GetEntry(IoFilter filter);
         IoFilter Get(String name);
+        INextFilter GetNextFilter(IoFilter filter);
         IEnumerable<IEntry> GetAll();
         Boolean Contains(String name);
         Boolean Contains(IoFilter filter);
