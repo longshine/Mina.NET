@@ -75,6 +75,7 @@
     <Compile Include="Core\Session\AttributeKey.cs" />
     <Compile Include="Core\Session\DefaultIoSessionAttributeMap.cs" />
     <Compile Include="Core\Session\DefaultIoSessionDataStructureFactory.cs" />
+    <Compile Include="Core\Session\IdleStatusChecker.cs" />
     <Compile Include="Core\Session\IoEvent.cs" />
     <Compile Include="Core\Session\IoEventType.cs" />
     <Compile Include="Core\Session\IoSessionAttributeMap.cs" />

@@ -15,16 +15,13 @@ namespace Mina.Transport.Socket
 {
     public class AsyncSocketAcceptor : AbstractIoAcceptor, ISocketAcceptor, IoProcessor<SocketSession>
     {
-        const Int32 IdleCheckingInterval = 1000;
-
         private System.Net.Sockets.Socket _listenSocket;
         private Int32 _backlog = 100;
         private Int32 _maxConnections;
 
         private BufferManager _bufferManager;
         private Pool<SocketAsyncEventArgsBuffer> _readWritePool;
-        private DateTime _lastIdleCheckTime;
-        private Timer _idleTimer;
+        private IdleStatusChecker _idleStatusChecker;
 
         private System.Collections.Concurrent.ConcurrentQueue<SocketSession> _newSessions = new System.Collections.Concurrent.ConcurrentQueue<SocketSession>();
 
@@ -36,7 +33,7 @@ namespace Mina.Transport.Socket
             : base(new DefaultSocketSessionConfig())
         {
             _maxConnections = maxConnections;
-            _idleTimer = new Timer(NotifyIdleSessions);
+            _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
         }
 
         public override void Bind(EndPoint localEP)
@@ -49,12 +46,12 @@ namespace Mina.Transport.Socket
 
             StartAccept(null);
 
-            _idleTimer.Change(0, IdleCheckingInterval);
+            _idleStatusChecker.Start();
         }
 
         public override void Unbind()
         {
-            _idleTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            _idleStatusChecker.Stop();
 
             _listenSocket.Close();
             _listenSocket = null;
@@ -137,11 +134,6 @@ namespace Mina.Transport.Socket
         {
             get { return _maxConnections; }
             set { _maxConnections = value; }
-        }
-
-        private void NotifyIdleSessions(Object state)
-        {
-            AbstractIoSession.NotifyIdleness(ManagedSessions.Values, DateTime.Now);
         }
 
         #region IoProcessor
