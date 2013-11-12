@@ -112,9 +112,15 @@
     <Compile Include="Filter\Executor\ExecutorFilter.cs" />
     <Compile Include="Filter\Executor\IExecutor.cs" />
     <Compile Include="Filter\Executor\IoEventExecutor.cs" />
+    <Compile Include="Filter\Executor\IoEventQueueHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\Executor\IoEventQueueThrottle.cs" />
+    <Compile Include="Filter\Executor\IoEventSizeEstimator.cs" />
     <Compile Include="Filter\Executor\OrderedThreadPoolExecutor.cs" />
     <Compile Include="Filter\Executor\ThreadPoolExecutor.cs" />
     <Compile Include="Filter\Executor\UnorderedThreadPoolExecutor.cs" />
+    <Compile Include="Filter\Executor\WriteRequestFilter.cs" />
     <Compile Include="Filter\Firewall\BlacklistFilter.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilter.cs" />
     <Compile Include="Filter\Firewall\Subnet.cs" />

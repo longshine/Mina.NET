@@ -1,4 +1,5 @@
-﻿using Mina.Core.Session;
+﻿using System;
+using Mina.Core.Session;
 
 namespace Mina.Filter.Executor
 {
@@ -10,9 +11,35 @@ namespace Mina.Filter.Executor
     /// </summary>
     public class UnorderedThreadPoolExecutor : ThreadPoolExecutor, IoEventExecutor
     {
+        private readonly IoEventQueueHandler _queueHandler;
+
+        public UnorderedThreadPoolExecutor()
+            : this(null)
+        { }
+
+        public UnorderedThreadPoolExecutor(IoEventQueueHandler queueHandler)
+        {
+            _queueHandler = queueHandler == null ? NoopIoEventQueueHandler.Instance : queueHandler;
+        }
+
+        public IoEventQueueHandler QueueHandler
+        {
+            get { return _queueHandler; }
+        }
+
         public void Execute(IoEvent ioe)
         {
-            Execute(() => ioe.Fire());
+            Boolean offeredEvent = _queueHandler.Accept(this, ioe);
+            if (offeredEvent)
+            {
+                Execute(() =>
+                {
+                    _queueHandler.Polled(this, ioe);
+                    ioe.Fire();
+                });
+
+                _queueHandler.Offered(this, ioe);
+            }
         }
     }
 }

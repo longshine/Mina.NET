@@ -19,6 +19,21 @@ namespace Mina.Filter.Executor
         /// A key stored into the session's attribute for the event tasks being queued
         /// </summary>
         private readonly AttributeKey TASKS_QUEUE = new AttributeKey(typeof(OrderedThreadPoolExecutor), "tasksQueue");
+        private readonly IoEventQueueHandler _queueHandler;
+
+        public OrderedThreadPoolExecutor()
+            : this(null)
+        { }
+
+        public OrderedThreadPoolExecutor(IoEventQueueHandler queueHandler)
+        {
+            _queueHandler = queueHandler == null ? NoopIoEventQueueHandler.Instance : queueHandler;
+        }
+
+        public IoEventQueueHandler QueueHandler
+        {
+            get { return _queueHandler; }
+        }
 
         public void Execute(IoEvent ioe)
         {
@@ -26,30 +41,40 @@ namespace Mina.Filter.Executor
             SessionTasksQueue sessionTasksQueue = GetSessionTasksQueue(session);
             Boolean exec;
 
-            lock (sessionTasksQueue.syncRoot)
+            // propose the new event to the event queue handler. If we
+            // use a throttle queue handler, the message may be rejected
+            // if the maximum size has been reached.
+            Boolean offerEvent = _queueHandler.Accept(this, ioe);
+
+            if (offerEvent)
             {
-                sessionTasksQueue.tasksQueue.Enqueue(ioe);
-
-                if (sessionTasksQueue.processingCompleted)
+                lock (sessionTasksQueue.syncRoot)
                 {
-                    sessionTasksQueue.processingCompleted = false;
-                    exec = true;
+                    sessionTasksQueue.tasksQueue.Enqueue(ioe);
+
+                    if (sessionTasksQueue.processingCompleted)
+                    {
+                        sessionTasksQueue.processingCompleted = false;
+                        exec = true;
+                    }
+                    else
+                    {
+                        exec = false;
+                    }
+
+                    if (log.IsDebugEnabled)
+                        Print(sessionTasksQueue.tasksQueue, ioe);
                 }
-                else
+
+                if (exec)
                 {
-                    exec = false;
+                    Execute(() =>
+                    {
+                        RunTasks(sessionTasksQueue);
+                    });
                 }
 
-                if (log.IsDebugEnabled)
-                    Print(sessionTasksQueue.tasksQueue, ioe);
-            }
-
-            if (exec)
-            {
-                Execute(() =>
-                {
-                    RunTasks(sessionTasksQueue);
-                });
+                _queueHandler.Offered(this, ioe);
             }
         }
 
@@ -81,7 +106,8 @@ namespace Mina.Filter.Executor
                         break;
                     }
                 }
-                
+
+                _queueHandler.Polled(this, ioe);
                 ioe.Fire();
             }
         }
