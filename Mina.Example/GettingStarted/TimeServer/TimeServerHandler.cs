@@ -29,7 +29,7 @@ namespace Mina.Example.GettingStarted.TimeServer
             // "Quit" ? let's get out ...
             if (str.Trim().Equals("quit", StringComparison.OrdinalIgnoreCase))
             {
-                session.Close();
+                session.Close(true);
                 return;
             }
 

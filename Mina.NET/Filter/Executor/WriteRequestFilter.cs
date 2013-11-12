@@ -42,7 +42,7 @@ namespace Mina.Filter.Executor
 
                 // We can track the write request only when it has a future.
                 _queueHandler.Offered(this, e);
-                writeFuture.Complete += new Action<IoFuture>(future => _queueHandler.Polled(this, e));
+                writeFuture.Complete += future => _queueHandler.Polled(this, e);
             }
         }
     }
