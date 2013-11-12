@@ -42,6 +42,7 @@ namespace Mina.Core.Session
         T GetAttribute<T>(Object key);
         Object GetAttribute(Object key);
         Object SetAttribute(Object key, Object value);
+        Object SetAttributeIfAbsent(Object key, Object value);
         Object RemoveAttribute(Object key);
 
         Boolean WriteSuspended { get; }

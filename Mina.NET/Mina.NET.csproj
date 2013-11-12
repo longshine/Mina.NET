@@ -60,6 +60,7 @@
     <Compile Include="Core\Filterchain\IoFilterAdapter.cs" />
     <Compile Include="Core\Filterchain\IoFilterChain.cs" />
     <Compile Include="Core\Filterchain\IoFilterChainBuilder.cs" />
+    <Compile Include="Core\Filterchain\IoFilterEvent.cs" />
     <Compile Include="Core\Filterchain\IoFilterLifeCycleException.cs" />
     <Compile Include="Core\Future\DefaultCloseFuture.cs" />
     <Compile Include="Core\Future\ICloseFuture.cs" />
@@ -73,6 +74,8 @@
     <Compile Include="Core\Session\AttributeKey.cs" />
     <Compile Include="Core\Session\DefaultIoSessionAttributeMap.cs" />
     <Compile Include="Core\Session\DefaultIoSessionDataStructureFactory.cs" />
+    <Compile Include="Core\Session\IoEvent.cs" />
+    <Compile Include="Core\Session\IoEventType.cs" />
     <Compile Include="Core\Session\IoSessionAttributeMap.cs" />
     <Compile Include="Core\Session\IoSessionDataStructureFactory.cs" />
     <Compile Include="Core\Write\DefaultWriteRequestQueue.cs" />
@@ -106,6 +109,11 @@
     <Compile Include="Filter\Codec\TextLine\TextLineDecoder.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineEncoder.cs" />
     <Compile Include="Filter\ErrorGenerating\ErrorGeneratingFilter.cs" />
+    <Compile Include="Filter\Executor\ExecutorFilter.cs" />
+    <Compile Include="Filter\Executor\IExecutor.cs" />
+    <Compile Include="Filter\Executor\IoEventExecutor.cs" />
+    <Compile Include="Filter\Executor\OrderedThreadPoolExecutor.cs" />
+    <Compile Include="Filter\Executor\ThreadPoolExecutor.cs" />
     <Compile Include="Filter\Firewall\BlacklistFilter.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilter.cs" />
     <Compile Include="Filter\Firewall\Subnet.cs" />

@@ -62,6 +62,7 @@
     <Compile Include="Filter\Codec\CumulativeProtocolDecoderTest.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineDecoderTest.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineEncoderTest.cs" />
+    <Compile Include="Filter\Executor\ExecutorFilterRegressionTest.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilterTest.cs" />
     <Compile Include="Filter\Firewall\SubnetTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
