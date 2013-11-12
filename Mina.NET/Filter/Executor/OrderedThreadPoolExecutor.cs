@@ -8,6 +8,8 @@ namespace Mina.Filter.Executor
 {
     /// <summary>
     /// A <see cref="IoEventExecutor"/> that maintains the order of <see cref="IoEvent"/>s.
+    /// If you don't need to maintain the order of events per session, please use
+    /// <see cref="UnorderedThreadPoolExecutor"/>.
     /// </summary>
     public class OrderedThreadPoolExecutor : ThreadPoolExecutor, IoEventExecutor
     {

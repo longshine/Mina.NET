@@ -114,6 +114,7 @@
     <Compile Include="Filter\Executor\IoEventExecutor.cs" />
     <Compile Include="Filter\Executor\OrderedThreadPoolExecutor.cs" />
     <Compile Include="Filter\Executor\ThreadPoolExecutor.cs" />
+    <Compile Include="Filter\Executor\UnorderedThreadPoolExecutor.cs" />
     <Compile Include="Filter\Firewall\BlacklistFilter.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilter.cs" />
     <Compile Include="Filter\Firewall\Subnet.cs" />
