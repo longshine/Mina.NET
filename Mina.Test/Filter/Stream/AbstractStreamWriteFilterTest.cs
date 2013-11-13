@@ -1,8 +1,11 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+#if !NETFX_CORE
+using NUnit.Framework;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace Mina.Filter.Stream
 {

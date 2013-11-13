@@ -1,6 +1,13 @@
 ﻿using System;
 using System.Text;
+#if !NETFX_CORE
+using NUnit.Framework;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
+using Mina.Core.Buffer;
 
 namespace Mina.Filter.Codec.TextLine
 {
@@ -16,14 +23,13 @@ namespace Mina.Filter.Codec.TextLine
 
             encoder.Encode(session, "ABC", output);
             Assert.AreEqual(1, session.EncoderOutputQueue.Count);
-            // TODO IoBuffer
-            Byte[] buf = (Byte[])session.EncoderOutputQueue.Dequeue();
-            Assert.AreEqual(5, buf.Length);
-            Assert.AreEqual((Byte)'A', buf[0]);
-            Assert.AreEqual((Byte)'B', buf[1]);
-            Assert.AreEqual((Byte)'C', buf[2]);
-            Assert.AreEqual((Byte)'\r', buf[3]);
-            Assert.AreEqual((Byte)'\n', buf[4]);
+            IoBuffer buf = (IoBuffer)session.EncoderOutputQueue.Dequeue();
+            Assert.AreEqual(5, buf.Remaining);
+            Assert.AreEqual((Byte)'A', buf.Get());
+            Assert.AreEqual((Byte)'B', buf.Get());
+            Assert.AreEqual((Byte)'C', buf.Get());
+            Assert.AreEqual((Byte)'\r', buf.Get());
+            Assert.AreEqual((Byte)'\n', buf.Get());
         }
     }
 }

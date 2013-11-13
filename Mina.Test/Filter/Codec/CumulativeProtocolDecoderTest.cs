@@ -1,7 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if !NETFX_CORE
+using NUnit.Framework;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+using TestInitialize = NUnit.Framework.SetUpAttribute;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using Mina.Core.Buffer;
 using Mina.Core.Session;
 
@@ -11,8 +18,15 @@ namespace Mina.Filter.Codec
     public class CumulativeProtocolDecoderTest
     {
         ProtocolCodecSession session = new ProtocolCodecSession();
-        IoBuffer buf = ByteBufferAllocator.Instance.Allocate(16);
-        IntegerDecoder decoder = new IntegerDecoder();
+        IoBuffer buf;
+        IntegerDecoder decoder;
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            buf = ByteBufferAllocator.Instance.Allocate(16);
+            decoder = new IntegerDecoder();
+        }
 
         [TestMethod]
         public void TestCumulation()
@@ -58,7 +72,7 @@ namespace Mina.Filter.Codec
         }
 
         [TestMethod]
-        public void testWrongImplementationDetection()
+        public void TestWrongImplementationDetection()
         {
             try
             {
@@ -72,7 +86,7 @@ namespace Mina.Filter.Codec
         }
 
         [TestMethod]
-        public void testBufferDerivation()
+        public void TestBufferDerivation()
         {
             decoder = new DuplicatingIntegerDecoder();
 

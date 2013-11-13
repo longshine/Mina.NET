@@ -1,7 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+#if !NETFX_CORE
+using NUnit.Framework;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+using TestInitialize = NUnit.Framework.SetUpAttribute;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using Mina.Core.Filterchain;
 using Mina.Core.Service;
 using Mina.Core.Session;
@@ -16,14 +23,16 @@ namespace Mina.Core
         private DummySession dummySession;
         private DummyHandler handler;
         private IoFilterChain chain;
-        String testResult = String.Empty;
+        String testResult;
 
-        public IoFilterChainTest()
+        [TestInitialize]
+        public void SetUp()
         {
             dummySession = new DummySession();
             handler = new DummyHandler(this);
             dummySession.SetHandler(handler);
             chain = dummySession.FilterChain;
+            testResult = String.Empty;
         }
 
         [TestMethod]

@@ -1,5 +1,12 @@
 ﻿using System;
+#if !NETFX_CORE
+using NUnit.Framework;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+using AssertFailedException = NUnit.Framework.AssertionException;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using Mina.Core.Buffer;
 using Mina.Core.Filterchain;
 using Mina.Core.Session;

@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+#if !NETFX_CORE
+using NUnit.Framework;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using Mina.Core.Buffer;
 
 namespace Mina.Filter.Codec.TextLine

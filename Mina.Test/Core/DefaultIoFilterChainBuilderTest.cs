@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Linq;
+#if !NETFX_CORE
+using NUnit.Framework;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using Mina.Core.Filterchain;
 using Mina.Filter.Util;
 
