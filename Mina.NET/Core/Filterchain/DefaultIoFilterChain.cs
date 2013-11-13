@@ -227,9 +227,46 @@ namespace Mina.Core.Filterchain
             return null;
         }
 
+        public IEntry GetEntry(Type filterType)
+        {
+            EntryImpl e = _head._nextEntry;
+            while (e != _tail)
+            {
+                if (filterType.IsAssignableFrom(e.Filter.GetType()))
+                    return e;
+                e = e._nextEntry;
+            }
+            return null;
+        }
+
+        public IEntry GetEntry<TFilter>() where TFilter : IoFilter
+        {
+            Type filterType = typeof(TFilter);
+            EntryImpl e = _head._nextEntry;
+            while (e != _tail)
+            {
+                if (filterType.IsAssignableFrom(e.Filter.GetType()))
+                    return e;
+                e = e._nextEntry;
+            }
+            return null;
+        }
+
         public INextFilter GetNextFilter(IoFilter filter)
         {
             IEntry e = GetEntry(filter);
+            return e == null ? null : e.NextFilter;
+        }
+
+        public INextFilter GetNextFilter(Type filterType)
+        {
+            IEntry e = GetEntry(filterType);
+            return e == null ? null : e.NextFilter;
+        }
+
+        public INextFilter GetNextFilter<TFilter>() where TFilter : IoFilter
+        {
+            IEntry e = GetEntry<TFilter>();
             return e == null ? null : e.NextFilter;
         }
 
@@ -253,6 +290,16 @@ namespace Mina.Core.Filterchain
         public Boolean Contains(IoFilter filter)
         {
             return GetEntry(filter) != null;
+        }
+
+        public Boolean Contains(Type filterType)
+        {
+            return GetEntry(filterType) != null;
+        }
+
+        public Boolean Contains<TFilter>() where TFilter : IoFilter
+        {
+            return GetEntry<TFilter>() != null;
         }
 
         public void AddFirst(String name, IoFilter filter)

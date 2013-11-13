@@ -29,11 +29,17 @@ namespace Mina.Core.Filterchain
 
         IEntry GetEntry(String name);
         IEntry GetEntry(IoFilter filter);
+        IEntry GetEntry(Type filterType);
+        IEntry GetEntry<TFilter>() where TFilter : IoFilter;
         IoFilter Get(String name);
         INextFilter GetNextFilter(IoFilter filter);
+        INextFilter GetNextFilter(Type filterType);
+        INextFilter GetNextFilter<TFilter>() where TFilter : IoFilter;
         IEnumerable<IEntry> GetAll();
         Boolean Contains(String name);
         Boolean Contains(IoFilter filter);
+        Boolean Contains(Type filterType);
+        Boolean Contains<TFilter>() where TFilter : IoFilter;
         void AddFirst(String name, IoFilter filter);
         void AddLast(String name, IoFilter filter);
         void AddBefore(String baseName, String name, IoFilter filter);

@@ -65,6 +65,8 @@
     <Compile Include="Filter\Executor\ExecutorFilterRegressionTest.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilterTest.cs" />
     <Compile Include="Filter\Firewall\SubnetTest.cs" />
+    <Compile Include="Filter\Stream\AbstractStreamWriteFilterTest.cs" />
+    <Compile Include="Filter\Stream\StreamWriteFilterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

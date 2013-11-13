@@ -129,6 +129,8 @@
     <Compile Include="Filter\Firewall\Subnet.cs" />
     <Compile Include="Filter\Logging\LoggingFilter.cs" />
     <Compile Include="Filter\Logging\LogLevel.cs" />
+    <Compile Include="Filter\Stream\AbstractStreamWriteFilter.cs" />
+    <Compile Include="Filter\Stream\StreamWriteFilter.cs" />
     <Compile Include="Filter\Util\NoopFilter.cs" />
     <Compile Include="Core\Future\DefaultIoFuture.cs" />
     <Compile Include="Core\Future\DefaultWriteFuture.cs" />
