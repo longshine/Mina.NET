@@ -585,7 +585,7 @@ namespace Mina.Core.Session
         #endregion
 
         /// <summary>
-        /// Fires a {@link IoEventType#SESSION_IDLE} event to any applicable sessions in the specified collection.
+        /// Fires a <see cref="IoEventType.SessionIdle"/> event to any applicable sessions in the specified collection.
         /// </summary>
         /// <param name="sessions"></param>
         /// <param name="currentTime"></param>
