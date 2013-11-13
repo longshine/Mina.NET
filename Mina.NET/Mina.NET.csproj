@@ -127,6 +127,11 @@
     <Compile Include="Filter\Firewall\BlacklistFilter.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilter.cs" />
     <Compile Include="Filter\Firewall\Subnet.cs" />
+    <Compile Include="Filter\KeepAlive\IKeepAliveMessageFactory.cs" />
+    <Compile Include="Filter\KeepAlive\IKeepAliveRequestTimeoutHandler.cs" />
+    <Compile Include="Filter\KeepAlive\KeepAliveFilter.cs" />
+    <Compile Include="Filter\KeepAlive\KeepAliveRequestTimeoutException.cs" />
+    <Compile Include="Filter\KeepAlive\KeepAliveRequestTimeoutHandler.cs" />
     <Compile Include="Filter\Logging\LoggingFilter.cs" />
     <Compile Include="Filter\Logging\LogLevel.cs" />
     <Compile Include="Filter\Stream\AbstractStreamWriteFilter.cs" />

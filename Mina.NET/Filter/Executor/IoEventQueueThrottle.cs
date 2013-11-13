@@ -88,7 +88,7 @@ namespace Mina.Filter.Executor
                     {
                         Monitor.Wait(_syncRoot);
                     }
-                    catch (ThreadInterruptedException e)
+                    catch (ThreadInterruptedException)
                     {
                         // Wait uninterruptably.
                     }
