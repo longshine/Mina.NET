@@ -134,6 +134,7 @@
     <Compile Include="Filter\KeepAlive\KeepAliveRequestTimeoutHandler.cs" />
     <Compile Include="Filter\Logging\LoggingFilter.cs" />
     <Compile Include="Filter\Logging\LogLevel.cs" />
+    <Compile Include="Filter\Statistic\ProfilerTimerFilter.cs" />
     <Compile Include="Filter\Stream\AbstractStreamWriteFilter.cs" />
     <Compile Include="Filter\Stream\StreamWriteFilter.cs" />
     <Compile Include="Filter\Util\NoopFilter.cs" />
