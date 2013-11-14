@@ -70,6 +70,7 @@
     <Compile Include="Filter\Firewall\SubnetTest.cs" />
     <Compile Include="Filter\Stream\AbstractStreamWriteFilterTest.cs" />
     <Compile Include="Filter\Stream\StreamWriteFilterTest.cs" />
+    <Compile Include="Handler\Chain\ChainedIoHandlerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

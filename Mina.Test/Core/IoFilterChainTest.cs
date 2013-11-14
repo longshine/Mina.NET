@@ -49,7 +49,7 @@ namespace Mina.Core
 
             String actual = "";
 
-            foreach (IEntry e in chain.GetAll())
+            foreach (IEntry<IoFilter, INextFilter> e in chain.GetAll())
             {
                 actual += e.Name;
             }

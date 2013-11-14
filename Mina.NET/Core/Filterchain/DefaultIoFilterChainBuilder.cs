@@ -19,12 +19,12 @@ namespace Mina.Core.Filterchain
     /// </summary>
     public class DefaultIoFilterChainBuilder : IoFilterChainBuilder
     {
-        private readonly List<IEntry> _entries;
+        private readonly List<EntryImpl> _entries;
         private readonly Object _syncRoot;
 
         public DefaultIoFilterChainBuilder()
         {
-            _entries = new List<IEntry>();
+            _entries = new List<EntryImpl>();
             _syncRoot = ((ICollection)_entries).SyncRoot;
         }
 
@@ -32,24 +32,24 @@ namespace Mina.Core.Filterchain
         {
             if (filterChain == null)
                 throw new ArgumentNullException("filterChain");
-            _entries = new List<IEntry>(filterChain._entries);
+            _entries = new List<EntryImpl>(filterChain._entries);
             _syncRoot = ((ICollection)_entries).SyncRoot;
         }
 
-        public IEntry GetEntry(String name)
+        public IEntry<IoFilter, INextFilter> GetEntry(String name)
         {
             return _entries.Find(e => e.Name.Equals(name));
         }
 
         public IoFilter Get(String name)
         {
-            IEntry entry = GetEntry(name);
+            IEntry<IoFilter, INextFilter> entry = GetEntry(name);
             return entry == null ? null : entry.Filter;
         }
 
-        public IEnumerable<IEntry> GetAll()
+        public IEnumerable<IEntry<IoFilter, INextFilter>> GetAll()
         {
-            return new List<IEntry>(_entries);
+            return new List<EntryImpl>(_entries);
         }
 
         public Boolean Contains(String name)
@@ -103,7 +103,7 @@ namespace Mina.Core.Filterchain
 
             lock (_syncRoot)
             {
-                IEntry entry = _entries.Find(e => e.Name.Equals(name));
+                EntryImpl entry = _entries.Find(e => e.Name.Equals(name));
                 if (entry != null)
                 {
                     _entries.Remove(entry);
@@ -136,7 +136,7 @@ namespace Mina.Core.Filterchain
 
         public void BuildFilterChain(IoFilterChain chain)
         {
-            foreach (IEntry entry in _entries)
+            foreach (EntryImpl entry in _entries)
             {
                 chain.AddLast(entry.Name, entry.Filter);
             }
@@ -150,14 +150,14 @@ namespace Mina.Core.Filterchain
                 throw new ArgumentException("Unknown filter name: " + baseName);
         }
 
-        private void Register(Int32 index, IEntry e)
+        private void Register(Int32 index, EntryImpl e)
         {
             if (Contains(e.Name))
                 throw new ArgumentException("Other filter is using the same name: " + e.Name);
             _entries.Insert(index, e);
         }
 
-        class EntryImpl : IEntry
+        class EntryImpl : IEntry<IoFilter, INextFilter>
         {
             private readonly DefaultIoFilterChainBuilder _chain;
             private readonly String _name;

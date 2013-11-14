@@ -29,7 +29,7 @@ namespace Mina.Core
             builder.AddAfter("D", "H", new NoopFilter());
 
             String actual = String.Empty;
-            foreach (IEntry entry in builder.GetAll())
+            foreach (IEntry<IoFilter, INextFilter> entry in builder.GetAll())
             {
                 actual += entry.Name;
             }

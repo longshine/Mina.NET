@@ -56,6 +56,7 @@
     <Compile Include="Core\Filterchain\DefaultIoFilterChainBuilder.cs" />
     <Compile Include="Core\Filterchain\IEntry.cs" />
     <Compile Include="Core\Filterchain\INextFilter.cs" />
+    <Compile Include="Core\Filterchain\Chain.cs" />
     <Compile Include="Core\Filterchain\IoFilter.cs" />
     <Compile Include="Core\Filterchain\IoFilterAdapter.cs" />
     <Compile Include="Core\Filterchain\IoFilterChain.cs" />
@@ -155,6 +156,10 @@
     <Compile Include="Core\Session\IoSessionConfig.cs" />
     <Compile Include="Core\Write\DefaultWriteRequest.cs" />
     <Compile Include="Core\Write\IWriteRequest.cs" />
+    <Compile Include="Handler\Chain\ChainedIoHandler.cs" />
+    <Compile Include="Handler\Chain\INextCommand.cs" />
+    <Compile Include="Handler\Chain\IoHandlerChain.cs" />
+    <Compile Include="Handler\Chain\IoHandlerCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\BufferManager.cs" />
     <Compile Include="Core\Service\IoAcceptor.cs" />
