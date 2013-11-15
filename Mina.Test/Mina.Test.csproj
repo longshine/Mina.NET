@@ -68,6 +68,7 @@
     <Compile Include="Filter\Executor\ExecutorFilterRegressionTest.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilterTest.cs" />
     <Compile Include="Filter\Firewall\SubnetTest.cs" />
+    <Compile Include="Filter\Ssl\SslTest.cs" />
     <Compile Include="Filter\Stream\AbstractStreamWriteFilterTest.cs" />
     <Compile Include="Filter\Stream\StreamWriteFilterTest.cs" />
     <Compile Include="Handler\Chain\ChainedIoHandlerTest.cs" />
@@ -84,6 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\Mina.Example\Cert\TempCert.cer">
+      <Link>TempCert.cer</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

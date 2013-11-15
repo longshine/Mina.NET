@@ -8,6 +8,13 @@ namespace Mina.Core.Future
     /// </summary>
     public class DefaultWriteFuture : DefaultIoFuture, IWriteFuture
     {
+        public static IWriteFuture NewWrittenFuture(IoSession session)
+        {
+            DefaultWriteFuture writtenFuture = new DefaultWriteFuture(session);
+            writtenFuture.Written = true;
+            return writtenFuture;
+        }
+
         public static IWriteFuture NewNotWrittenFuture(IoSession session, Exception cause)
         {
             DefaultWriteFuture unwrittenFuture = new DefaultWriteFuture(session);
