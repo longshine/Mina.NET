@@ -22,6 +22,7 @@ namespace Mina.Filter.Ssl
         private static readonly AttributeKey SSL_HANDLER = new AttributeKey(typeof(SslFilter), "handler");
 
         X509Certificate _serverCertificate = null;
+        SslProtocols _sslProtocol = SslProtocols.Default;
 
         public SslFilter(String certFile)
             : this(X509Certificate.CreateFromCertFile(certFile))
@@ -30,6 +31,12 @@ namespace Mina.Filter.Ssl
         public SslFilter(X509Certificate cert)
         {
             _serverCertificate = cert;
+        }
+
+        public SslProtocols SslProtocol
+        {
+            get { return _sslProtocol; }
+            set { _sslProtocol = value; }
         }
 
         public X509Certificate Certificate
@@ -265,7 +272,7 @@ namespace Mina.Filter.Ssl
             {
                 _currentNextFilter = nextFilter;
                 _sslStream.BeginAuthenticateAsServer(_sslFilter.Certificate,
-                    false, SslProtocols.Tls, true, AuthenticateCallback, null);
+                    false, _sslFilter.SslProtocol, true, AuthenticateCallback, null);
             }
         }
 
