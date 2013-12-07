@@ -107,10 +107,18 @@ namespace Mina.Transport.Socket
             if (e.SocketError == SocketError.Success)
             {
                 SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();
-                SocketSession session = new SocketSession(this, this, e.AcceptSocket, readBuffer);
 
-                InitSession(session, null, null);
-                session.Processor.Add(session);
+                try
+                {
+                    SocketSession session = new SocketSession(this, this, e.AcceptSocket, readBuffer);
+
+                    InitSession(session, null, null);
+                    session.Processor.Add(session);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionMonitor.Instance.ExceptionCaught(ex);
+                }
 
                 // Accept the next connection request
                 StartAccept(e);

@@ -95,6 +95,8 @@ namespace Mina.Transport.Socket
             }
             else
             {
+                CurrentWriteRequest = req;
+
                 SocketAsyncEventArgs saea;
                 SocketAsyncEventArgsBuffer saeaBuf = buf as SocketAsyncEventArgsBuffer;
                 if (saeaBuf == null)
@@ -110,12 +112,26 @@ namespace Mina.Transport.Socket
                     saea.Completed += new EventHandler<SocketAsyncEventArgs>(saea_Completed);
                 }
 
-                Boolean willRaiseEvent = _socket.SendAsync(saea);
-                if (!willRaiseEvent)
+                try
                 {
-                    ProcessSend(saea);
+                    Boolean willRaiseEvent = _socket.SendAsync(saea);
+                    if (!willRaiseEvent)
+                    {
+                        ProcessSend(saea);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ExceptionMonitor.Instance.ExceptionCaught(ex);
                 }
             }
+        }
+
+        private void FireMessageSent()
+        {
+            IWriteRequest req = CurrentWriteRequest;
+            CurrentWriteRequest = null;
+            this.FilterChain.FireMessageSent(req);
         }
 
         void saea_Completed(object sender, SocketAsyncEventArgs e)
@@ -128,6 +144,7 @@ namespace Mina.Transport.Socket
             if (e.SocketError == SocketError.Success)
             {
                 this.IncreaseWrittenBytes(e.BytesTransferred, DateTime.Now);
+                FireMessageSent();
                 // TODO e.BytesTransferred == 0
                 BeginSend();
             }
@@ -136,10 +153,17 @@ namespace Mina.Transport.Socket
         private void BeginReceive()
         {
             _readBuffer.Clear();
-            Boolean willRaiseEvent = _socket.ReceiveAsync(_readBuffer.SocketAsyncEventArgs);
-            if (!willRaiseEvent)
+            try
             {
-                ProcessReceive(_readBuffer.SocketAsyncEventArgs);
+                Boolean willRaiseEvent = _socket.ReceiveAsync(_readBuffer.SocketAsyncEventArgs);
+                if (!willRaiseEvent)
+                {
+                    ProcessReceive(_readBuffer.SocketAsyncEventArgs);
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(ex);
             }
         }
 
