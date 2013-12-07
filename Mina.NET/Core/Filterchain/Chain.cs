@@ -12,6 +12,7 @@ namespace Mina.Core.Filterchain
         IEntry<TFilter, TNextFilter> GetEntry(Type filterType);
         IEntry<TFilter, TNextFilter> GetEntry<T>() where T : TFilter;
         TFilter Get(String name);
+        TNextFilter GetNextFilter(String name);
         TNextFilter GetNextFilter(TFilter filter);
         TNextFilter GetNextFilter(Type filterType);
         TNextFilter GetNextFilter<T>() where T : TFilter;
@@ -109,6 +110,12 @@ namespace Mina.Core.Filterchain
                 e = e._nextEntry;
             }
             return null;
+        }
+
+        public TNextFilter GetNextFilter(String name)
+        {
+            IEntry<TFilter, TNextFilter> e = GetEntry(name);
+            return e == null ? default(TNextFilter) : e.NextFilter;
         }
 
         public TNextFilter GetNextFilter(TFilter filter)

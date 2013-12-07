@@ -608,12 +608,15 @@ namespace Mina.Core.Session
         private static void NotifyIdleSession(IoSession session, DateTime currentTime, IdleStatus status, DateTime lastIoTime)
         {
             UInt64 idleTime = session.Config.GetIdleTimeInMillis(status);
-            DateTime lastIdleTime = session.GetLastIdleTime(status);
-            if (lastIoTime < lastIdleTime)
-                lastIoTime = lastIdleTime;
+            if (idleTime > 0)
+            {
+                DateTime lastIdleTime = session.GetLastIdleTime(status);
+                if (lastIoTime < lastIdleTime)
+                    lastIoTime = lastIdleTime;
 
-            if ((idleTime > 0) && ((currentTime - lastIoTime).TotalMilliseconds >= idleTime))
-                session.FilterChain.FireSessionIdle(status);
+                if ((currentTime - lastIoTime).TotalMilliseconds >= idleTime)
+                    session.FilterChain.FireSessionIdle(status);
+            }
         }
 
         private static void NotifyWriteTimeout(IoSession session, DateTime currentTime)

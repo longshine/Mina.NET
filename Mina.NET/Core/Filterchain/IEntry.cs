@@ -16,7 +16,7 @@ namespace Mina.Core.Filterchain
         /// </summary>
         TFilter Filter { get; }
         /// <summary>
-        /// Gets the <see cref="TNextFilter"/> of the filter.
+        /// Gets the <typeparamref name="TNextFilter"/> of the filter.
         /// </summary>
         TNextFilter NextFilter { get; }
         /// <summary>
