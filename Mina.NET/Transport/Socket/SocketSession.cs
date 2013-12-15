@@ -130,8 +130,11 @@ namespace Mina.Transport.Socket
         private void FireMessageSent()
         {
             IWriteRequest req = CurrentWriteRequest;
-            CurrentWriteRequest = null;
-            this.FilterChain.FireMessageSent(req);
+            if (req != null)
+            {
+                CurrentWriteRequest = null;
+                this.FilterChain.FireMessageSent(req);
+            }
         }
 
         void saea_Completed(object sender, SocketAsyncEventArgs e)
@@ -144,7 +147,16 @@ namespace Mina.Transport.Socket
             if (e.SocketError == SocketError.Success)
             {
                 this.IncreaseWrittenBytes(e.BytesTransferred, DateTime.Now);
-                FireMessageSent();
+
+                try
+                {
+                    FireMessageSent();
+                }
+                catch (Exception ex)
+                {
+                    ExceptionMonitor.Instance.ExceptionCaught(ex);
+                }
+
                 // TODO e.BytesTransferred == 0
                 BeginSend();
             }
