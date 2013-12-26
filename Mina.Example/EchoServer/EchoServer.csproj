@@ -43,13 +43,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mina.NET\Mina.NET.csproj">
+    <ProjectReference Include="..\..\Mina.NET\Mina.NET.csproj">
       <Project>{28ABBF94-0584-4254-A8B4-4843E6F4E867}</Project>
       <Name>Mina.NET</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Mina.Example\Cert\TempCert.cer">
+    <None Include="..\Cert\TempCert.cer">
       <Link>TempCert.cer</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
