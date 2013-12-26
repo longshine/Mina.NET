@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{28ABBF94-0584-4254-A8B4-4843E6F4E867}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mina</RootNamespace>
+    <AssemblyName>Mina.NET</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\NET20\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET20</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\NET20\</OutputPath>
+    <DefineConstants>TRACE;NET20</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging, Version=2.1.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NET20\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Buffer\Buffer.cs" />
+    <Compile Include="Core\Buffer\BufferDataException.cs" />
+    <Compile Include="Core\Buffer\BufferUnderflowException.cs" />
+    <Compile Include="Core\Buffer\ByteBuffer.cs" />
+    <Compile Include="Core\Buffer\ByteBufferAllocator.cs" />
+    <Compile Include="Core\Buffer\ByteBufferR.cs" />
+    <Compile Include="Core\Buffer\IoBuffer.cs" />
+    <Compile Include="Core\Buffer\IoBufferAllocator.cs" />
+    <Compile Include="Core\Buffer\IoBufferHexDumper.cs" />
+    <Compile Include="Core\Filterchain\DefaultIoFilterChain.cs" />
+    <Compile Include="Core\Filterchain\DefaultIoFilterChainBuilder.cs" />
+    <Compile Include="Core\Filterchain\IEntry.cs" />
+    <Compile Include="Core\Filterchain\INextFilter.cs" />
+    <Compile Include="Core\Filterchain\Chain.cs" />
+    <Compile Include="Core\Filterchain\IoFilter.cs" />
+    <Compile Include="Core\Filterchain\IoFilterAdapter.cs" />
+    <Compile Include="Core\Filterchain\IoFilterChain.cs" />
+    <Compile Include="Core\Filterchain\IoFilterChainBuilder.cs" />
+    <Compile Include="Core\Filterchain\IoFilterEvent.cs" />
+    <Compile Include="Core\Filterchain\IoFilterLifeCycleException.cs" />
+    <Compile Include="Core\Future\CompositeIoFuture.cs" />
+    <Compile Include="Core\Future\DefaultCloseFuture.cs" />
+    <Compile Include="Core\Future\ICloseFuture.cs" />
+    <Compile Include="Core\Future\IConnectFuture.cs" />
+    <Compile Include="Core\Future\DefaultConnectFuture.cs" />
+    <Compile Include="Core\Future\IReadFuture.cs" />
+    <Compile Include="Core\Future\DefaultReadFuture.cs" />
+    <Compile Include="Core\Service\IoProcessor.cs" />
+    <Compile Include="Core\Service\IoServiceStatistics.cs" />
+    <Compile Include="Core\Service\IoServiceSupport.cs" />
+    <Compile Include="Core\Session\AttributeKey.cs" />
+    <Compile Include="Core\Session\DefaultIoSessionAttributeMap.cs" />
+    <Compile Include="Core\Session\DefaultIoSessionDataStructureFactory.cs" />
+    <Compile Include="Core\Session\IdleStatusChecker.cs" />
+    <Compile Include="Core\Session\IoEvent.cs" />
+    <Compile Include="Core\Session\IoEventType.cs" />
+    <Compile Include="Core\Session\IoSessionAttributeMap.cs" />
+    <Compile Include="Core\Session\IoSessionDataStructureFactory.cs" />
+    <Compile Include="Core\Session\UnknownMessageTypeException.cs" />
+    <Compile Include="Core\Write\DefaultWriteRequestQueue.cs" />
+    <Compile Include="Core\Write\IWriteRequestQueue.cs" />
+    <Compile Include="Core\Write\NothingWrittenException.cs" />
+    <Compile Include="Core\Write\WriteException.cs" />
+    <Compile Include="Core\Write\WriteRequestWrapper.cs" />
+    <Compile Include="Core\Write\WriteTimeoutException.cs" />
+    <Compile Include="Core\Write\WriteToClosedSessionException.cs" />
+    <Compile Include="Filter\Buffer\BufferedWriteFilter.cs" />
+    <Compile Include="Filter\Codec\AbstractProtocolDecoderOutput.cs" />
+    <Compile Include="Filter\Codec\AbstractProtocolEncoderOutput.cs" />
+    <Compile Include="Filter\Codec\CumulativeProtocolDecoder.cs" />
+    <Compile Include="Filter\Codec\IProtocolCodecFactory.cs" />
+    <Compile Include="Filter\Codec\IProtocolDecoder.cs" />
+    <Compile Include="Filter\Codec\IProtocolDecoderOutput.cs" />
+    <Compile Include="Filter\Codec\IProtocolEncoder.cs" />
+    <Compile Include="Filter\Codec\IProtocolEncoderOutput.cs" />
+    <Compile Include="Filter\Codec\PrefixedString\PrefixedStringCodecFactory.cs" />
+    <Compile Include="Filter\Codec\PrefixedString\PrefixedStringDecoder.cs" />
+    <Compile Include="Filter\Codec\PrefixedString\PrefixedStringEncoder.cs" />
+    <Compile Include="Filter\Codec\ProtocolCodecException.cs" />
+    <Compile Include="Filter\Codec\ProtocolCodecFilter.cs" />
+    <Compile Include="Filter\Codec\ProtocolCodecSession.cs" />
+    <Compile Include="Filter\Codec\ProtocolDecoderAdapter.cs" />
+    <Compile Include="Filter\Codec\ProtocolEncoderAdapter.cs" />
+    <Compile Include="Filter\Codec\SynchronizedProtocolDecoder.cs" />
+    <Compile Include="Filter\Codec\SynchronizedProtocolEncoder.cs" />
+    <Compile Include="Filter\Codec\TextLine\LineDelimiter.cs" />
+    <Compile Include="Filter\Codec\TextLine\TextLineCodecFactory.cs" />
+    <Compile Include="Filter\Codec\TextLine\TextLineDecoder.cs" />
+    <Compile Include="Filter\Codec\TextLine\TextLineEncoder.cs" />
+    <Compile Include="Filter\ErrorGenerating\ErrorGeneratingFilter.cs" />
+    <Compile Include="Filter\Executor\ExecutorFilter.cs" />
+    <Compile Include="Filter\Executor\IExecutor.cs" />
+    <Compile Include="Filter\Executor\IoEventExecutor.cs" />
+    <Compile Include="Filter\Executor\IoEventQueueHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\Executor\IoEventQueueThrottle.cs" />
+    <Compile Include="Filter\Executor\IoEventSizeEstimator.cs" />
+    <Compile Include="Filter\Executor\OrderedThreadPoolExecutor.cs" />
+    <Compile Include="Filter\Executor\UnorderedThreadPoolExecutor.cs" />
+    <Compile Include="Filter\Executor\WriteRequestFilter.cs" />
+    <Compile Include="Filter\Executor\ThreadPoolExecutor.NET20.cs" />
+    <Compile Include="Filter\Firewall\BlacklistFilter.cs" />
+    <Compile Include="Filter\Firewall\ConnectionThrottleFilter.cs" />
+    <Compile Include="Filter\Firewall\Subnet.cs" />
+    <Compile Include="Filter\KeepAlive\IKeepAliveMessageFactory.cs" />
+    <Compile Include="Filter\KeepAlive\IKeepAliveRequestTimeoutHandler.cs" />
+    <Compile Include="Filter\KeepAlive\KeepAliveFilter.cs" />
+    <Compile Include="Filter\KeepAlive\KeepAliveRequestTimeoutException.cs" />
+    <Compile Include="Filter\KeepAlive\KeepAliveRequestTimeoutHandler.cs" />
+    <Compile Include="Filter\Logging\LoggingFilter.cs" />
+    <Compile Include="Filter\Logging\LogLevel.cs" />
+    <Compile Include="Filter\Ssl\SslFilter.cs" />
+    <Compile Include="Filter\Statistic\ProfilerTimerFilter.cs" />
+    <Compile Include="Filter\Stream\AbstractStreamWriteFilter.cs" />
+    <Compile Include="Filter\Stream\StreamWriteFilter.cs" />
+    <Compile Include="Filter\Util\CommonEventFilter.cs" />
+    <Compile Include="Filter\Util\NoopFilter.cs" />
+    <Compile Include="Core\Future\DefaultIoFuture.cs" />
+    <Compile Include="Core\Future\DefaultWriteFuture.cs" />
+    <Compile Include="Core\Future\IoFuture.cs" />
+    <Compile Include="Core\Future\IWriteFuture.cs" />
+    <Compile Include="Core\Service\AbstractIoAcceptor.cs" />
+    <Compile Include="Core\Service\AbstractIoService.cs" />
+    <Compile Include="Core\Service\IoHandler.cs" />
+    <Compile Include="Core\Service\IoHandlerAdapter.cs" />
+    <Compile Include="Core\Session\AbstractIoSession.cs" />
+    <Compile Include="Core\Session\AbstractIoSessionConfig.cs" />
+    <Compile Include="Core\Session\DummySession.cs" />
+    <Compile Include="Core\Session\IdleStatus.cs" />
+    <Compile Include="Core\Session\IoSession.cs" />
+    <Compile Include="Core\Session\IoSessionConfig.cs" />
+    <Compile Include="Core\Write\DefaultWriteRequest.cs" />
+    <Compile Include="Core\Write\IWriteRequest.cs" />
+    <Compile Include="Handler\Chain\ChainedIoHandler.cs" />
+    <Compile Include="Handler\Chain\INextCommand.cs" />
+    <Compile Include="Handler\Chain\IoHandlerChain.cs" />
+    <Compile Include="Handler\Chain\IoHandlerCommand.cs" />
+    <Compile Include="Handler\Stream\IoSessionStream.cs" />
+    <Compile Include="Handler\Stream\StreamIoHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\BufferManager.cs" />
+    <Compile Include="Core\Service\IoAcceptor.cs" />
+    <Compile Include="Core\Service\IoService.cs" />
+    <Compile Include="Core\Pool.cs" />
+    <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />
+    <Compile Include="Transport\Socket\AsyncSocketAcceptor.cs" />
+    <Compile Include="Transport\Socket\DefaultSocketSessionConfig.cs" />
+    <Compile Include="Transport\Socket\ISocketAcceptor.cs" />
+    <Compile Include="Transport\Socket\ISocketSessionConfig.cs" />
+    <Compile Include="Transport\Socket\SocketAsyncEventArgsBuffer.cs" />
+    <Compile Include="Transport\Socket\SocketAsyncEventArgsBufferAllocator.cs" />
+    <Compile Include="Transport\Socket\SocketSession.cs" />
+    <Compile Include="Util\Delegates.cs" />
+    <Compile Include="Util\DelegateUtils.cs" />
+    <Compile Include="Util\ExceptionMonitor.cs" />
+    <Compile Include="Util\IQueue.cs" />
+    <Compile Include="Util\System\Lazy.cs" />
+    <Compile Include="Util\System.Collections.Concurrent\ConcurrentDictionary.cs" />
+    <Compile Include="Util\System.Collections.Concurrent\ConcurrentQueue.cs" />
+    <Compile Include="Util\System.Collections.Concurrent\ConcurrentStack.cs" />
+    <Compile Include="Util\System.Collections.Concurrent\IProducerConsumerCollection.cs" />
+    <Compile Include="Util\System.Collections.Concurrent\SplitOrderedList.cs" />
+    <Compile Include="Util\System.Collections.Generic\HashSet.cs" />
+    <Compile Include="Util\System\Funcs.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

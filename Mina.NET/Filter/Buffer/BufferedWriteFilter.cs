@@ -38,7 +38,12 @@ namespace Mina.Filter.Buffer
             : this(bufferSize, null)
         { }
 
-        public BufferedWriteFilter(Int32 bufferSize, ConcurrentDictionary<IoSession, Lazy<IoBuffer>> buffersMap)
+#if NET20
+        internal
+#else
+        public
+#endif
+        BufferedWriteFilter(Int32 bufferSize, ConcurrentDictionary<IoSession, Lazy<IoBuffer>> buffersMap)
         {
             _bufferSize = bufferSize;
             _buffersMap = buffersMap == null ?

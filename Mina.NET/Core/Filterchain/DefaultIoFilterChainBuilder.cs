@@ -49,7 +49,10 @@ namespace Mina.Core.Filterchain
 
         public IEnumerable<IEntry<IoFilter, INextFilter>> GetAll()
         {
-            return new List<EntryImpl>(_entries);
+            foreach (EntryImpl item in _entries)
+            {
+                yield return item;
+            }
         }
 
         public Boolean Contains(String name)

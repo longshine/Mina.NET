@@ -12,7 +12,11 @@ namespace Mina.Core.Future
     {
         private readonly IoSession _session;
         private volatile Boolean _ready;
+#if NET20
+        private readonly ManualResetEvent _readyEvent = new ManualResetEvent(false);
+#else
         private readonly ManualResetEventSlim _readyEvent = new ManualResetEventSlim(false);
+#endif
         private Object _value;
         private Action<IoFuture> _complete;
 
@@ -94,10 +98,15 @@ namespace Mina.Core.Future
         {
             if (_ready)
                 return _ready;
-
+#if NET20
+            _readyEvent.WaitOne(millisecondsTimeout);
+            if (_ready)
+                _readyEvent.Close();
+#else
             _readyEvent.Wait(millisecondsTimeout);
             if (_ready)
                 _readyEvent.Dispose();
+#endif
 
             return _ready;
         }

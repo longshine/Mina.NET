@@ -138,14 +138,12 @@ namespace Mina.Core.Filterchain
 
         public IEnumerable<IEntry<TFilter, TNextFilter>> GetAll()
         {
-            List<Entry> list = new List<Entry>();
             Entry e = _head._nextEntry;
             while (e != _tail)
             {
-                list.Add(e);
+                yield return e;
                 e = e._nextEntry;
             }
-            return list;
         }
 
         public Boolean Contains(String name)

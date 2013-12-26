@@ -1,8 +1,8 @@
 ﻿using System;
-using Mina.Core.Session;
+using System.Collections.Generic;
 using Mina.Core.Filterchain;
 using Mina.Core.Future;
-using System.Collections.Generic;
+using Mina.Core.Session;
 
 namespace Mina.Core.Service
 {

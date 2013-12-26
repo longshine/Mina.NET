@@ -11,7 +11,7 @@ namespace Mina.Util
         Int32 Count { get; }
     }
 
-    public class ConcurrentQueue<T> : System.Collections.Concurrent.ConcurrentQueue<T>, IQueue<T>
+    class ConcurrentQueue<T> : System.Collections.Concurrent.ConcurrentQueue<T>, IQueue<T>
     {
         public Boolean Empty
         {
