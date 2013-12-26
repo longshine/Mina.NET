@@ -1,27 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using Mina.Core.Service;
-using Mina.Core.Buffer;
-using System.Collections.Generic;
-using Mina.Core.Write;
-using Mina.Core.Session;
-using System.Collections.Concurrent;
-using Mina.Core.Filterchain;
 using Mina.Util;
-using System.Threading;
 
 namespace Mina.Transport.Socket
 {
-    public class AsyncSocketAcceptor : AbstractIoAcceptor, ISocketAcceptor, IoProcessor<SocketSession>
+    public class AsyncSocketAcceptor : AbstractSocketAcceptor
     {
         private System.Net.Sockets.Socket _listenSocket;
-        private Int32 _backlog = 100;
-        private Int32 _maxConnections;
 
         private BufferManager _bufferManager;
         private Pool<SocketAsyncEventArgsBuffer> _readWritePool;
-        private IdleStatusChecker _idleStatusChecker;
 
         private System.Collections.Concurrent.ConcurrentQueue<SocketSession> _newSessions = new System.Collections.Concurrent.ConcurrentQueue<SocketSession>();
 
@@ -30,11 +20,8 @@ namespace Mina.Transport.Socket
         { }
 
         public AsyncSocketAcceptor(Int32 maxConnections)
-            : base(new DefaultSocketSessionConfig())
-        {
-            _maxConnections = maxConnections;
-            _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
-        }
+            : base(maxConnections)
+        { }
 
         public override void Bind(EndPoint localEP)
         {
@@ -42,7 +29,7 @@ namespace Mina.Transport.Socket
 
             _listenSocket = new System.Net.Sockets.Socket(localEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             _listenSocket.Bind(localEP);
-            _listenSocket.Listen(_backlog);
+            _listenSocket.Listen(Backlog);
 
             StartAccept(null);
 
@@ -62,11 +49,13 @@ namespace Mina.Transport.Socket
             Int32 bufferSize = SessionConfig.ReadBufferSize;
             if (_bufferManager == null || _bufferManager.BufferSize != bufferSize)
             {
-                _bufferManager = new BufferManager(bufferSize * _maxConnections, bufferSize);
+                // TODO free previous pool
+
+                _bufferManager = new BufferManager(bufferSize * MaxConnections, bufferSize);
                 _bufferManager.InitBuffer();
 
-                var list = new List<SocketAsyncEventArgsBuffer>(_maxConnections);
-                for (Int32 i = 0; i < _maxConnections; i++)
+                var list = new List<SocketAsyncEventArgsBuffer>(MaxConnections);
+                for (Int32 i = 0; i < MaxConnections; i++)
                 {
                     SocketAsyncEventArgs readWriteEventArg = new SocketAsyncEventArgs();
                     _bufferManager.SetBuffer(readWriteEventArg);
@@ -110,7 +99,7 @@ namespace Mina.Transport.Socket
 
                 try
                 {
-                    SocketSession session = new SocketSession(this, this, e.AcceptSocket, readBuffer);
+                    SocketSession session = new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer);
 
                     InitSession(session, null, null);
                     session.Processor.Add(session);
@@ -129,130 +118,5 @@ namespace Mina.Transport.Socket
                 ExceptionMonitor.Instance.ExceptionCaught(new SocketException((Int32)e.SocketError));
             }
         }
-
-        public Boolean ReuseAddress { get; set; }
-
-        public Int32 Backlog
-        {
-            get { return _backlog; }
-            set { _backlog = value; }
-        }
-
-        public Int32 MaxConnections
-        {
-            get { return _maxConnections; }
-            set { _maxConnections = value; }
-        }
-
-        #region IoProcessor
-
-        public void Add(SocketSession session)
-        {
-            // Build the filter chain of this session.
-            IoFilterChainBuilder chainBuilder = session.Service.FilterChainBuilder;
-            chainBuilder.BuildFilterChain(session.FilterChain);
-
-            // Propagate the SESSION_CREATED event up to the chain
-            IoServiceSupport serviceSupport = session.Service as IoServiceSupport;
-            if (serviceSupport != null)
-                serviceSupport.FireSessionCreated(session);
-
-            session.Start();
-        }
-
-        public void Remove(SocketSession session)
-        {
-            ClearWriteRequestQueue(session);
-            session.Socket.Close();
-            IoServiceSupport support = session.Service as IoServiceSupport;
-            if (support != null)
-                support.FireSessionDestroyed(session);
-        }
-
-        public void Write(SocketSession session, IWriteRequest writeRequest)
-        {
-            IWriteRequestQueue writeRequestQueue = session.WriteRequestQueue;
-            writeRequestQueue.Offer(session, writeRequest);
-            if (!session.WriteSuspended)
-                Flush(session);
-        }
-
-        public void Flush(SocketSession session)
-        {
-            // TODO send data
-            session.Flush();
-        }
-
-        private void ClearWriteRequestQueue(SocketSession session)
-        {
-            IWriteRequestQueue writeRequestQueue = session.WriteRequestQueue;
-            IWriteRequest req;
-            List<IWriteRequest> failedRequests = new List<IWriteRequest>();
-
-            if ((req = writeRequestQueue.Poll(session)) != null)
-            {
-                IoBuffer buf = req.Message as IoBuffer;
-                if (buf != null)
-                { 
-                    // The first unwritten empty buffer must be
-                    // forwarded to the filter chain.
-                    if (buf.HasRemaining)
-                    {
-                        buf.Reset();
-                        failedRequests.Add(req);
-                    }
-                    else
-                    {
-                        session.FilterChain.FireMessageSent(req);
-                    }
-                }
-                else
-                {
-                    failedRequests.Add(req);
-                }
-
-                // Discard others.
-                while ((req = writeRequestQueue.Poll(session)) != null)
-                {
-                    failedRequests.Add(req);
-                }
-            }
-
-            // Create an exception and notify.
-            if (failedRequests.Count > 0)
-            {
-                WriteToClosedSessionException cause = new WriteToClosedSessionException(failedRequests);
-
-                foreach (IWriteRequest r in failedRequests)
-                {
-                    //session.DecreaseScheduledBytesAndMessages(r);
-                    r.Future.Exception = cause;
-                }
-
-                session.FilterChain.FireExceptionCaught(cause);
-            }
-        }
-
-        void IoProcessor.Write(IoSession session, IWriteRequest writeRequest)
-        {
-            Write((SocketSession)session, writeRequest);
-        }
-
-        void IoProcessor.Flush(IoSession session)
-        {
-            Flush((SocketSession)session);
-        }
-
-        void IoProcessor.Add(IoSession session)
-        {
-            Add((SocketSession)session);
-        }
-
-        void IoProcessor.Remove(IoSession session)
-        {
-            Remove((SocketSession)session);
-        }
-
-        #endregion
     }
 }

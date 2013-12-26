@@ -168,13 +168,16 @@
     <Compile Include="Core\Service\IoAcceptor.cs" />
     <Compile Include="Core\Service\IoService.cs" />
     <Compile Include="Core\Pool.cs" />
+    <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
     <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\AsyncSocketAcceptor.cs" />
     <Compile Include="Transport\Socket\DefaultSocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\ISocketAcceptor.cs" />
     <Compile Include="Transport\Socket\ISocketSessionConfig.cs" />
+    <Compile Include="Transport\Socket\SessionConfigImpl.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBuffer.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBufferAllocator.cs" />
+    <Compile Include="Transport\Socket\AsyncSocketSession.cs" />
     <Compile Include="Transport\Socket\SocketSession.cs" />
     <Compile Include="Util\DelegateUtils.cs" />
     <Compile Include="Util\ExceptionMonitor.cs" />

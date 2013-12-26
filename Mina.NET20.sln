@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{6731
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GettingStarted", "GettingStarted", "{9AA23412-94F7-4DEB-BB38-EEBB6260A7CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeServer", "Mina.Example\GettingStarted\TimeServer\TimeServer.csproj", "{18ABDB3D-FF4E-4EB9-912A-902EE739D127}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeServer", "Mina.Example\GettingStarted\TimeServer\TimeServer.NET20.csproj", "{18ABDB3D-FF4E-4EB9-912A-902EE739D127}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mina.Test", "Mina.Test\Mina.Test.NET20.csproj", "{D02DB0C8-E5D0-4C75-AF1A-3916B43EF3D6}"
 EndProject
@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoServer", "Mina.Example\EchoServer\EchoServer.csproj", "{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoServer", "Mina.Example\EchoServer\EchoServer.NET20.csproj", "{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

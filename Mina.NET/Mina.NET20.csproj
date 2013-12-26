@@ -167,13 +167,17 @@
     <Compile Include="Core\Service\IoService.cs" />
     <Compile Include="Core\Pool.cs" />
     <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />
-    <Compile Include="Transport\Socket\AsyncSocketAcceptor.cs" />
     <Compile Include="Transport\Socket\DefaultSocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\ISocketAcceptor.cs" />
     <Compile Include="Transport\Socket\ISocketSessionConfig.cs" />
+    <Compile Include="Transport\Socket\SessionConfigImpl.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBuffer.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBufferAllocator.cs" />
-    <Compile Include="Transport\Socket\SocketSession.cs" />
+    <Compile Include="Transport\Socket\AsyncSocketSession.NET20.cs" />
+    <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
+    <Compile Include="Transport\Socket\SocketSession.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Util\Delegates.cs" />
     <Compile Include="Util\DelegateUtils.cs" />
     <Compile Include="Util\ExceptionMonitor.cs" />
@@ -187,7 +191,9 @@
     <Compile Include="Util\System.Collections.Generic\HashSet.cs" />
     <Compile Include="Util\System\Funcs.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Transport\Socket\AsyncSocketAcceptor.NET20.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
