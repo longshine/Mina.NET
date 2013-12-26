@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using Common.Logging;
+using Mina.Core.Session;
 using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
     public class AsyncSocketAcceptor : AbstractSocketAcceptor
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(AsyncSocketAcceptor));
+
         private System.Net.Sockets.Socket _listenSocket;
 
         private BufferManager _bufferManager;
@@ -21,7 +25,9 @@ namespace Mina.Transport.Socket
 
         public AsyncSocketAcceptor(Int32 maxConnections)
             : base(maxConnections)
-        { }
+        {
+            this.SessionDestroyed += OnSessionDestroyed;
+        }
 
         public override void Bind(EndPoint localEP)
         {
@@ -61,9 +67,35 @@ namespace Mina.Transport.Socket
                     _bufferManager.SetBuffer(readWriteEventArg);
                     SocketAsyncEventArgsBuffer buf = new SocketAsyncEventArgsBuffer(readWriteEventArg);
                     list.Add(buf);
+
+                    readWriteEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(readWriteEventArg_Completed);
                 }
                 _readWritePool = new Pool<SocketAsyncEventArgsBuffer>(list);
             }
+        }
+
+        void readWriteEventArg_Completed(object sender, SocketAsyncEventArgs e)
+        {
+            AsyncSocketSession session = e.UserToken as AsyncSocketSession;
+
+            if (session == null)
+                return;
+
+            if (e.LastOperation == SocketAsyncOperation.Receive)
+            {
+                session.ProcessReceive(e);
+            }
+            else
+            {
+                // TODO handle other Socket operations
+            }
+        }
+
+        private void OnSessionDestroyed(IoSession session)
+        {
+            AsyncSocketSession s = session as AsyncSocketSession;
+            if (s != null && _readWritePool != null)
+                _readWritePool.Push(s.ReadBuffer);
         }
 
         private void StartAccept(SocketAsyncEventArgs acceptEventArg)
@@ -96,6 +128,13 @@ namespace Mina.Transport.Socket
             if (e.SocketError == SocketError.Success)
             {
                 SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();
+
+                if (readBuffer == null)
+                {
+                    if (log.IsErrorEnabled)
+                        log.Error("No enough buffer for newly incoming clients");
+                    return;
+                }
 
                 try
                 {

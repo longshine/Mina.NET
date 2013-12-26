@@ -16,12 +16,12 @@ namespace Mina.Transport.Socket
             : base(service, processor, socket)
         {
             _readBuffer = readBuffer;
-            _readBuffer.SocketAsyncEventArgs.Completed += new EventHandler<SocketAsyncEventArgs>(SocketAsyncEventArgs_Completed);
+            _readBuffer.SocketAsyncEventArgs.UserToken = this;
         }
 
-        void SocketAsyncEventArgs_Completed(Object sender, SocketAsyncEventArgs e)
+        public SocketAsyncEventArgsBuffer ReadBuffer
         {
-            ProcessReceive(e);
+            get { return _readBuffer; }
         }
 
         protected override void BeginSend(IoBuffer buf)
@@ -93,7 +93,7 @@ namespace Mina.Transport.Socket
             }
         }
 
-        private void ProcessReceive(SocketAsyncEventArgs e)
+        public void ProcessReceive(SocketAsyncEventArgs e)
         {
             if (e.SocketError == SocketError.Success)
             {
