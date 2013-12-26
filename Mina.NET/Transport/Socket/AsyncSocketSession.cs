@@ -11,7 +11,6 @@ namespace Mina.Transport.Socket
     public class AsyncSocketSession : SocketSession
     {
         private readonly SocketAsyncEventArgsBuffer _readBuffer;
-        private Int32 _writing;
 
         public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket, SocketAsyncEventArgsBuffer readBuffer)
             : base(service, processor, socket)
