@@ -188,7 +188,8 @@ namespace Mina.Core.Service
             filterChain.FireSessionCreated();
             filterChain.FireSessionOpened();
 
-            DelegateUtils.SaveInvoke(SessionCreated, session);
+            if (_handler != this)
+                DelegateUtils.SaveInvoke(SessionCreated, session);
         }
 
         void IoServiceSupport.FireSessionDestroyed(IoSession session)
