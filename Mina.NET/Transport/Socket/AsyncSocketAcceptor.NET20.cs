@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
 using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
     public class AsyncSocketAcceptor : AbstractSocketAcceptor
     {
-        private System.Net.Sockets.Socket _listenSocket;
-
         public AsyncSocketAcceptor()
             : this(1024)
         { }
@@ -17,48 +13,32 @@ namespace Mina.Transport.Socket
             : base(maxConnections)
         { }
 
-        public override void Bind(EndPoint localEP)
+        protected override void BeginAccept(Object state)
         {
-            _listenSocket = new System.Net.Sockets.Socket(localEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            _listenSocket.Bind(localEP);
-            _listenSocket.Listen(Backlog);
-
-            StartAccept();
-
-            _idleStatusChecker.Start();
-        }
-
-        public override void Unbind()
-        {
-            _idleStatusChecker.Stop();
-
-            _listenSocket.Close();
-            _listenSocket = null;
-        }
-
-        private void StartAccept()
-        {
-            _listenSocket.BeginAccept(AcceptCallback, null);
+            _listenSocket.BeginAccept(AcceptCallback, _listenSocket);
         }
 
         private void AcceptCallback(IAsyncResult ar)
         {
-            System.Net.Sockets.Socket socket;
+            System.Net.Sockets.Socket listener = (System.Net.Sockets.Socket)ar.AsyncState;
+            SocketSession session;
 
             try
             {
-                socket = _listenSocket.EndAccept(ar);
-
-                SocketSession session = new AsyncSocketSession(this, this, socket);
-                InitSession(session, null, null);
-                session.Processor.Add(session);
+                System.Net.Sockets.Socket socket = listener.EndAccept(ar);
+                session = new AsyncSocketSession(this, this, socket);
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
             }
             catch (Exception ex)
             {
                 ExceptionMonitor.Instance.ExceptionCaught(ex);
+                session = null;
             }
 
-            StartAccept();
+            EndAccept(session, null);
         }
     }
 }

@@ -1,18 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 using Mina.Core.Buffer;
 using Mina.Core.Filterchain;
 using Mina.Core.Service;
 using Mina.Core.Session;
 using Mina.Core.Write;
+using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
     public abstract class AbstractSocketAcceptor : AbstractIoAcceptor, ISocketAcceptor, IoProcessor<SocketSession>
     {
-        private Int32 _backlog = 100;
+        private Int32 _backlog;
         private Int32 _maxConnections;
-        protected IdleStatusChecker _idleStatusChecker;
+        private IdleStatusChecker _idleStatusChecker;
+        private Semaphore _connectionPool;
+#if NET20
+        private readonly WaitCallback _startAccept;
+#else
+        private readonly Action<Object> _startAccept;
+#endif
+        private Boolean _disposed;
+        protected System.Net.Sockets.Socket _listenSocket;
 
         public AbstractSocketAcceptor()
             : this(1024)
@@ -23,6 +35,8 @@ namespace Mina.Transport.Socket
         {
             _maxConnections = maxConnections;
             _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
+            this.SessionDestroyed += OnSessionDestroyed;
+            _startAccept = StartAccept0;
         }
 
         public Boolean ReuseAddress { get; set; }
@@ -37,6 +51,108 @@ namespace Mina.Transport.Socket
         {
             get { return _maxConnections; }
             set { _maxConnections = value; }
+        }
+
+        public override void Bind(EndPoint localEP)
+        {
+            _listenSocket = new System.Net.Sockets.Socket(localEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            _listenSocket.Bind(localEP);
+            _listenSocket.Listen(Backlog);
+
+            if (MaxConnections > 0)
+                _connectionPool = new Semaphore(MaxConnections, MaxConnections);
+
+            StartAccept(null);
+
+            _idleStatusChecker.Start();
+        }
+
+        public override void Unbind()
+        {
+            _idleStatusChecker.Stop();
+
+            if (_listenSocket != null)
+            {
+                _listenSocket.Close();
+                _listenSocket = null;
+            }
+
+            if (_connectionPool != null)
+            {
+                _connectionPool.Close();
+                _connectionPool = null;
+            }
+        }
+
+        private void StartAccept(Object state)
+        {
+            if (_connectionPool == null)
+            {
+                BeginAccept(state);
+            }
+            else
+            {
+#if NET20
+                System.Threading.ThreadPool.QueueUserWorkItem(_startAccept, state);
+#else
+                System.Threading.Tasks.Task.Factory.StartNew(_startAccept, state);
+#endif
+            }
+        }
+
+        private void StartAccept0(Object state)
+        {
+            _connectionPool.WaitOne();
+            BeginAccept(state);
+        }
+
+        private void OnSessionDestroyed(IoSession session)
+        {
+            if (_connectionPool != null)
+                _connectionPool.Release();
+        }
+
+        protected abstract void BeginAccept(Object state);
+
+        protected void EndAccept(IoSession session, Object state)
+        {
+            if (session != null)
+            {
+                try
+                {
+                    InitSession(session, null, null);
+                    session.Processor.Add(session);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionMonitor.Instance.ExceptionCaught(ex);
+                }
+            }
+
+            // Accept the next connection request
+            StartAccept(state);
+        }
+
+        protected override void Dispose(Boolean disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if (_listenSocket != null)
+                    {
+                        ((IDisposable)_listenSocket).Dispose();
+                        _listenSocket = null;
+                    }
+                    if (_connectionPool != null)
+                    {
+                        ((IDisposable)_connectionPool).Dispose();
+                        _connectionPool = null;
+                    }
+                    base.Dispose(disposing);
+                    _disposed = true;
+                }
+            }
         }
 
         #region IoProcessor

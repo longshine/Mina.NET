@@ -12,12 +12,8 @@ namespace Mina.Transport.Socket
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(AsyncSocketAcceptor));
 
-        private System.Net.Sockets.Socket _listenSocket;
-
         private BufferManager _bufferManager;
         private Pool<SocketAsyncEventArgsBuffer> _readWritePool;
-
-        private System.Collections.Concurrent.ConcurrentQueue<SocketSession> _newSessions = new System.Collections.Concurrent.ConcurrentQueue<SocketSession>();
 
         public AsyncSocketAcceptor()
             : this(1024)
@@ -32,22 +28,7 @@ namespace Mina.Transport.Socket
         public override void Bind(EndPoint localEP)
         {
             InitBuffer();
-
-            _listenSocket = new System.Net.Sockets.Socket(localEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            _listenSocket.Bind(localEP);
-            _listenSocket.Listen(Backlog);
-
-            StartAccept(null);
-
-            _idleStatusChecker.Start();
-        }
-
-        public override void Unbind()
-        {
-            _idleStatusChecker.Stop();
-
-            _listenSocket.Close();
-            _listenSocket = null;
+            base.Bind(localEP);
         }
 
         private void InitBuffer()
@@ -98,8 +79,9 @@ namespace Mina.Transport.Socket
                 _readWritePool.Push(s.ReadBuffer);
         }
 
-        private void StartAccept(SocketAsyncEventArgs acceptEventArg)
+        protected override void BeginAccept(Object state)
         {
+            SocketAsyncEventArgs acceptEventArg = (SocketAsyncEventArgs)state;
             if (acceptEventArg == null)
             {
                 acceptEventArg = new SocketAsyncEventArgs();
@@ -110,7 +92,7 @@ namespace Mina.Transport.Socket
                 // socket must be cleared since the context object is being reused
                 acceptEventArg.AcceptSocket = null;
             }
-            
+
             bool willRaiseEvent = _listenSocket.AcceptAsync(acceptEventArg);
             if (!willRaiseEvent)
             {
@@ -136,20 +118,7 @@ namespace Mina.Transport.Socket
                     return;
                 }
 
-                try
-                {
-                    SocketSession session = new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer);
-
-                    InitSession(session, null, null);
-                    session.Processor.Add(session);
-                }
-                catch (Exception ex)
-                {
-                    ExceptionMonitor.Instance.ExceptionCaught(ex);
-                }
-
-                // Accept the next connection request
-                StartAccept(e);
+                EndAccept(new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer), e);
             }
             else if (e.SocketError != SocketError.OperationAborted
                 && e.SocketError != SocketError.Interrupted)

@@ -18,15 +18,16 @@ namespace Mina.Transport.Socket
 
         protected override void BeginReceive()
         {
-            Socket.BeginReceive(_readBuffer, 0, _readBuffer.Length, SocketFlags.None, ReceiveCallback, null);
+            Socket.BeginReceive(_readBuffer, 0, _readBuffer.Length, SocketFlags.None, ReceiveCallback, Socket);
         }
 
         private void ReceiveCallback(IAsyncResult ar)
         {
+            System.Net.Sockets.Socket socket = (System.Net.Sockets.Socket)ar.AsyncState;
             Int32 read = 0;
             try
             {
-                read = Socket.EndReceive(ar);
+                read = socket.EndReceive(ar);
             }
             catch (Exception ex)
             {
@@ -46,15 +47,16 @@ namespace Mina.Transport.Socket
         protected override void BeginSend(IoBuffer buf)
         {
             ArraySegment<Byte> array = buf.GetRemaining();
-            Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, null);
+            Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, Socket);
         }
 
         private void SendCallback(IAsyncResult ar)
         {
+            System.Net.Sockets.Socket socket = (System.Net.Sockets.Socket)ar.AsyncState;
             Int32 written;
             try
             {
-                written = Socket.EndSend(ar);
+                written = socket.EndSend(ar);
             }
             catch (Exception ex)
             {
