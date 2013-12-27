@@ -113,9 +113,9 @@ namespace Mina.Transport.Socket
 
                 if (readBuffer == null)
                 {
-                    if (log.IsErrorEnabled)
-                        log.Error("No enough buffer for newly incoming clients");
-                    return;
+                    readBuffer = (SocketAsyncEventArgsBuffer)
+                        SocketAsyncEventArgsBufferAllocator.Instance.Allocate(SessionConfig.ReadBufferSize);
+                    readBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
                 }
 
                 EndAccept(new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer), e);
