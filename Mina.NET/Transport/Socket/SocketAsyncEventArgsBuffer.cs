@@ -86,7 +86,7 @@ namespace Mina.Transport.Socket
 
         protected override void PutInternal(Byte[] src, Int32 offset, Int32 length)
         {
-            Array.Copy(src, offset, _socketAsyncEventArgs.Buffer, Offset(Position), length);
+            System.Buffer.BlockCopy(src, offset, _socketAsyncEventArgs.Buffer, Offset(Position), length);
             Position += length;
         }
 

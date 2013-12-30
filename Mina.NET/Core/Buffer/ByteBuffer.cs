@@ -60,7 +60,7 @@ namespace Mina.Core.Buffer
                 { 
                     // Reallocate.
                     Byte[] newHb = new Byte[value];
-                    Array.Copy(_hb, Offset(0), newHb, 0, capacity);
+                    System.Buffer.BlockCopy(_hb, Offset(0), newHb, 0, capacity);
 
                     _hb = newHb;
                     _offset = 0;
@@ -129,7 +129,7 @@ namespace Mina.Core.Buffer
 
                 // Reallocate.
                 Byte[] newHb = new Byte[newCapacity];
-                Array.Copy(_hb, Offset(Position), newHb, 0, remaining);
+                System.Buffer.BlockCopy(_hb, Offset(Position), newHb, 0, remaining);
 
                 _hb = newHb;
                 _offset = 0;
@@ -138,7 +138,7 @@ namespace Mina.Core.Buffer
             }
             else
             {
-                Array.Copy(_hb, Offset(Position), _hb, Offset(0), Remaining);
+                System.Buffer.BlockCopy(_hb, Offset(Position), _hb, Offset(0), Remaining);
             }
 
             Position = Remaining;
@@ -168,7 +168,7 @@ namespace Mina.Core.Buffer
 
         protected override void PutInternal(Byte[] src, Int32 offset, Int32 length)
         {
-            Array.Copy(src, offset, _hb, Offset(Position), length);
+            System.Buffer.BlockCopy(src, offset, _hb, Offset(Position), length);
             Position += length;
         }
 
@@ -184,7 +184,7 @@ namespace Mina.Core.Buffer
                 Int32 n = bb.Remaining;
                 if (n > Remaining)
                     throw new OverflowException();
-                Array.Copy(bb._hb, bb.Offset(bb.Position), _hb, Offset(Position), n);
+                System.Buffer.BlockCopy(bb._hb, bb.Offset(bb.Position), _hb, Offset(Position), n);
                 bb.Position += n;
                 Position += n;
             }
