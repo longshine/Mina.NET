@@ -11,12 +11,18 @@ namespace Mina.Transport.Socket
     public class AsyncSocketSession : SocketSession
     {
         private readonly SocketAsyncEventArgsBuffer _readBuffer;
+        private readonly SocketAsyncEventArgsBuffer _writeBuffer;
+        private readonly EventHandler<SocketAsyncEventArgs> _completeHandler;
 
-        public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket, SocketAsyncEventArgsBuffer readBuffer)
+        public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor,System.Net.Sockets.Socket socket,
+            SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer)
             : base(service, processor, socket)
         {
             _readBuffer = readBuffer;
             _readBuffer.SocketAsyncEventArgs.UserToken = this;
+            _writeBuffer = writeBuffer;
+            _writeBuffer.SocketAsyncEventArgs.UserToken = this;
+            _completeHandler = saea_Completed;
         }
 
         public SocketAsyncEventArgsBuffer ReadBuffer
@@ -24,21 +30,44 @@ namespace Mina.Transport.Socket
             get { return _readBuffer; }
         }
 
+        public SocketAsyncEventArgsBuffer WriteBuffer
+        {
+            get { return _writeBuffer; }
+        }
+
         protected override void BeginSend(IoBuffer buf)
         {
+            if (!buf.HasRemaining)
+            {
+                EndSend(0);
+                return;
+            }
+
+            _writeBuffer.Clear();
+
             SocketAsyncEventArgs saea;
             SocketAsyncEventArgsBuffer saeaBuf = buf as SocketAsyncEventArgsBuffer;
             if (saeaBuf == null)
             {
-                saea = new SocketAsyncEventArgs();
-                ArraySegment<Byte> array = buf.GetRemaining();
-                saea.SetBuffer(array.Array, array.Offset, array.Count);
-                saea.Completed += new EventHandler<SocketAsyncEventArgs>(saea_Completed);
+                if (_writeBuffer.Remaining < buf.Remaining)
+                {
+                    Int32 oldLimit = buf.Limit;
+                    buf.Limit = buf.Position + _writeBuffer.Remaining;
+                    _writeBuffer.Put(buf);
+                    buf.Limit = oldLimit;
+                }
+                else
+                {
+                    _writeBuffer.Put(buf);
+                }
+                _writeBuffer.Flip();
+                saea = _writeBuffer.SocketAsyncEventArgs;
+                saea.SetBuffer(saea.Offset + _writeBuffer.Position, _writeBuffer.Limit);
             }
             else
             {
                 saea = saeaBuf.SocketAsyncEventArgs;
-                saea.Completed += new EventHandler<SocketAsyncEventArgs>(saea_Completed);
+                saea.Completed += _completeHandler;
             }
 
             try
@@ -57,10 +86,11 @@ namespace Mina.Transport.Socket
 
         void saea_Completed(object sender, SocketAsyncEventArgs e)
         {
+            e.Completed -= _completeHandler;
             ProcessSend(e);
         }
 
-        private void ProcessSend(SocketAsyncEventArgs e)
+        public void ProcessSend(SocketAsyncEventArgs e)
         {
             if (e.SocketError == SocketError.Success)
             {

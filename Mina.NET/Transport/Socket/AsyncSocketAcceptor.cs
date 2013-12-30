@@ -12,6 +12,7 @@ namespace Mina.Transport.Socket
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(AsyncSocketAcceptor));
 
+        const Int32 opsToPreAlloc = 2;
         private BufferManager _bufferManager;
         private Pool<SocketAsyncEventArgsBuffer> _readWritePool;
 
@@ -38,11 +39,11 @@ namespace Mina.Transport.Socket
             {
                 // TODO free previous pool
 
-                _bufferManager = new BufferManager(bufferSize * MaxConnections, bufferSize);
+                _bufferManager = new BufferManager(bufferSize * MaxConnections * opsToPreAlloc, bufferSize);
                 _bufferManager.InitBuffer();
 
-                var list = new List<SocketAsyncEventArgsBuffer>(MaxConnections);
-                for (Int32 i = 0; i < MaxConnections; i++)
+                var list = new List<SocketAsyncEventArgsBuffer>(MaxConnections * opsToPreAlloc);
+                for (Int32 i = 0; i < MaxConnections * opsToPreAlloc; i++)
                 {
                     SocketAsyncEventArgs readWriteEventArg = new SocketAsyncEventArgs();
                     _bufferManager.SetBuffer(readWriteEventArg);
@@ -66,6 +67,10 @@ namespace Mina.Transport.Socket
             {
                 session.ProcessReceive(e);
             }
+            else if (e.LastOperation == SocketAsyncOperation.Send)
+            {
+                session.ProcessSend(e);
+            }
             else
             {
                 // TODO handle other Socket operations
@@ -76,7 +81,10 @@ namespace Mina.Transport.Socket
         {
             AsyncSocketSession s = session as AsyncSocketSession;
             if (s != null && _readWritePool != null)
+            {
                 _readWritePool.Push(s.ReadBuffer);
+                _readWritePool.Push(s.WriteBuffer);
+            }
         }
 
         protected override void BeginAccept(Object state)
@@ -110,6 +118,7 @@ namespace Mina.Transport.Socket
             if (e.SocketError == SocketError.Success)
             {
                 SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();
+                SocketAsyncEventArgsBuffer writeBuffer = _readWritePool.Pop();
 
                 if (readBuffer == null)
                 {
@@ -118,7 +127,14 @@ namespace Mina.Transport.Socket
                     readBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
                 }
 
-                EndAccept(new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer), e);
+                if (writeBuffer == null)
+                {
+                    writeBuffer = (SocketAsyncEventArgsBuffer)
+                        SocketAsyncEventArgsBufferAllocator.Instance.Allocate(SessionConfig.ReadBufferSize);
+                    writeBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
+                }
+
+                EndAccept(new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer, writeBuffer), e);
             }
             else if (e.SocketError != SocketError.OperationAborted
                 && e.SocketError != SocketError.Interrupted)

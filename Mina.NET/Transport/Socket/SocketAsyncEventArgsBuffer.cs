@@ -76,12 +76,27 @@ namespace Mina.Transport.Socket
 
         protected override Byte GetInternal(Int32 i)
         {
-            throw new NotImplementedException();
+            return _socketAsyncEventArgs.Buffer[i];
         }
 
         protected override void PutInternal(Int32 i, Byte b)
         {
-            throw new NotImplementedException();
+            _socketAsyncEventArgs.Buffer[i] = b;
+        }
+
+        protected override void PutInternal(Byte[] src, Int32 offset, Int32 length)
+        {
+            Array.Copy(src, offset, _socketAsyncEventArgs.Buffer, Offset(Position), length);
+            Position += length;
+        }
+
+        protected override void PutInternal(IoBuffer src)
+        {
+            ArraySegment<Byte> array = src.GetRemaining();
+            if (array.Count > Remaining)
+                throw new OverflowException();
+            PutInternal(array.Array, array.Offset, array.Count);
+            src.Position += array.Count;
         }
 
         public override IoBuffer Compact()

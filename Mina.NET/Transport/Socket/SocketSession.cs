@@ -67,13 +67,16 @@ namespace Mina.Transport.Socket
 
         private void BeginSend()
         {
-            IWriteRequestQueue writeRequestQueue = WriteRequestQueue;
-            IWriteRequest req = writeRequestQueue.Poll(this);
-
+            IWriteRequest req = CurrentWriteRequest;
             if (req == null)
             {
-                Interlocked.Exchange(ref _writing, 0);
-                return;
+                req = WriteRequestQueue.Poll(this);
+
+                if (req == null)
+                {
+                    Interlocked.Exchange(ref _writing, 0);
+                    return;
+                }
             }
 
             IoBuffer buf = req.Message as IoBuffer;
@@ -96,13 +99,28 @@ namespace Mina.Transport.Socket
         {
             this.IncreaseWrittenBytes(bytesTransferred, DateTime.Now);
 
-            try
+            IWriteRequest req = CurrentWriteRequest;
+            if (req != null)
             {
-                FireMessageSent();
-            }
-            catch (Exception ex)
-            {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
+                IoBuffer buf = req.Message as IoBuffer;
+                if (!buf.HasRemaining)
+                {
+                    // Buffer has been sent, clear the current request.
+                    Int32 pos = buf.Position;
+                    buf.Reset();
+
+                    try
+                    {
+                        FireMessageSent(req);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionMonitor.Instance.ExceptionCaught(ex);
+                    }
+
+                    // And set it back to its position
+                    buf.Position = pos;
+                }
             }
 
             BeginSend();
@@ -117,14 +135,10 @@ namespace Mina.Transport.Socket
             BeginReceive();
         }
 
-        private void FireMessageSent()
+        private void FireMessageSent(IWriteRequest req)
         {
-            IWriteRequest req = CurrentWriteRequest;
-            if (req != null)
-            {
-                CurrentWriteRequest = null;
-                this.FilterChain.FireMessageSent(req);
-            }
+            CurrentWriteRequest = null;
+            this.FilterChain.FireMessageSent(req);
         }
     }
 }
