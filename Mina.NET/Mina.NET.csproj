@@ -190,6 +190,11 @@
     <Compile Include="Handler\Chain\INextCommand.cs" />
     <Compile Include="Handler\Chain\IoHandlerChain.cs" />
     <Compile Include="Handler\Chain\IoHandlerCommand.cs" />
+    <Compile Include="Handler\Demux\DemuxingIoHandler.cs" />
+    <Compile Include="Handler\Demux\ExceptionHandler.cs" />
+    <Compile Include="Handler\Demux\IExceptionHandler.cs" />
+    <Compile Include="Handler\Demux\IMessageHandler.cs" />
+    <Compile Include="Handler\Demux\MessageHandler.cs" />
     <Compile Include="Handler\Stream\IoSessionStream.cs" />
     <Compile Include="Handler\Stream\StreamIoHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
