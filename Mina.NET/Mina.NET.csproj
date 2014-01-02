@@ -166,10 +166,10 @@
     <Compile Include="Handler\Stream\IoSessionStream.cs" />
     <Compile Include="Handler\Stream\StreamIoHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\BufferManager.cs" />
+    <Compile Include="Util\BufferManager.cs" />
     <Compile Include="Core\Service\IoAcceptor.cs" />
     <Compile Include="Core\Service\IoService.cs" />
-    <Compile Include="Core\Pool.cs" />
+    <Compile Include="Util\Pool.cs" />
     <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
     <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\AsyncSocketAcceptor.cs" />

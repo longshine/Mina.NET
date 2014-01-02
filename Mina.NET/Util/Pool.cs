@@ -2,7 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Mina
+namespace Mina.Util
 {
     /// <summary>
     /// Represents a collection of resusable SocketAsyncEventArgs objects.  

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 
-namespace Mina
+namespace Mina.Util
 {
     /// <summary>
     /// This class creates a single large buffer which can be divided up and assigned to SocketAsyncEventArgs objects for use
