@@ -47,7 +47,22 @@ namespace Mina.Transport.Socket
         protected override void BeginSend(IoBuffer buf)
         {
             ArraySegment<Byte> array = buf.GetRemaining();
-            Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, Socket);
+            try
+            {
+                Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, Socket);
+            }
+            catch (ObjectDisposedException)
+            {
+                // ignore
+            }
+            catch (Exception ex)
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(ex);
+            }
+            finally
+            {
+                buf.Position += array.Count;
+            }
         }
 
         private void SendCallback(IAsyncResult ar)

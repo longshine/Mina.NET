@@ -89,7 +89,10 @@ namespace Mina.Transport.Socket
             else
             {
                 CurrentWriteRequest = req;
-                BeginSend(buf);
+                if (buf.HasRemaining)
+                    BeginSend(buf);
+                else
+                    EndSend(0);
             }
         }
 
@@ -123,7 +126,8 @@ namespace Mina.Transport.Socket
                 }
             }
 
-            BeginSend();
+            if (Socket.Connected)
+                BeginSend();
         }
 
         protected abstract void BeginReceive();
@@ -132,7 +136,8 @@ namespace Mina.Transport.Socket
         {
             FilterChain.FireMessageReceived(buf);
 
-            BeginReceive();
+            if (Socket.Connected)
+                BeginReceive();
         }
 
         private void FireMessageSent(IWriteRequest req)

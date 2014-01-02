@@ -37,12 +37,6 @@ namespace Mina.Transport.Socket
 
         protected override void BeginSend(IoBuffer buf)
         {
-            if (!buf.HasRemaining)
-            {
-                EndSend(0);
-                return;
-            }
-
             _writeBuffer.Clear();
 
             SocketAsyncEventArgs saea;
