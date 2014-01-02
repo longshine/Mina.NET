@@ -17,7 +17,7 @@ namespace Mina.Filter.Codec
     public class ProtocolCodecFilter : IoFilterAdapter
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ProtocolCodecFilter));
-        private static readonly IoBuffer EMPTY_BUFFER = ByteBufferAllocator.Instance.Wrap(new Byte[0]);
+        private static readonly IoBuffer EMPTY_BUFFER = IoBuffer.Wrap(new Byte[0]);
         private readonly AttributeKey DECODER_OUT = new AttributeKey(typeof(ProtocolCodecFilter), "decoderOut");
         private readonly AttributeKey ENCODER_OUT = new AttributeKey(typeof(ProtocolCodecFilter), "encoderOut");
         private readonly IProtocolCodecFactory _factory;
@@ -54,8 +54,8 @@ namespace Mina.Filter.Codec
 
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
-            if (log.IsDebugEnabled)
-                log.DebugFormat("Processing a MESSAGE_RECEIVED for session {0}", session.Id);
+            //if (log.IsDebugEnabled)
+            //    log.DebugFormat("Processing a MESSAGE_RECEIVED for session {0}", session.Id);
 
             IoBuffer input = message as IoBuffer;
             if (input == null)

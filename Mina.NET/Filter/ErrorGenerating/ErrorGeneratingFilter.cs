@@ -118,7 +118,7 @@ namespace Mina.Filter.ErrorGenerating
                 // how many byte to insert ?
                 int count = _rng.Next(_maxInsertByte - 1) + 1;
 
-                IoBuffer newBuff = ByteBufferAllocator.Instance.Allocate(buffer.Remaining + count);
+                IoBuffer newBuff = IoBuffer.Allocate(buffer.Remaining + count);
                 for (int i = 0; i < pos; i++)
                     newBuff.Put(buffer.Get());
                 for (int i = 0; i < count; i++)
@@ -155,7 +155,7 @@ namespace Mina.Filter.ErrorGenerating
                 if (count == buffer.Remaining)
                     count = buffer.Remaining - 1;
 
-                IoBuffer newBuff = ByteBufferAllocator.Instance.Allocate(buffer.Remaining - count);
+                IoBuffer newBuff = IoBuffer.Allocate(buffer.Remaining - count);
                 for (int i = 0; i < pos; i++)
                     newBuff.Put(buffer.Get());
 

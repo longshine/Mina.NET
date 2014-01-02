@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Buffer\AbstractIoBuffer.cs" />
     <Compile Include="Core\Buffer\Buffer.cs" />
     <Compile Include="Core\Buffer\BufferDataException.cs" />
     <Compile Include="Core\Buffer\BufferUnderflowException.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="Core\Buffer\IoBuffer.cs" />
     <Compile Include="Core\Buffer\IoBufferAllocator.cs" />
     <Compile Include="Core\Buffer\IoBufferHexDumper.cs" />
+    <Compile Include="Core\Buffer\IoBufferWrapper.cs" />
     <Compile Include="Core\Filterchain\DefaultIoFilterChain.cs" />
     <Compile Include="Core\Filterchain\DefaultIoFilterChainBuilder.cs" />
     <Compile Include="Core\Filterchain\IEntry.cs" />

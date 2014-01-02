@@ -5,16 +5,11 @@ namespace Mina.Core.Buffer
     /// <summary>
     /// A Byte buffer. 
     /// </summary>
-    class ByteBuffer : IoBuffer
+    class ByteBuffer : AbstractIoBuffer
     {
         protected Byte[] _hb;
         protected Int32 _offset;
         protected Boolean _isReadOnly;
-
-        public static IoBuffer Allocate(Int32 capacity)
-        {
-            return ByteBufferAllocator.Instance.Allocate(capacity);
-        }
 
         /// <summary>
         /// Creates a new buffer with the given mark, position, limit, capacity,
@@ -27,7 +22,7 @@ namespace Mina.Core.Buffer
             this._offset = offset;
         }
 
-        public ByteBuffer(IoBuffer parent, Int32 mark, Int32 pos, Int32 lim, Int32 cap, Byte[] hb, Int32 offset)
+        public ByteBuffer(ByteBuffer parent, Int32 mark, Int32 pos, Int32 lim, Int32 cap, Byte[] hb, Int32 offset)
             : base(parent, mark, pos, lim, cap)
         {
             this._hb = hb;
@@ -42,7 +37,7 @@ namespace Mina.Core.Buffer
             : this(allocator, -1, off, off + len, buf.Length, buf, 0)
         { }
 
-        public ByteBuffer(IoBuffer parent, Byte[] buf, Int32 mark, Int32 pos, Int32 lim, Int32 cap, Int32 off)
+        public ByteBuffer(ByteBuffer parent, Byte[] buf, Int32 mark, Int32 pos, Int32 lim, Int32 cap, Int32 off)
             : this(parent, mark, pos, lim, cap, buf, off)
         { }
 
@@ -95,7 +90,7 @@ namespace Mina.Core.Buffer
             return new ArraySegment<Byte>(_hb, Offset(Position), Remaining);
         }
 
-        public override Boolean IsReadOnly
+        public override Boolean ReadOnly
         {
             get { return false; }
         }

@@ -71,7 +71,7 @@ namespace Mina.Filter.Codec.TextLine
                 throw new ArgumentException("Line too long: " + bytes.Length);
 
             // TODO BufferAllocator
-            IoBuffer buf = ByteBufferAllocator.Instance.Wrap(bytes);
+            IoBuffer buf = IoBuffer.Wrap(bytes);
             output.Write(buf);
         }
 

@@ -59,7 +59,7 @@ namespace Mina.Filter.Codec
                     // derivation or disabled auto-expansion.
                     buf.Flip();
 
-                    IoBuffer newBuf = ByteBufferAllocator.Instance.Allocate(buf.Remaining + input.Remaining);
+                    IoBuffer newBuf = IoBuffer.Allocate(buf.Remaining + input.Remaining);
                     newBuf.AutoExpand = true;
                     newBuf.Order = buf.Order;
                     newBuf.Put(buf);
@@ -133,7 +133,7 @@ namespace Mina.Filter.Codec
 
         private void StoreRemainingInSession(IoBuffer buf, IoSession session)
         {
-            IoBuffer remainingBuf = ByteBufferAllocator.Instance.Allocate(buf.Capacity);
+            IoBuffer remainingBuf = IoBuffer.Allocate(buf.Capacity);
             remainingBuf.AutoExpand = true;
 
             remainingBuf.Order = buf.Order;

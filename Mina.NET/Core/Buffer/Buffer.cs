@@ -92,7 +92,7 @@ namespace Mina.Core.Buffer
         /// <summary>
         /// Tells whether or not this buffer is read-only.
         /// </summary>
-        public abstract Boolean IsReadOnly { get; }
+        public abstract Boolean ReadOnly { get; }
 
         /// <summary>
         /// Sets this buffer's mark at its position.

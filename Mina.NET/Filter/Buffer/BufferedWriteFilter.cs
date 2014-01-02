@@ -97,7 +97,7 @@ namespace Mina.Filter.Buffer
         private void Write(IoSession session, IoBuffer data)
         {
             Lazy<IoBuffer> dest = _buffersMap.GetOrAdd(session,
-                new Lazy<IoBuffer>(() => ByteBufferAllocator.Instance.Allocate(_bufferSize)));
+                new Lazy<IoBuffer>(() => IoBuffer.Allocate(_bufferSize)));
             Write(session, data, dest.Value);
         }
 

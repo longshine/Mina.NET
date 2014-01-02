@@ -22,7 +22,7 @@ namespace Mina.Handler.Stream
         public IoSessionStream()
         {
             _syncRoot = new Byte[0];
-            _buf = ByteBufferAllocator.Instance.Allocate(16);
+            _buf = IoBuffer.Allocate(16);
             _buf.AutoExpand = true;
             _buf.Limit = 0;
         }
@@ -132,7 +132,7 @@ namespace Mina.Handler.Stream
 
         public override void Write(Byte[] buffer, Int32 offset, Int32 count)
         {
-            Write(ByteBufferAllocator.Instance.Wrap((Byte[])buffer.Clone(), offset, count));
+            Write(IoBuffer.Wrap((Byte[])buffer.Clone(), offset, count));
         }
 
         public override void Close()

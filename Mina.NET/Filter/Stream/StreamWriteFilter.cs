@@ -35,7 +35,7 @@ namespace Mina.Filter.Stream
             if (n <= 0 && off == 0)
                 return null;
 
-            return ByteBufferAllocator.Instance.Wrap(bytes, 0, off);
+            return IoBuffer.Wrap(bytes, 0, off);
         }
     }
 }

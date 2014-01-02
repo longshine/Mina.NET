@@ -43,7 +43,7 @@ namespace Mina.Filter.Codec.PrefixedString
         public override void Encode(IoSession session, Object message, IProtocolEncoderOutput output)
         {
             String value = (String)message;
-            IoBuffer buffer = ByteBufferAllocator.Instance.Allocate(value.Length);
+            IoBuffer buffer = IoBuffer.Allocate(value.Length);
             buffer.AutoExpand = true;
             buffer.PutPrefixedString(value, PrefixLength, Encoding);
             if (buffer.Position > MaxDataLength)

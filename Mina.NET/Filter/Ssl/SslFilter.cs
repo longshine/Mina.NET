@@ -374,7 +374,7 @@ namespace Mina.Filter.Ssl
 
         private IoBuffer ReadBuffer()
         {
-            IoBuffer buf = ByteBufferAllocator.Instance.Allocate(_sessionStream.Remaining);
+            IoBuffer buf = IoBuffer.Allocate(_sessionStream.Remaining);
 
             while (true)
             {
@@ -410,7 +410,7 @@ namespace Mina.Filter.Ssl
             public IoSessionStream(SslHandler sslHandler)
             {
                 _sslHandler = sslHandler;
-                _buf = ByteBufferAllocator.Instance.Allocate(16);
+                _buf = IoBuffer.Allocate(16);
                 _buf.AutoExpand = true;
                 _buf.Limit = 0;
             }
@@ -455,12 +455,12 @@ namespace Mina.Filter.Ssl
 
             public override void Write(Byte[] buffer, Int32 offset, Int32 count)
             {
-                _sslHandler.WriteBuffer(ByteBufferAllocator.Instance.Wrap((Byte[])buffer.Clone(), offset, count));
+                _sslHandler.WriteBuffer(IoBuffer.Wrap((Byte[])buffer.Clone(), offset, count));
             }
 
             public override void WriteByte(Byte value)
             {
-                IoBuffer buf = ByteBufferAllocator.Instance.Allocate(1);
+                IoBuffer buf = IoBuffer.Allocate(1);
                 buf.Put(value);
                 buf.Flip();
                 _sslHandler.WriteBuffer(buf);

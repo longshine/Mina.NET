@@ -265,7 +265,7 @@ namespace Mina.Filter.Codec.TextLine
             public Context(TextLineDecoder textLineDecoder)
             {
                 _textLineDecoder = textLineDecoder;
-                _buf = ByteBuffer.Allocate(_textLineDecoder.BufferLength);
+                _buf = IoBuffer.Allocate(_textLineDecoder.BufferLength);
                 _buf.AutoExpand = true;
             }
 

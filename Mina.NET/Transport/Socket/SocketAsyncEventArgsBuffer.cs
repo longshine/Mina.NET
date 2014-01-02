@@ -4,7 +4,7 @@ using Mina.Core.Buffer;
 
 namespace Mina.Transport.Socket
 {
-    public class SocketAsyncEventArgsBuffer : IoBuffer
+    public class SocketAsyncEventArgsBuffer : AbstractIoBuffer
     {
         private readonly SocketAsyncEventArgs _socketAsyncEventArgs;
 
@@ -30,7 +30,7 @@ namespace Mina.Transport.Socket
             get { return _socketAsyncEventArgs; }
         }
 
-        public override Boolean IsReadOnly
+        public override Boolean ReadOnly
         {
             get { return false; }
         }

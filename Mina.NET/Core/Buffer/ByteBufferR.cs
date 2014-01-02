@@ -19,13 +19,13 @@ namespace Mina.Core.Buffer
             _isReadOnly = true;
         }
 
-        public ByteBufferR(IoBuffer parent, Byte[] buf, Int32 mark, Int32 pos, Int32 lim, Int32 cap, Int32 off)
+        public ByteBufferR(ByteBuffer parent, Byte[] buf, Int32 mark, Int32 pos, Int32 lim, Int32 cap, Int32 off)
             : base(parent, buf, mark, pos, lim, cap, off)
         {
             _isReadOnly = true;
         }
 
-        public override Boolean IsReadOnly
+        public override Boolean ReadOnly
         {
             get { return true; }
         }
