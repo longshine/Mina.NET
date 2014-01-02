@@ -118,6 +118,21 @@
     <Compile Include="Filter\Codec\ProtocolDecoderAdapter.cs" />
     <Compile Include="Filter\Codec\ProtocolEncoderAdapter.cs" />
     <Compile Include="Filter\Codec\RecoverableProtocolDecoderException.cs" />
+    <Compile Include="Filter\Codec\StateMachine\ConsumeToCrLfDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\ConsumeToDynamicTerminatorDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\ConsumeToEndOfSessionDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\ConsumeToLinearWhitespaceDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\ConsumeToTerminatorDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\CrLfDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\DecodingStateMachine.cs" />
+    <Compile Include="Filter\Codec\StateMachine\DecodingStateProtocolDecoder.cs" />
+    <Compile Include="Filter\Codec\StateMachine\FixedLengthDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\IDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\IntegerDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\LinearWhitespaceSkippingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\ShortIntegerDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\SingleByteDecodingState.cs" />
+    <Compile Include="Filter\Codec\StateMachine\SkippingState.cs" />
     <Compile Include="Filter\Codec\SynchronizedProtocolDecoder.cs" />
     <Compile Include="Filter\Codec\SynchronizedProtocolEncoder.cs" />
     <Compile Include="Filter\Codec\TextLine\LineDelimiter.cs" />
@@ -195,7 +210,6 @@
     <Compile Include="Util\ExceptionMonitor.cs" />
     <Compile Include="Util\IQueue.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
