@@ -108,6 +108,7 @@
     <Compile Include="Filter\Codec\ProtocolCodecSession.cs" />
     <Compile Include="Filter\Codec\ProtocolDecoderAdapter.cs" />
     <Compile Include="Filter\Codec\ProtocolEncoderAdapter.cs" />
+    <Compile Include="Filter\Codec\RecoverableProtocolDecoderException.cs" />
     <Compile Include="Filter\Codec\SynchronizedProtocolDecoder.cs" />
     <Compile Include="Filter\Codec\SynchronizedProtocolEncoder.cs" />
     <Compile Include="Filter\Codec\TextLine\LineDelimiter.cs" />

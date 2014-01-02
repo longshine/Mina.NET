@@ -7,6 +7,7 @@ namespace Mina.Filter.Codec
     /// <see cref="IProtocolDecoder"/> cannot understand or failed to validate
     /// data to process.
     /// </summary>
+    [Serializable]
     public class ProtocolCodecException : Exception
     {
         public ProtocolCodecException()
@@ -19,12 +20,18 @@ namespace Mina.Filter.Codec
         public ProtocolCodecException(String message, Exception innerException)
             : base(message, innerException)
         { }
+
+        protected ProtocolCodecException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
     }
 
     /// <summary>
     /// An exception that is thrown when <see cref="IProtocolEncoder"/>
     /// cannot understand or failed to validate the specified message object.
     /// </summary>
+    [Serializable]
     public class ProtocolEncoderException : ProtocolCodecException
     {
         public ProtocolEncoderException()
@@ -37,6 +44,11 @@ namespace Mina.Filter.Codec
         public ProtocolEncoderException(String message, Exception innerException)
             : base(message, innerException)
         { }
+
+        protected ProtocolEncoderException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
     }
 
     /// <summary>
@@ -44,6 +56,7 @@ namespace Mina.Filter.Codec
     /// cannot understand or failed to validate the specified <see cref="IoBuffer"/>
     /// content.
     /// </summary>
+    [Serializable]
     public class ProtocolDecoderException : ProtocolCodecException
     {
         private String _hexdump;
@@ -59,6 +72,11 @@ namespace Mina.Filter.Codec
             : base(message, innerException)
         { }
 
+        protected ProtocolDecoderException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
+
         public String Hexdump
         {
             get { return _hexdump; }
@@ -69,23 +87,5 @@ namespace Mina.Filter.Codec
                 _hexdump = value;
             }
         }
-    }
-
-    /// <summary>
-    /// A special exception that tells the <see cref="IProtocolDecoder"/> can keep
-    /// decoding even after this exception is thrown.
-    /// </summary>
-    public class RecoverableProtocolDecoderException : ProtocolDecoderException
-    {
-        public RecoverableProtocolDecoderException()
-        { }
-
-        public RecoverableProtocolDecoderException(String message)
-            : base(message)
-        { }
-
-        public RecoverableProtocolDecoderException(String message, Exception innerException)
-            : base(message, innerException)
-        { }
     }
 }
