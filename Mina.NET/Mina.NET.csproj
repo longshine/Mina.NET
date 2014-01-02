@@ -95,6 +95,15 @@
     <Compile Include="Filter\Codec\AbstractProtocolDecoderOutput.cs" />
     <Compile Include="Filter\Codec\AbstractProtocolEncoderOutput.cs" />
     <Compile Include="Filter\Codec\CumulativeProtocolDecoder.cs" />
+    <Compile Include="Filter\Codec\Demux\DemuxingProtocolCodecFactory.cs" />
+    <Compile Include="Filter\Codec\Demux\DemuxingProtocolDecoder.cs" />
+    <Compile Include="Filter\Codec\Demux\DemuxingProtocolEncoder.cs" />
+    <Compile Include="Filter\Codec\Demux\IMessageDecoderFactory.cs" />
+    <Compile Include="Filter\Codec\Demux\IMessageDecoder.cs" />
+    <Compile Include="Filter\Codec\Demux\IMessageEncoder.cs" />
+    <Compile Include="Filter\Codec\Demux\IMessageEncoderFactory.cs" />
+    <Compile Include="Filter\Codec\Demux\MessageDecoderAdapter.cs" />
+    <Compile Include="Filter\Codec\Demux\MessageDecoderResult.cs" />
     <Compile Include="Filter\Codec\IProtocolCodecFactory.cs" />
     <Compile Include="Filter\Codec\IProtocolDecoder.cs" />
     <Compile Include="Filter\Codec\IProtocolDecoderOutput.cs" />

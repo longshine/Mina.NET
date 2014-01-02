@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoServer", "Mina.Example\EchoServer\EchoServer.csproj", "{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SumUp", "Mina.Example\SumUp\SumUp.csproj", "{0692C08A-51C1-4E47-A498-AF8A23E57273}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Mina.NET.vsmdi
@@ -73,6 +75,16 @@ Global
 		{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76}.Release|Mixed Platforms.Build.0 = Release|x86
 		{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76}.Release|x86.ActiveCfg = Release|x86
 		{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76}.Release|x86.Build.0 = Release|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Debug|x86.ActiveCfg = Debug|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Debug|x86.Build.0 = Debug|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Release|Any CPU.ActiveCfg = Release|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Release|x86.ActiveCfg = Release|x86
+		{0692C08A-51C1-4E47-A498-AF8A23E57273}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +92,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9AA23412-94F7-4DEB-BB38-EEBB6260A7CA} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
 		{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
+		{0692C08A-51C1-4E47-A498-AF8A23E57273} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
 		{18ABDB3D-FF4E-4EB9-912A-902EE739D127} = {9AA23412-94F7-4DEB-BB38-EEBB6260A7CA}
 	EndGlobalSection
 EndGlobal

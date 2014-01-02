@@ -333,27 +333,27 @@ namespace Mina.Filter.Codec
                 get { return EMPTY_BUFFER; }
             }
         }
-    }
 
-    class ProtocolCodecFactory : IProtocolCodecFactory
-    {
-        private IProtocolEncoder _encoder;
-        private IProtocolDecoder _decoder;
-
-        public ProtocolCodecFactory(IProtocolEncoder encoder, IProtocolDecoder decoder)
+        class ProtocolCodecFactory : IProtocolCodecFactory
         {
-            _encoder = encoder;
-            _decoder = decoder;
-        }
+            private IProtocolEncoder _encoder;
+            private IProtocolDecoder _decoder;
 
-        public IProtocolEncoder GetEncoder(IoSession session)
-        {
-            return _encoder;
-        }
+            public ProtocolCodecFactory(IProtocolEncoder encoder, IProtocolDecoder decoder)
+            {
+                _encoder = encoder;
+                _decoder = decoder;
+            }
 
-        public IProtocolDecoder GetDecoder(IoSession session)
-        {
-            return _decoder;
+            public IProtocolEncoder GetEncoder(IoSession session)
+            {
+                return _encoder;
+            }
+
+            public IProtocolDecoder GetDecoder(IoSession session)
+            {
+                return _decoder;
+            }
         }
     }
 }
