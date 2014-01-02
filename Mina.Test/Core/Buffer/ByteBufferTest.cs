@@ -324,6 +324,99 @@ namespace Mina.Core.Buffer
         }
 
         [TestMethod]
+        public void TestGetPrefixedString()
+        {
+            IoBuffer buf = IoBuffer.Allocate(16);
+            Encoding encoding = Encoding.GetEncoding("ISO-8859-1");
+
+            buf.PutInt16((short)3);
+            buf.PutString("ABCD", encoding);
+            buf.Clear();
+            Assert.AreEqual("ABC", buf.GetPrefixedString(encoding));
+        }
+
+        [TestMethod]
+        public void TestPutPrefixedString()
+        {
+            Encoding encoding = Encoding.GetEncoding("ISO-8859-1");
+            IoBuffer buf = IoBuffer.Allocate(16);
+            buf.FillAndReset(buf.Remaining);
+
+            // Without autoExpand
+            buf.PutPrefixedString("ABC", encoding);
+            Assert.AreEqual(5, buf.Position);
+            Assert.AreEqual(0, buf.Get(0));
+            Assert.AreEqual(3, buf.Get(1));
+            Assert.AreEqual((byte)'A', buf.Get(2));
+            Assert.AreEqual((byte)'B', buf.Get(3));
+            Assert.AreEqual((byte)'C', buf.Get(4));
+
+            buf.Clear();
+            try
+            {
+                buf.PutPrefixedString("123456789012345", encoding);
+                Assert.Fail();
+            }
+            catch (OverflowException)
+            {
+                // Expected an Exception, signifies test success
+                Assert.IsTrue(true);
+            }
+
+            // With autoExpand
+            buf.Clear();
+            buf.AutoExpand = true;
+            buf.PutPrefixedString("123456789012345", encoding);
+            Assert.AreEqual(17, buf.Position);
+            Assert.AreEqual(0, buf.Get(0));
+            Assert.AreEqual(15, buf.Get(1));
+            Assert.AreEqual((byte)'1', buf.Get(2));
+            Assert.AreEqual((byte)'2', buf.Get(3));
+            Assert.AreEqual((byte)'3', buf.Get(4));
+            Assert.AreEqual((byte)'4', buf.Get(5));
+            Assert.AreEqual((byte)'5', buf.Get(6));
+            Assert.AreEqual((byte)'6', buf.Get(7));
+            Assert.AreEqual((byte)'7', buf.Get(8));
+            Assert.AreEqual((byte)'8', buf.Get(9));
+            Assert.AreEqual((byte)'9', buf.Get(10));
+            Assert.AreEqual((byte)'0', buf.Get(11));
+            Assert.AreEqual((byte)'1', buf.Get(12));
+            Assert.AreEqual((byte)'2', buf.Get(13));
+            Assert.AreEqual((byte)'3', buf.Get(14));
+            Assert.AreEqual((byte)'4', buf.Get(15));
+            Assert.AreEqual((byte)'5', buf.Get(16));
+        }
+
+        [TestMethod]
+        public void TestPutPrefixedStringWithPrefixLength()
+        {
+            Encoding encoding = Encoding.GetEncoding("ISO-8859-1");
+            IoBuffer buf = IoBuffer.Allocate(16).Sweep();
+            buf.AutoExpand = true;
+
+            buf.PutPrefixedString("A", 1, encoding);
+            Assert.AreEqual(2, buf.Position);
+            Assert.AreEqual(1, buf.Get(0));
+            Assert.AreEqual((byte)'A', buf.Get(1));
+
+            buf.Sweep();
+            buf.PutPrefixedString("A", 2, encoding);
+            Assert.AreEqual(3, buf.Position);
+            Assert.AreEqual(0, buf.Get(0));
+            Assert.AreEqual(1, buf.Get(1));
+            Assert.AreEqual((byte)'A', buf.Get(2));
+
+            buf.Sweep();
+            buf.PutPrefixedString("A", 4, encoding);
+            Assert.AreEqual(5, buf.Position);
+            Assert.AreEqual(0, buf.Get(0));
+            Assert.AreEqual(0, buf.Get(1));
+            Assert.AreEqual(0, buf.Get(2));
+            Assert.AreEqual(1, buf.Get(3));
+            Assert.AreEqual((byte)'A', buf.Get(4));
+        }
+
+        [TestMethod]
         public void TestSweepWithZeros()
         {
             IoBuffer buf = ByteBufferAllocator.Instance.Allocate(4);
@@ -485,6 +578,50 @@ namespace Mina.Core.Buffer
             {
                 // Expected an Exception, signifies test success
                 Assert.IsTrue(true);
+            }
+        }
+
+        [TestMethod]
+        public void TestGetUnsigned()
+        {
+            IoBuffer buf = IoBuffer.Allocate(16);
+            buf.Put((byte)0xA4);
+            buf.Put((byte)0xD0);
+            buf.Put((byte)0xB3);
+            buf.Put((byte)0xCD);
+            buf.Flip();
+
+            buf.Order = ByteOrder.LittleEndian;
+
+            buf.Mark();
+            Assert.AreEqual(0xA4, buf.Get());
+            buf.Reset();
+            Assert.AreEqual(0xD0A4, (UInt16)buf.GetInt16());
+            buf.Reset();
+            Assert.AreEqual(0xCDB3D0A4L, (UInt32)buf.GetInt32());
+        }
+
+        [TestMethod]
+        public void TestIndexOf()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                IoBuffer buf = IoBuffer.Allocate(16);
+                buf.Put((byte)0x1);
+                buf.Put((byte)0x2);
+                buf.Put((byte)0x3);
+                buf.Put((byte)0x4);
+                buf.Put((byte)0x1);
+                buf.Put((byte)0x2);
+                buf.Put((byte)0x3);
+                buf.Put((byte)0x4);
+                buf.Position = 2;
+                buf.Limit = 5;
+
+                Assert.AreEqual(4, buf.IndexOf((byte)0x1));
+                Assert.AreEqual(-1, buf.IndexOf((byte)0x2));
+                Assert.AreEqual(2, buf.IndexOf((byte)0x3));
+                Assert.AreEqual(3, buf.IndexOf((byte)0x4));
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Mina.Core.Buffer
     {
         protected Byte[] _hb;
         protected Int32 _offset;
-        protected Boolean _isReadOnly;
+        protected Boolean _readOnly;
 
         /// <summary>
         /// Creates a new buffer with the given mark, position, limit, capacity,
@@ -63,6 +63,11 @@ namespace Mina.Core.Buffer
                     Recapacity(value);
                 }
             }
+        }
+
+        public override Boolean HasArray
+        {
+            get { return _hb != null && !_readOnly; }
         }
 
         public override Byte Get()

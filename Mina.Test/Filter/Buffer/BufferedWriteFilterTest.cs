@@ -21,7 +21,7 @@ namespace Mina.Filter.Buffer
         [TestMethod]
         public void TestNonExpandableBuffer()
         {
-            IoBuffer dest = ByteBufferAllocator.Instance.Allocate(1);
+            IoBuffer dest = IoBuffer.Allocate(1);
             Assert.AreEqual(false, dest.AutoExpand);
         }
 
@@ -34,7 +34,7 @@ namespace Mina.Filter.Buffer
             BufferedWriteFilter bFilter = new BufferedWriteFilter(10);
             sess.FilterChain.AddLast("buffer", bFilter);
 
-            IoBuffer data = ByteBufferAllocator.Instance.Allocate(1);
+            IoBuffer data = IoBuffer.Allocate(1);
             for (byte i = 0; i < 20; i++)
             {
                 data.Put((byte)(0x30 + i));

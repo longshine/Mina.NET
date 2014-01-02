@@ -126,6 +126,11 @@ namespace Mina.Core.Buffer
 
         public abstract Int32 MinimumCapacity { get; set; }
 
+        /// <summary>
+        /// Tells whether or not this buffer is backed by an accessible byte array.
+        /// </summary>
+        public abstract Boolean HasArray { get; }
+
         public new virtual IoBuffer Mark()
         {
             base.Mark();
@@ -201,12 +206,37 @@ namespace Mina.Core.Buffer
         public abstract Boolean PrefixedDataAvailable(Int32 prefixLength, Int32 maxDataLength);
 
         /// <summary>
+        /// Returns the first occurence position of the specified byte from the
+        /// current position to the current limit.
+        /// </summary>
+        /// <param name="b">the byte to find</param>
+        /// <returns>-1 if the specified byte is not found</returns>
+        public abstract Int32 IndexOf(Byte b);
+
+        /// <summary>
+        /// Reads a string which has a 16-bit length field before the actual encoded string.
+        /// This method is a shortcut for <code>GetPrefixedString(2, encoding)</code>.
+        /// </summary>
+        /// <param name="encoding">the encoding of the string</param>
+        /// <returns>the prefixed string</returns>
+        public abstract String GetPrefixedString(Encoding encoding);
+
+        /// <summary>
         /// Reads a string which has a length field before the actual encoded string.
         /// </summary>
         /// <param name="prefixLength">the length of the length field (1, 2, or 4)</param>
         /// <param name="encoding">the encoding of the string</param>
         /// <returns>the prefixed string</returns>
         public abstract String GetPrefixedString(Int32 prefixLength, Encoding encoding);
+
+        /// <summary>
+        /// Writes the string into this buffer which has a 16-bit length field
+        /// before the actual encoded string.
+        /// This method is a shortcut for <code>PutPrefixedString(value, 2, encoding)</code>.
+        /// </summary>
+        /// <param name="value">the string to write</param>
+        /// <param name="encoding">the encoding of the string</param>
+        public abstract IoBuffer PutPrefixedString(String value, Encoding encoding);
 
         /// <summary>
         /// Writes the string into this buffer which has a prefixLength field

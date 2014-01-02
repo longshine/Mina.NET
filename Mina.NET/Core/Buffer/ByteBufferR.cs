@@ -10,19 +10,19 @@ namespace Mina.Core.Buffer
         ByteBufferR(IoBufferAllocator allocator, Int32 cap, Int32 lim)
             : base(allocator, cap, lim)
         {
-            _isReadOnly = true;
+            _readOnly = true;
         }
 
         ByteBufferR(IoBufferAllocator allocator, Byte[] buf, Int32 off, Int32 len)
             : base(allocator, buf, off, len)
         {
-            _isReadOnly = true;
+            _readOnly = true;
         }
 
         public ByteBufferR(ByteBuffer parent, Byte[] buf, Int32 mark, Int32 pos, Int32 lim, Int32 cap, Int32 off)
             : base(parent, buf, mark, pos, lim, cap, off)
         {
-            _isReadOnly = true;
+            _readOnly = true;
         }
 
         public override Boolean ReadOnly

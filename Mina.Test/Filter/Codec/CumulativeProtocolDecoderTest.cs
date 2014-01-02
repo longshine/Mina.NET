@@ -24,7 +24,7 @@ namespace Mina.Filter.Codec
         [TestInitialize]
         public void SetUp()
         {
-            buf = ByteBufferAllocator.Instance.Allocate(16);
+            buf = IoBuffer.Allocate(16);
             decoder = new IntegerDecoder();
         }
 

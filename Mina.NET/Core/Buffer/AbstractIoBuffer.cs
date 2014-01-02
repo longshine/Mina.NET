@@ -299,6 +299,41 @@ namespace Mina.Core.Buffer
             return Remaining - prefixLength >= dataLength;
         }
 
+        public override Int32 IndexOf(Byte b)
+        {
+            if (HasArray)
+            {
+                ArraySegment<Byte> array = GetRemaining();
+                for (Int32 i = 0; i < array.Count; i++)
+                {
+                    if (array.Array[i + array.Offset] == b)
+                    {
+                        return i + Position;
+                    }
+                }
+            }
+            else
+            {
+                Int32 beginPos = Position;
+                Int32 limit = Limit;
+
+                for (Int32 i = beginPos; i < limit; i++)
+                {
+                    if (Get(i) == b)
+                    {
+                        return i;
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        public override String GetPrefixedString(Encoding encoding)
+        {
+            return GetPrefixedString(2, encoding);
+        }
+
         /// <summary>
         /// Reads a string which has a length field before the actual encoded string.
         /// </summary>
@@ -330,6 +365,11 @@ namespace Mina.Core.Buffer
             Byte[] bytes = new Byte[dataLength];
             Get(bytes, 0, dataLength);
             return encoding.GetString(bytes, 0, dataLength);
+        }
+
+        public override IoBuffer PutPrefixedString(String value, Encoding encoding)
+        {
+            return PutPrefixedString(value, 2, encoding);
         }
 
         /// <summary>

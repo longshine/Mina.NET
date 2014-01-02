@@ -44,6 +44,11 @@ namespace Mina.Transport.Socket
             }
         }
 
+        public override Boolean HasArray
+        {
+            get { return true; }
+        }
+
         public override Byte Get()
         {
             return _socketAsyncEventArgs.Buffer[Offset(NextGetIndex())];

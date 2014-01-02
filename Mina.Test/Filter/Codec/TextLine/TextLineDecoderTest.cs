@@ -15,8 +15,6 @@ namespace Mina.Filter.Codec.TextLine
     [TestClass]
     public class TextLineDecoderTest
     {
-        ByteBufferAllocator byteBufferAllocator = new ByteBufferAllocator();
-
         [TestMethod]
         public void TestNormalDecode()
         {
@@ -25,7 +23,7 @@ namespace Mina.Filter.Codec.TextLine
 
             ProtocolCodecSession session = new ProtocolCodecSession();
             IProtocolDecoderOutput output = session.DecoderOutput;
-            IoBuffer input = byteBufferAllocator.Allocate(16);
+            IoBuffer input = IoBuffer.Allocate(16);
 
             // Test one decode and one output.put
             input.PutString("ABC\r\n", encoding);
@@ -132,7 +130,7 @@ namespace Mina.Filter.Codec.TextLine
 
             ProtocolCodecSession session = new ProtocolCodecSession();
             IProtocolDecoderOutput output = session.DecoderOutput;
-            IoBuffer input = byteBufferAllocator.Allocate(16);
+            IoBuffer input = IoBuffer.Allocate(16);
 
             // Test one decode and one output
             input.PutString("ABC\r\n", encoding);
@@ -248,7 +246,7 @@ namespace Mina.Filter.Codec.TextLine
 
             ProtocolCodecSession session = new ProtocolCodecSession();
             IProtocolDecoderOutput output = session.DecoderOutput;
-            IoBuffer input = byteBufferAllocator.Allocate(16);
+            IoBuffer input = IoBuffer.Allocate(16);
 
             // Make sure the overflow exception is not thrown until
             // the delimiter is encountered.
@@ -282,7 +280,7 @@ namespace Mina.Filter.Codec.TextLine
             //// Make sure OOM is not thrown.
             GC.Collect();
             //long oldFreeMemory = GC.GetTotalMemory(false);
-            input = byteBufferAllocator.Allocate(1048576 * 16).Sweep((byte)' ').Mark();
+            input = IoBuffer.Allocate(1048576 * 16).Sweep((byte)' ').Mark();
 
             for (int i = 0; i < 10; i++)
             {
@@ -322,7 +320,7 @@ namespace Mina.Filter.Codec.TextLine
             TextLineDecoder decoder = new TextLineDecoder(encoding, new LineDelimiter("\r\n.\r\n"));
 
             ProtocolCodecSession session = new ProtocolCodecSession();
-            IoBuffer input = byteBufferAllocator.Allocate(16);
+            IoBuffer input = IoBuffer.Allocate(16);
             input.AutoExpand = true;
 
             input.PutString("\r\n", encoding).Flip().Mark();

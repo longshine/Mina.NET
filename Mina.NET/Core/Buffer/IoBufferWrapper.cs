@@ -80,6 +80,11 @@ namespace Mina.Core.Buffer
             set { _buf.MinimumCapacity = value; }
         }
 
+        public override Boolean HasArray
+        {
+            get { return _buf.HasArray; }
+        }
+
         public override IoBuffer Expand(Int32 expectedRemaining)
         {
             _buf.Expand(expectedRemaining);
@@ -148,9 +153,24 @@ namespace Mina.Core.Buffer
             return _buf.PrefixedDataAvailable(prefixLength, maxDataLength);
         }
 
+        public override Int32 IndexOf(Byte b)
+        {
+            return _buf.IndexOf(b);
+        }
+
+        public override String GetPrefixedString(Encoding encoding)
+        {
+            return _buf.GetPrefixedString(encoding);
+        }
+
         public override String GetPrefixedString(Int32 prefixLength, Encoding encoding)
         {
             return _buf.GetPrefixedString(prefixLength, encoding);
+        }
+
+        public override IoBuffer PutPrefixedString(String value, Encoding encoding)
+        {
+            return _buf.PutPrefixedString(value, encoding);
         }
 
         public override IoBuffer PutPrefixedString(String value, Int32 prefixLength, Encoding encoding)
