@@ -163,6 +163,25 @@ namespace Mina.Core.Service
 
         }
 
+        private void DisconnectSessions()
+        {
+            IoAcceptor acceptor = this as IoAcceptor;
+            if (acceptor == null)
+                // We don't disconnect sessions for anything but an IoAcceptor
+                return;
+
+            if (!acceptor.CloseOnDeactivation)
+                return;
+
+            List<ICloseFuture> closeFutures = new List<ICloseFuture>(_managedSessions.Count);
+            foreach (IoSession s in _managedSessions.Values)
+            {
+                closeFutures.Add(s.Close(true));
+            }
+
+            new CompositeIoFuture<ICloseFuture>(closeFutures).Await();
+        }
+
         #region IoServiceSupport
         
         void IoServiceSupport.FireServiceActivated()
@@ -202,6 +221,15 @@ namespace Mina.Core.Service
             session.FilterChain.FireSessionClosed();
 
             DelegateUtils.SaveInvoke(SessionDestroyed, session);
+        }
+
+        void IoServiceSupport.FireServiceDeactivated()
+        {
+            if (Interlocked.CompareExchange(ref _active, 0, 1) == 0)
+                // The instance is already desactivated
+                return;
+            DelegateUtils.SaveInvoke(Deactivated, this);
+            DisconnectSessions();
         }
 
         #endregion

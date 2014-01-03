@@ -26,10 +26,10 @@ namespace Mina.Transport.Socket
             this.SessionDestroyed += OnSessionDestroyed;
         }
 
-        public override void Bind(EndPoint localEP)
+        protected override IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints)
         {
             InitBuffer();
-            base.Bind(localEP);
+            return base.BindInternal(localEndPoints);
         }
 
         private void InitBuffer()
@@ -87,12 +87,13 @@ namespace Mina.Transport.Socket
             }
         }
 
-        protected override void BeginAccept(Object state)
+        protected override void BeginAccept(ListenerContext listener)
         {
-            SocketAsyncEventArgs acceptEventArg = (SocketAsyncEventArgs)state;
+            SocketAsyncEventArgs acceptEventArg = (SocketAsyncEventArgs)listener.Tag;
             if (acceptEventArg == null)
             {
                 acceptEventArg = new SocketAsyncEventArgs();
+                acceptEventArg.UserToken = listener;
                 acceptEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(AcceptEventArg_Completed);
             }
             else
@@ -101,7 +102,7 @@ namespace Mina.Transport.Socket
                 acceptEventArg.AcceptSocket = null;
             }
 
-            bool willRaiseEvent = _listenSocket.AcceptAsync(acceptEventArg);
+            Boolean willRaiseEvent = listener.Socket.AcceptAsync(acceptEventArg);
             if (!willRaiseEvent)
             {
                 ProcessAccept(acceptEventArg);
@@ -134,7 +135,7 @@ namespace Mina.Transport.Socket
                     writeBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
                 }
 
-                EndAccept(new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer, writeBuffer), e);
+                EndAccept(new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer, writeBuffer), (ListenerContext)e.UserToken);
             }
             else if (e.SocketError != SocketError.OperationAborted
                 && e.SocketError != SocketError.Interrupted)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using Mina.Core.Filterchain;
 using Mina.Core.Service;
@@ -69,12 +70,12 @@ namespace Mina.Core.Session
                 : base(sessionConfig)
             { }
 
-            public override void Bind(System.Net.EndPoint localEP)
+            protected override IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints)
             {
                 throw new NotSupportedException();
             }
 
-            public override void Unbind()
+            protected override void UnbindInternal(IEnumerable<EndPoint> localEndPoints)
             {
                 throw new NotImplementedException();
             }

@@ -13,19 +13,19 @@ namespace Mina.Transport.Socket
             : base(maxConnections)
         { }
 
-        protected override void BeginAccept(Object state)
+        protected override void BeginAccept(ListenerContext listener)
         {
-            _listenSocket.BeginAccept(AcceptCallback, _listenSocket);
+            listener.Socket.BeginAccept(AcceptCallback, listener);
         }
 
         private void AcceptCallback(IAsyncResult ar)
         {
-            System.Net.Sockets.Socket listener = (System.Net.Sockets.Socket)ar.AsyncState;
+            ListenerContext listener = (ListenerContext)ar.AsyncState;
             SocketSession session;
 
             try
             {
-                System.Net.Sockets.Socket socket = listener.EndAccept(ar);
+                System.Net.Sockets.Socket socket = listener.Socket.EndAccept(ar);
                 session = new AsyncSocketSession(this, this, socket);
             }
             catch (ObjectDisposedException)
@@ -38,7 +38,7 @@ namespace Mina.Transport.Socket
                 session = null;
             }
 
-            EndAccept(session, null);
+            EndAccept(session, listener);
         }
     }
 }
