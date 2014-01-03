@@ -42,7 +42,6 @@ namespace Mina.Transport.Socket
 
         public void Flush(SocketSession session)
         {
-            // TODO send data
             session.Flush();
         }
 

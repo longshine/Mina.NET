@@ -135,7 +135,7 @@ namespace Mina.Transport.Socket
                     writeBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
                 }
 
-                EndAccept(new AsyncSocketSession(this, this, e.AcceptSocket, readBuffer, writeBuffer), (ListenerContext)e.UserToken);
+                EndAccept(new AsyncSocketSession(this, _processor, e.AcceptSocket, readBuffer, writeBuffer), (ListenerContext)e.UserToken);
             }
             else if (e.SocketError != SocketError.OperationAborted
                 && e.SocketError != SocketError.Interrupted)
