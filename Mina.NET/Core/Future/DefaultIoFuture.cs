@@ -8,7 +8,7 @@ namespace Mina.Core.Future
     /// <summary>
     /// A default implementation of <see cref="IoFuture"/> associated with an <see cref="IoSession"/>.
     /// </summary>
-    public class DefaultIoFuture : IoFuture
+    public class DefaultIoFuture : IoFuture, IDisposable
     {
         private readonly IoSession _session;
         private volatile Boolean _ready;
@@ -19,6 +19,7 @@ namespace Mina.Core.Future
 #endif
         private Object _value;
         private Action<IoFuture> _complete;
+        private Boolean _disposed;
 
         public DefaultIoFuture(IoSession session)
         {
@@ -92,6 +93,24 @@ namespace Mina.Core.Future
         public Boolean Await(Int32 millisecondsTimeout)
         {
             return Await0(millisecondsTimeout);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    ((IDisposable)_readyEvent).Dispose();
+                    _disposed = true;
+                }
+            }
         }
 
         private Boolean Await0(Int32 millisecondsTimeout)
