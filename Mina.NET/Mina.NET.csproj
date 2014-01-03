@@ -78,6 +78,8 @@
     <Compile Include="Core\Future\DefaultConnectFuture.cs" />
     <Compile Include="Core\Future\IReadFuture.cs" />
     <Compile Include="Core\Future\DefaultReadFuture.cs" />
+    <Compile Include="Core\Service\AbstractIoConnector.cs" />
+    <Compile Include="Core\Service\IoConnector.cs" />
     <Compile Include="Core\Service\IoProcessor.cs" />
     <Compile Include="Core\Service\IoServiceStatistics.cs" />
     <Compile Include="Core\Service\IoServiceSupport.cs" />
@@ -104,8 +106,8 @@
     <Compile Include="Filter\Codec\Demux\DemuxingProtocolCodecFactory.cs" />
     <Compile Include="Filter\Codec\Demux\DemuxingProtocolDecoder.cs" />
     <Compile Include="Filter\Codec\Demux\DemuxingProtocolEncoder.cs" />
-    <Compile Include="Filter\Codec\Demux\IMessageDecoderFactory.cs" />
     <Compile Include="Filter\Codec\Demux\IMessageDecoder.cs" />
+    <Compile Include="Filter\Codec\Demux\IMessageDecoderFactory.cs" />
     <Compile Include="Filter\Codec\Demux\IMessageEncoder.cs" />
     <Compile Include="Filter\Codec\Demux\IMessageEncoderFactory.cs" />
     <Compile Include="Filter\Codec\Demux\MessageDecoderAdapter.cs" />
@@ -209,10 +211,14 @@
     <Compile Include="Core\Service\IoService.cs" />
     <Compile Include="Util\Pool.cs" />
     <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
+    <Compile Include="Transport\Socket\AbstractSocketConnector.cs" />
     <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\AsyncSocketAcceptor.cs" />
+    <Compile Include="Transport\Socket\AsyncSocketConnector.cs" />
+    <Compile Include="Transport\Socket\AsyncSocketProcessor.cs" />
     <Compile Include="Transport\Socket\DefaultSocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\ISocketAcceptor.cs" />
+    <Compile Include="Transport\Socket\ISocketConnector.cs" />
     <Compile Include="Transport\Socket\ISocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\SessionConfigImpl.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBuffer.cs" />

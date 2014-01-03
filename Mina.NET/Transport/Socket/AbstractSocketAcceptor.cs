@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Threading;
 using Mina.Core.Buffer;
 using Mina.Core.Filterchain;
+using Mina.Core.Future;
 using Mina.Core.Service;
 using Mina.Core.Session;
 using Mina.Core.Write;
@@ -166,7 +167,7 @@ namespace Mina.Transport.Socket
             {
                 try
                 {
-                    InitSession(session, null, null);
+                    InitSession<IoFuture>(session, null, null);
                     session.Processor.Add(session);
                 }
                 catch (Exception ex)

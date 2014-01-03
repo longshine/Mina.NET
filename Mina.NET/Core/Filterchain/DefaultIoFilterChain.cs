@@ -166,9 +166,20 @@ namespace Mina.Core.Filterchain
 
         private void CallNextExceptionCaught(IEntry<IoFilter, INextFilter> entry, IoSession session, Exception cause)
         {
-            // TODO Notify the related future.
-            CallNext(entry, (filter, next) => filter.ExceptionCaught(next, _session, cause),
-                e => log.Warn("Unexpected exception from exceptionCaught handler.", e));
+            // Notify the related future.
+            IConnectFuture future = session.RemoveAttribute(SessionCreatedFuture) as IConnectFuture;
+            if (future == null)
+            {
+                CallNext(entry, (filter, next) => filter.ExceptionCaught(next, _session, cause),
+                    e => log.Warn("Unexpected exception from exceptionCaught handler.", e));
+            }
+            else
+            {
+                // Please note that this place is not the only place that
+                // calls ConnectFuture.setException().
+                session.Close(true);
+                future.Exception = cause;
+            }
         }
 
         private void CallNextMessageReceived(IEntry<IoFilter, INextFilter> entry, IoSession session, Object message)

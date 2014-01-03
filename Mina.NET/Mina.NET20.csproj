@@ -76,6 +76,8 @@
     <Compile Include="Core\Future\DefaultConnectFuture.cs" />
     <Compile Include="Core\Future\IReadFuture.cs" />
     <Compile Include="Core\Future\DefaultReadFuture.cs" />
+    <Compile Include="Core\Service\AbstractIoConnector.cs" />
+    <Compile Include="Core\Service\IoConnector.cs" />
     <Compile Include="Core\Service\IoProcessor.cs" />
     <Compile Include="Core\Service\IoServiceStatistics.cs" />
     <Compile Include="Core\Service\IoServiceSupport.cs" />
@@ -153,9 +155,9 @@
     <Compile Include="Filter\Executor\IoEventQueueThrottle.cs" />
     <Compile Include="Filter\Executor\IoEventSizeEstimator.cs" />
     <Compile Include="Filter\Executor\OrderedThreadPoolExecutor.cs" />
+    <Compile Include="Filter\Executor\ThreadPoolExecutor.NET20.cs" />
     <Compile Include="Filter\Executor\UnorderedThreadPoolExecutor.cs" />
     <Compile Include="Filter\Executor\WriteRequestFilter.cs" />
-    <Compile Include="Filter\Executor\ThreadPoolExecutor.NET20.cs" />
     <Compile Include="Filter\Firewall\BlacklistFilter.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilter.cs" />
     <Compile Include="Filter\Firewall\Subnet.cs" />
@@ -204,18 +206,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Service\IoAcceptor.cs" />
     <Compile Include="Core\Service\IoService.cs" />
+
+    <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
+    <Compile Include="Transport\Socket\AbstractSocketConnector.cs" />
     <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />
+    <Compile Include="Transport\Socket\AsyncSocketAcceptor.NET20.cs" />
+    <Compile Include="Transport\Socket\AsyncSocketConnector.NET20.cs" />
+    <Compile Include="Transport\Socket\AsyncSocketProcessor.cs" />
     <Compile Include="Transport\Socket\DefaultSocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\ISocketAcceptor.cs" />
+    <Compile Include="Transport\Socket\ISocketConnector.cs" />
     <Compile Include="Transport\Socket\ISocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\SessionConfigImpl.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBuffer.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBufferAllocator.cs" />
     <Compile Include="Transport\Socket\AsyncSocketSession.NET20.cs" />
-    <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
-    <Compile Include="Transport\Socket\SocketSession.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Transport\Socket\SocketSession.cs" />
     <Compile Include="Util\Delegates.cs" />
     <Compile Include="Util\DelegateUtils.cs" />
     <Compile Include="Util\ExceptionMonitor.cs" />
@@ -227,9 +233,6 @@
     <Compile Include="Util\System.Collections.Concurrent\SplitOrderedList.cs" />
     <Compile Include="Util\System.Collections.Generic\HashSet.cs" />
     <Compile Include="Util\System\Funcs.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Transport\Socket\AsyncSocketAcceptor.NET20.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mina.snk" />

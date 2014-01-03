@@ -131,7 +131,8 @@ namespace Mina.Core.Service
             GC.SuppressFinalize(this);
         }
 
-        protected void InitSession(IoSession session, IoFuture future, Action<IoSession, IoFuture> initializeSession)
+        protected void InitSession<TFuture>(IoSession session, TFuture future, Action<IoSession, TFuture> initializeSession)
+            where TFuture : IoFuture
         {
             AbstractIoSession s = session as AbstractIoSession;
             if (s != null)

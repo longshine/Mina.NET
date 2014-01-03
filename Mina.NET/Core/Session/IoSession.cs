@@ -16,11 +16,17 @@ namespace Mina.Core.Session
         /// Gets a unique identifier for this session.
         /// </summary>
         Int64 Id { get; }
+        /// <summary>
+        /// Gets the configuration of this session.
+        /// </summary>
         IoSessionConfig Config { get; }
         /// <summary>
         /// Gets the <see cref="IoService"/> which provides I/O service to this session.
         /// </summary>
         IoService Service { get; }
+        /// <summary>
+        /// Gets the associated <see cref="IoProcessor"/> for this session.
+        /// </summary>
         IoProcessor Processor { get; }
         /// <summary>
         /// Gets the <see cref="IoHandler"/> which handles this session.
@@ -37,6 +43,11 @@ namespace Mina.Core.Session
         Boolean Connected { get; }
         EndPoint LocalEndPoint { get; }
         EndPoint RemoteEndPoint { get; }
+        /// <summary>
+        /// Gets the <see cref="ICloseFuture"/> of this session.
+        /// This method returns the same instance whenever user calls it.
+        /// </summary>
+        ICloseFuture CloseFuture { get; }
         IWriteFuture Write(Object message);
         ICloseFuture Close(Boolean rightNow);
         T GetAttribute<T>(Object key);
