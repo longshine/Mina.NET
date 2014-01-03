@@ -4,6 +4,7 @@ using System.Threading;
 using Mina.Core.Buffer;
 using Mina.Core.Service;
 using Mina.Core.Session;
+using Mina.Filter.Logging;
 using Mina.Filter.Ssl;
 using Mina.Transport.Socket;
 
@@ -21,6 +22,8 @@ namespace EchoServer
             if (ssl)
                 acceptor.FilterChain.AddLast("ssl", new SslFilter(AppDomain.CurrentDomain.BaseDirectory + "\\TempCert.cer"));
 
+            acceptor.FilterChain.AddLast("logger", new LoggingFilter());
+
             acceptor.SessionCreated += s => s.Config.SetIdleTime(IdleStatus.BothIdle, 10);
             acceptor.SessionOpened += s => Console.WriteLine("OPENED");
             acceptor.SessionClosed += s => Console.WriteLine("CLOSED");
@@ -30,8 +33,9 @@ namespace EchoServer
             {
                 Console.WriteLine("Received : " + m);
                 IoBuffer income = (IoBuffer)m;
-                IoBuffer outcome = ByteBufferAllocator.Instance.Allocate(income.Remaining);
+                IoBuffer outcome = IoBuffer.Allocate(income.Remaining);
                 outcome.Put(income);
+                outcome.Flip();
                 s.Write(outcome);
             };
 
@@ -41,8 +45,8 @@ namespace EchoServer
 
             while (true)
             {
-                Console.WriteLine("R: " + acceptor.Statistics.ReadBytesThroughput +
-                    ", W: " + acceptor.Statistics.WrittenBytesThroughput);
+                Console.WriteLine("R: " + acceptor.Statistics.ReadBytes +
+                    ", W: " + acceptor.Statistics.WrittenBytes);
                 Thread.Sleep(3000);
             }
         }
