@@ -99,7 +99,7 @@ namespace Mina.Core.Filterchain
             return null;
         }
 
-#if NET201
+#if NET20
         IEntry<TFilter, TNextFilter> IChain<TFilter, TNextFilter>.GetEntry<T>()
 #else
         public IEntry<TFilter, TNextFilter> GetEntry<T>() where T : TFilter
