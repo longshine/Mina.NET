@@ -1,4 +1,6 @@
 ﻿using System;
+using Mina.Core.Service;
+using Mina.Core.Session;
 using Mina.Util;
 
 namespace Mina.Transport.Socket
@@ -21,12 +23,11 @@ namespace Mina.Transport.Socket
         private void AcceptCallback(IAsyncResult ar)
         {
             ListenerContext listener = (ListenerContext)ar.AsyncState;
-            SocketSession session;
+            System.Net.Sockets.Socket socket;
 
             try
             {
-                System.Net.Sockets.Socket socket = listener.Socket.EndAccept(ar);
-                session = new AsyncSocketSession(this, _processor, socket);
+                socket = listener.Socket.EndAccept(ar);
             }
             catch (ObjectDisposedException)
             {
@@ -35,10 +36,15 @@ namespace Mina.Transport.Socket
             catch (Exception ex)
             {
                 ExceptionMonitor.Instance.ExceptionCaught(ex);
-                session = null;
+                socket = null;
             }
 
-            EndAccept(session, listener);
+            EndAccept(socket, listener);
+        }
+
+        protected override IoSession NewSession(IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
+        {
+            return new AsyncSocketSession(this, processor, socket);
         }
     }
 }

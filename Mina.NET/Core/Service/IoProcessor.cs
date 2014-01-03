@@ -15,7 +15,7 @@ namespace Mina.Core.Service
         void Remove(IoSession session);
     }
 
-    public interface IoProcessor<S> : IoProcessor
+    public interface IoProcessor<in S> : IoProcessor
         where S : IoSession
     {
         void Add(S session);

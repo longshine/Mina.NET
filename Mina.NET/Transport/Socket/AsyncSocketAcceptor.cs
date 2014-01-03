@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using Common.Logging;
+using Mina.Core.Service;
 using Mina.Core.Session;
 using Mina.Util;
 
@@ -118,30 +119,35 @@ namespace Mina.Transport.Socket
         {
             if (e.SocketError == SocketError.Success)
             {
-                SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();
-                SocketAsyncEventArgsBuffer writeBuffer = _readWritePool.Pop();
-
-                if (readBuffer == null)
-                {
-                    readBuffer = (SocketAsyncEventArgsBuffer)
-                        SocketAsyncEventArgsBufferAllocator.Instance.Allocate(SessionConfig.ReadBufferSize);
-                    readBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
-                }
-
-                if (writeBuffer == null)
-                {
-                    writeBuffer = (SocketAsyncEventArgsBuffer)
-                        SocketAsyncEventArgsBufferAllocator.Instance.Allocate(SessionConfig.ReadBufferSize);
-                    writeBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
-                }
-
-                EndAccept(new AsyncSocketSession(this, _processor, e.AcceptSocket, readBuffer, writeBuffer), (ListenerContext)e.UserToken);
+                EndAccept(e.AcceptSocket, (ListenerContext)e.UserToken);
             }
             else if (e.SocketError != SocketError.OperationAborted
                 && e.SocketError != SocketError.Interrupted)
             {
                 ExceptionMonitor.Instance.ExceptionCaught(new SocketException((Int32)e.SocketError));
             }
+        }
+
+        protected override IoSession NewSession(IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
+        {
+            SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();
+            SocketAsyncEventArgsBuffer writeBuffer = _readWritePool.Pop();
+
+            if (readBuffer == null)
+            {
+                readBuffer = (SocketAsyncEventArgsBuffer)
+                    SocketAsyncEventArgsBufferAllocator.Instance.Allocate(SessionConfig.ReadBufferSize);
+                readBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
+            }
+
+            if (writeBuffer == null)
+            {
+                writeBuffer = (SocketAsyncEventArgsBuffer)
+                    SocketAsyncEventArgsBufferAllocator.Instance.Allocate(SessionConfig.ReadBufferSize);
+                writeBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
+            }
+
+            return new AsyncSocketSession(this, processor, socket, readBuffer, writeBuffer);
         }
     }
 }

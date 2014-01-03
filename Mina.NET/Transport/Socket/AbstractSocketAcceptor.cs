@@ -12,7 +12,7 @@ namespace Mina.Transport.Socket
 {
     public abstract class AbstractSocketAcceptor : AbstractIoAcceptor, ISocketAcceptor
     {
-        protected readonly IoProcessor<SocketSession> _processor = new AsyncSocketProcessor();
+        private readonly IoProcessor<SocketSession> _processor = new AsyncSocketProcessor();
         private Int32 _backlog;
         private Int32 _maxConnections;
         private IdleStatusChecker _idleStatusChecker;
@@ -157,12 +157,15 @@ namespace Mina.Transport.Socket
                 _connectionPool.Release();
         }
 
+        protected abstract IoSession NewSession(IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket);
+
         protected abstract void BeginAccept(ListenerContext listener);
 
-        protected void EndAccept(IoSession session, ListenerContext listener)
+        protected void EndAccept(System.Net.Sockets.Socket socket, ListenerContext listener)
         {
-            if (session != null)
+            if (socket != null)
             {
+                IoSession session = NewSession(_processor, socket);
                 try
                 {
                     InitSession<IoFuture>(session, null, null);
