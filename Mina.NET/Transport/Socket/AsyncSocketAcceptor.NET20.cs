@@ -26,7 +26,7 @@ namespace Mina.Transport.Socket
             try
             {
                 System.Net.Sockets.Socket socket = listener.Socket.EndAccept(ar);
-                session = new AsyncSocketSession(this, this, socket);
+                session = new AsyncSocketSession(this, _processor, socket);
             }
             catch (ObjectDisposedException)
             {
