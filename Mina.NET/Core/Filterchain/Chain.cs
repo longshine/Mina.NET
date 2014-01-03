@@ -99,7 +99,11 @@ namespace Mina.Core.Filterchain
             return null;
         }
 
+#if NET201
+        IEntry<TFilter, TNextFilter> IChain<TFilter, TNextFilter>.GetEntry<T>()
+#else
         public IEntry<TFilter, TNextFilter> GetEntry<T>() where T : TFilter
+#endif
         {
             Type filterType = typeof(T);
             Entry e = _head._nextEntry;
@@ -129,10 +133,16 @@ namespace Mina.Core.Filterchain
             IEntry<TFilter, TNextFilter> e = GetEntry(filterType);
             return e == null ? default(TNextFilter) : e.NextFilter;
         }
-
+        
+#if NET20
+        TNextFilter IChain<TFilter, TNextFilter>.GetNextFilter<T>()
+        {
+            IEntry<TFilter, TNextFilter> e = ((IChain<TFilter, TNextFilter>)this).GetEntry<T>();
+#else
         public TNextFilter GetNextFilter<T>() where T : TFilter
         {
             IEntry<TFilter, TNextFilter> e = GetEntry<T>();
+#endif
             return e == null ? default(TNextFilter) : e.NextFilter;
         }
 
@@ -160,11 +170,18 @@ namespace Mina.Core.Filterchain
         {
             return GetEntry(filterType) != null;
         }
-
+        
+#if NET20
+        Boolean IChain<TFilter, TNextFilter>.Contains<T>()
+        {
+            return ((IChain<TFilter, TNextFilter>)this).GetEntry<T>() != null;
+        }
+#else
         public Boolean Contains<T>() where T : TFilter
         {
             return GetEntry<T>() != null;
         }
+#endif
 
         public void AddFirst(String name, TFilter filter)
         {
