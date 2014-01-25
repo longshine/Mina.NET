@@ -13,6 +13,8 @@ namespace Mina.Transport.Socket
     public abstract class SocketSession : AbstractIoSession
     {
         private readonly System.Net.Sockets.Socket _socket;
+        private readonly EndPoint _localEP;
+        private readonly EndPoint _remoteEP;
         private readonly IoProcessor<SocketSession> _processor;
         private readonly IoFilterChain _filterChain;
         private Int32 _writing;
@@ -21,6 +23,8 @@ namespace Mina.Transport.Socket
             : base(service)
         {
             _socket = socket;
+            _localEP = socket.LocalEndPoint;
+            _remoteEP = socket.RemoteEndPoint;
             _config = new SessionConfigImpl(socket);
             if (service.SessionConfig != null)
                 _config.SetAll(service.SessionConfig);
@@ -40,12 +44,12 @@ namespace Mina.Transport.Socket
 
         public override EndPoint LocalEndPoint
         {
-            get { return _socket.LocalEndPoint; }
+            get { return _localEP; }
         }
 
         public override EndPoint RemoteEndPoint
         {
-            get { return _socket.RemoteEndPoint; }
+            get { return _remoteEP; }
         }
 
         public System.Net.Sockets.Socket Socket
