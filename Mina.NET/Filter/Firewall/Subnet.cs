@@ -30,7 +30,10 @@ namespace Mina.Filter.Firewall
             this._suffix = mask;
 
             // binary mask for this subnet
-            this._subnetMask = (int)(IP_MASK >> (mask - 1));
+            unchecked
+            {
+                this._subnetMask = (int)IP_MASK >> (mask - 1);
+            }
         }
 
         public Boolean InSubnet(IPAddress address)
