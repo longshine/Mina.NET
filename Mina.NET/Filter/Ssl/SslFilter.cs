@@ -131,7 +131,7 @@ namespace Mina.Filter.Ssl
             try
             {
                 future = InitiateClosure(handler, nextFilter, session);
-                future.Complete += f => base.FilterClose(nextFilter, session);
+                future.Complete += (s, e) => base.FilterClose(nextFilter, session);
             }
             finally
             { 

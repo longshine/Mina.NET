@@ -28,7 +28,7 @@ namespace Mina.Core.Future
                 Value = true;
         }
 
-        private void OnComplete(IoFuture future)
+        private void OnComplete(Object sender, IoFutureEventArgs e)
         {
             if (Interlocked.Decrement(ref _unnotified) == 0 && _constructionFinished)
                 Value = true;

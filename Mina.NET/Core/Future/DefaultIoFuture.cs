@@ -18,7 +18,7 @@ namespace Mina.Core.Future
         private readonly ManualResetEventSlim _readyEvent = new ManualResetEventSlim(false);
 #endif
         private Object _value;
-        private Action<IoFuture> _complete;
+        private EventHandler<IoFutureEventArgs> _complete;
         private Boolean _disposed;
 
         public DefaultIoFuture(IoSession session)
@@ -26,16 +26,16 @@ namespace Mina.Core.Future
             _session = session;
         }
 
-        public event Action<IoFuture> Complete
+        public event EventHandler<IoFutureEventArgs> Complete
         {
             add
             {
-                Action<IoFuture> tmp;
-                Action<IoFuture> complete = _complete;
+                EventHandler<IoFutureEventArgs> tmp;
+                EventHandler<IoFutureEventArgs> complete = _complete;
                 do
                 {
                     tmp = complete;
-                    Action<IoFuture> newComplete = (Action<IoFuture>)Delegate.Combine(tmp, value);
+                    EventHandler<IoFutureEventArgs> newComplete = (EventHandler<IoFutureEventArgs>)Delegate.Combine(tmp, value);
                     complete = Interlocked.CompareExchange(ref _complete, newComplete, tmp);
                 }
                 while (complete != tmp);
@@ -45,12 +45,12 @@ namespace Mina.Core.Future
             }
             remove
             {
-                Action<IoFuture> tmp;
-                Action<IoFuture> complete = _complete;
+                EventHandler<IoFutureEventArgs> tmp;
+                EventHandler<IoFutureEventArgs> complete = _complete;
                 do
                 {
                     tmp = complete;
-                    Action<IoFuture> newComplete = (Action<IoFuture>)Delegate.Remove(tmp, value);
+                    EventHandler<IoFutureEventArgs> newComplete = (EventHandler<IoFutureEventArgs>)Delegate.Remove(tmp, value);
                     complete = Interlocked.CompareExchange(ref _complete, newComplete, tmp);
                 }
                 while (complete != tmp);
@@ -132,22 +132,22 @@ namespace Mina.Core.Future
 
         private void OnComplete()
         {
-            Action<IoFuture> complete = _complete;
+            EventHandler<IoFutureEventArgs> complete = _complete;
             if (complete != null)
             {
                 Delegate[] handlers = complete.GetInvocationList();
                 foreach (var current in handlers)
                 {
-                    OnComplete((Action<IoFuture>)current);
+                    OnComplete((EventHandler<IoFutureEventArgs>)current);
                 }
             }
         }
 
-        private void OnComplete(Action<IoFuture> act)
+        private void OnComplete(EventHandler<IoFutureEventArgs> act)
         {
             try
             {
-                act(this);
+                act(_session, new IoFutureEventArgs(this));
             }
             catch (Exception ex)
             {

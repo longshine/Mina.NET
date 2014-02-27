@@ -41,7 +41,7 @@ namespace Mina.Core.Session
             _id = Interlocked.Increment(ref idGenerator);
 
             _closeFuture = new DefaultCloseFuture(this);
-            _closeFuture.Complete += new Action<IoFuture>(ResetCounter);
+            _closeFuture.Complete += ResetCounter;
         }
 
         public Int64 Id
@@ -585,9 +585,9 @@ namespace Mina.Core.Session
             _lastThroughputCalculationTime = currentTime;
         }
 
-        private static void ResetCounter(IoFuture future)
+        private static void ResetCounter(Object sender, IoFutureEventArgs e)
         {
-            AbstractIoSession session = (AbstractIoSession)future.Session;
+            AbstractIoSession session = (AbstractIoSession)e.Future.Session;
             Interlocked.Exchange(ref session._scheduledWriteBytes, 0);
             Interlocked.Exchange(ref session._scheduledWriteMessages, 0);
             session._readBytesThroughput = 0;

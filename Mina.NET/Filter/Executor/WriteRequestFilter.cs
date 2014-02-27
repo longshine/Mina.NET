@@ -32,8 +32,8 @@ namespace Mina.Filter.Executor
 
         public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
-            IoEvent e = new IoEvent(IoEventType.Write, session, writeRequest);
-            if (_queueHandler.Accept(this, e))
+            IoEvent ioe = new IoEvent(IoEventType.Write, session, writeRequest);
+            if (_queueHandler.Accept(this, ioe))
             {
                 nextFilter.FilterWrite(session, writeRequest);
                 IWriteFuture writeFuture = writeRequest.Future;
@@ -41,8 +41,8 @@ namespace Mina.Filter.Executor
                     return;
 
                 // We can track the write request only when it has a future.
-                _queueHandler.Offered(this, e);
-                writeFuture.Complete += future => _queueHandler.Polled(this, e);
+                _queueHandler.Offered(this, ioe);
+                writeFuture.Complete += (s, e) => _queueHandler.Polled(this, ioe);
             }
         }
     }

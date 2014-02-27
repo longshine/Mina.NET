@@ -43,7 +43,7 @@ namespace Mina.Core.Write
         {
             public static readonly UnusedFuture Instance = new UnusedFuture();
 
-            public event Action<IoFuture> Complete
+            public event EventHandler<IoFutureEventArgs> Complete
             {
                 add { throw new NotSupportedException(); }
                 remove { throw new NotSupportedException(); }

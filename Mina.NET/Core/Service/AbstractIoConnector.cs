@@ -79,9 +79,9 @@ namespace Mina.Core.Service
             // In case that IConnectFuture.Cancel() is invoked before
             // SetSession() is invoked, add a listener that closes the
             // connection immediately on cancellation.
-            future.Complete += f =>
+            future.Complete += (s, e) =>
             {
-                if (((IConnectFuture)f).Canceled)
+                if (((IConnectFuture)e.Future).Canceled)
                     session.Close(true);
             };
         }

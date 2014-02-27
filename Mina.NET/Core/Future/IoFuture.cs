@@ -20,7 +20,7 @@ namespace Mina.Core.Future
         /// Event that this future is completed.
         /// If the listener is added after the completion, the listener is directly notified.
         /// </summary>
-        event Action<IoFuture> Complete;
+        event EventHandler<IoFutureEventArgs> Complete;
         /// <summary>
         /// Wait for the asynchronous operation to complete.
         /// </summary>
@@ -31,5 +31,20 @@ namespace Mina.Core.Future
         /// </summary>
         /// <returns><tt>true</tt> if the operation is completed</returns>
         Boolean Await(Int32 millisecondsTimeout);
+    }
+
+    public class IoFutureEventArgs : EventArgs
+    {
+        private readonly IoFuture _future;
+
+        public IoFutureEventArgs(IoFuture future)
+        {
+            _future = future;
+        }
+
+        public IoFuture Future
+        {
+            get { return _future; }
+        }
     }
 }
