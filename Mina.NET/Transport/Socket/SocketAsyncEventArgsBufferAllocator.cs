@@ -30,10 +30,5 @@ namespace Mina.Transport.Socket
                 throw new IndexOutOfRangeException();
             }
         }
-
-        public void Dispose()
-        {
-            // Do nothing
-        }
     }
 }

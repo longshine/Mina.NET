@@ -52,7 +52,7 @@ namespace Mina.Transport.Socket
             connector.Socket.Close();
         }
 
-        protected class ConnectorContext
+        protected class ConnectorContext : IDisposable
         {
             private readonly System.Net.Sockets.Socket _socket;
             private readonly EndPoint _remoteEP;
@@ -84,6 +84,21 @@ namespace Mina.Transport.Socket
             public Action<IoSession, IConnectFuture> SessionInitializer
             {
                 get { return _sessionInitializer; }
+            }
+
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            protected virtual void Dispose(Boolean disposing)
+            {
+                if (disposing)
+                {
+                    _socket.Dispose();
+                    _future.Dispose();
+                }
             }
         }
     }

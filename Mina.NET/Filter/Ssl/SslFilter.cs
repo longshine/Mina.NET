@@ -229,7 +229,7 @@ namespace Mina.Filter.Ssl
         }
     }
 
-    class SslHandler
+    class SslHandler : IDisposable
     {
         static readonly ILog log = LogManager.GetLogger(typeof(SslFilter));
 
@@ -264,6 +264,12 @@ namespace Mina.Filter.Ssl
                 if (value)
                     FlushPreHandshakeEvents();
             }
+        }
+
+        public void Dispose()
+        {
+            _sessionStream.Dispose();
+            _sslStream.Dispose();
         }
 
         public void Handshake(INextFilter nextFilter)

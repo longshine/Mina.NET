@@ -199,6 +199,7 @@ namespace Mina.Transport.Socket
                         ((IDisposable)_connectionPool).Dispose();
                         _connectionPool = null;
                     }
+                    _idleStatusChecker.Dispose();
                     base.Dispose(disposing);
                     _disposed = true;
                 }

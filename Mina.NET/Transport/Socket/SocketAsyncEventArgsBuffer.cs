@@ -4,7 +4,7 @@ using Mina.Core.Buffer;
 
 namespace Mina.Transport.Socket
 {
-    public class SocketAsyncEventArgsBuffer : AbstractIoBuffer
+    public class SocketAsyncEventArgsBuffer : AbstractIoBuffer, IDisposable
     {
         private readonly SocketAsyncEventArgs _socketAsyncEventArgs;
 
@@ -112,6 +112,20 @@ namespace Mina.Transport.Socket
         public override void Free()
         {
             // TODO free buffer?
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+            if (disposing)
+            {
+                _socketAsyncEventArgs.Dispose();
+            }
         }
 
         protected override IoBuffer Slice0()

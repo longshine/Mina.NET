@@ -13,7 +13,7 @@ namespace Mina.Core.Session
     /// <summary>
     /// Base implementation of <see cref="IoSession"/>.
     /// </summary>
-    public abstract class AbstractIoSession : IoSession
+    public abstract class AbstractIoSession : IoSession, IDisposable
     {
         private static readonly IWriteRequest CLOSE_REQUEST = new DefaultWriteRequest(new Object());
         private static Int64 idGenerator = 0;
@@ -224,6 +224,20 @@ namespace Mina.Core.Session
         public Boolean ContainsAttribute(Object key)
         {
             return _attributes.ContainsAttribute(this, key);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+            if (disposing)
+            {
+                ((DefaultCloseFuture)_closeFuture).Dispose();
+            }
         }
 
         #region Traffic control

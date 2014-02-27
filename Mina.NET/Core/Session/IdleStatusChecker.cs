@@ -7,7 +7,7 @@ namespace Mina.Core.Session
     /// <summary>
     /// Detects idle sessions and fires <tt>SessionIdle</tt> events to them.
     /// </summary>
-    public class IdleStatusChecker
+    public class IdleStatusChecker : IDisposable
     {
         public const Int32 IdleCheckingInterval = 1000;
 
@@ -41,6 +41,20 @@ namespace Mina.Core.Session
         public void Stop()
         {
             _idleTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+            if (disposing)
+            {
+                _idleTimer.Dispose();
+            }
         }
     }
 }

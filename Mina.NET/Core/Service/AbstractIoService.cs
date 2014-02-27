@@ -13,7 +13,7 @@ namespace Mina.Core.Service
     /// <summary>
     /// Base implementation of <see cref="IoService"/>s.
     /// </summary>
-    public abstract class AbstractIoService : IoService, IoServiceSupport, IoHandler
+    public abstract class AbstractIoService : IoService, IoServiceSupport, IoHandler, IDisposable
     {
         private Int32 _active = 0;
         private DateTime _activationTime;

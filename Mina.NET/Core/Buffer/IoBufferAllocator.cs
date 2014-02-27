@@ -6,7 +6,7 @@ namespace Mina.Core.Buffer
     /// Allocates <see cref="IoBuffer"/>s and manages them.
     /// Please implement this interface if you need more advanced memory management scheme.
     /// </summary>
-    public interface IoBufferAllocator : IDisposable
+    public interface IoBufferAllocator
     {
         /// <summary>
         /// Returns the buffer which is capable of the specified size.

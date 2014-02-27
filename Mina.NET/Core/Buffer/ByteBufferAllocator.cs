@@ -33,10 +33,5 @@ namespace Mina.Core.Buffer
         {
             return Wrap(array, 0, array.Length);
         }
-
-        public void Dispose()
-        {
-            // Do nothing
-        }
     }
 }
