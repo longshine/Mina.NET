@@ -89,4 +89,67 @@ namespace Mina.Core.Session
         Int32 GetIdleCount(IdleStatus status);
         DateTime GetLastIdleTime(IdleStatus status);
     }
+
+    public class IoSessionEventArgs : EventArgs
+    {
+        private readonly IoSession _session;
+
+        public IoSessionEventArgs(IoSession session)
+        {
+            _session = session;
+        }
+
+        public IoSession Session
+        {
+            get { return _session; }
+        }
+    }
+
+    public class IoSessionIdleEventArgs : IoSessionEventArgs
+    {
+        private readonly IdleStatus _idleStatus;
+
+        public IoSessionIdleEventArgs(IoSession session, IdleStatus idleStatus)
+            : base(session)
+        {
+            _idleStatus = idleStatus;
+        }
+
+        public IdleStatus IdleStatus
+        {
+            get { return _idleStatus; }
+        }
+    }
+
+    public class IoSessionExceptionEventArgs : IoSessionEventArgs
+    {
+        private readonly Exception _exception;
+
+        public IoSessionExceptionEventArgs(IoSession session, Exception exception)
+            : base(session)
+        {
+            _exception = exception;
+        }
+
+        public Exception Exception
+        {
+            get { return _exception; }
+        }
+    }
+
+    public class IoSessionMessageEventArgs : IoSessionEventArgs
+    {
+        private readonly Object _message;
+
+        public IoSessionMessageEventArgs(IoSession session, Object message)
+            : base(session)
+        {
+            _message = message;
+        }
+
+        public Object Message
+        {
+            get { return _message; }
+        }
+    }
 }

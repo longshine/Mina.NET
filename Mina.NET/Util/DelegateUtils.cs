@@ -4,6 +4,43 @@ namespace Mina.Util
 {
     public static class DelegateUtils
     {
+        public static void SaveInvoke(EventHandler handler, Object sender)
+        {
+            if (handler != null)
+            {
+                foreach (Delegate d in handler.GetInvocationList())
+                {
+                    try
+                    {
+                        ((EventHandler)d)(sender, EventArgs.Empty);
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionMonitor.Instance.ExceptionCaught(e);
+                    }
+                }
+            }
+        }
+
+        public static void SaveInvoke<TEventArgs>(EventHandler<TEventArgs> handler, Object sender, TEventArgs e)
+            where TEventArgs : EventArgs
+        {
+            if (handler != null)
+            {
+                foreach (Delegate d in handler.GetInvocationList())
+                {
+                    try
+                    {
+                        ((EventHandler<TEventArgs>)d)(sender, e);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionMonitor.Instance.ExceptionCaught(ex);
+                    }
+                }
+            }
+        }
+
         public static void SaveInvoke(Action act)
         {
             if (act != null)

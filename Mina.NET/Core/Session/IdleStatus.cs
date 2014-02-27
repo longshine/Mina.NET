@@ -18,4 +18,19 @@
         /// </summary>
         BothIdle
     }
+
+    public class IdleStatusEventArgs : System.EventArgs
+    {
+        private readonly IdleStatus _idleStatus;
+
+        public IdleStatusEventArgs(IdleStatus idleStatus)
+        {
+            _idleStatus = idleStatus;
+        }
+
+        public IdleStatus IdleStatus
+        {
+            get { return _idleStatus; }
+        }
+    }
 }

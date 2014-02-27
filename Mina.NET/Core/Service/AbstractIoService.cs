@@ -25,17 +25,17 @@ namespace Mina.Core.Service
 
         private ConcurrentDictionary<Int64, IoSession> _managedSessions = new ConcurrentDictionary<Int64, IoSession>();
 
-        public event Action<IoService> Activated;
-        public event Action<IoService, IdleStatus> Idle;
-        public event Action<IoService> Deactivated;
-        public event Action<IoSession> SessionCreated;
-        public event Action<IoSession> SessionOpened;
-        public event Action<IoSession> SessionClosed;
-        public event Action<IoSession> SessionDestroyed;
-        public event Action<IoSession, IdleStatus> SessionIdle;
-        public event Action<IoSession, Exception> ExceptionCaught;
-        public event Action<IoSession, Object> MessageReceived;
-        public event Action<IoSession, Object> MessageSent;
+        public event EventHandler Activated;
+        public event EventHandler<IdleStatusEventArgs> Idle;
+        public event EventHandler Deactivated;
+        public event EventHandler<IoSessionEventArgs> SessionCreated;
+        public event EventHandler<IoSessionEventArgs> SessionOpened;
+        public event EventHandler<IoSessionEventArgs> SessionClosed;
+        public event EventHandler<IoSessionEventArgs> SessionDestroyed;
+        public event EventHandler<IoSessionIdleEventArgs> SessionIdle;
+        public event EventHandler<IoSessionExceptionEventArgs> ExceptionCaught;
+        public event EventHandler<IoSessionMessageEventArgs> MessageReceived;
+        public event EventHandler<IoSessionMessageEventArgs> MessageSent;
 
         public AbstractIoService(IoSessionConfig sessionConfig)
         {
@@ -197,6 +197,11 @@ namespace Mina.Core.Service
             DelegateUtils.SaveInvoke(Activated, this);
         }
 
+        void IoServiceSupport.FireServiceIdle(IdleStatus idleStatus)
+        {
+            DelegateUtils.SaveInvoke(Idle, this, new IdleStatusEventArgs(idleStatus));
+        }
+
         void IoServiceSupport.FireSessionCreated(IoSession session)
         {
             // If already registered, ignore.
@@ -209,7 +214,7 @@ namespace Mina.Core.Service
             filterChain.FireSessionOpened();
 
             if (_handler != this)
-                DelegateUtils.SaveInvoke(SessionCreated, session);
+                DelegateUtils.SaveInvoke(SessionCreated, this, new IoSessionEventArgs(session));
         }
 
         void IoServiceSupport.FireSessionDestroyed(IoSession session)
@@ -221,7 +226,7 @@ namespace Mina.Core.Service
             // Fire session events.
             session.FilterChain.FireSessionClosed();
 
-            DelegateUtils.SaveInvoke(SessionDestroyed, session);
+            DelegateUtils.SaveInvoke(SessionDestroyed, this, new IoSessionEventArgs(session));
         }
 
         void IoServiceSupport.FireServiceDeactivated()
@@ -246,51 +251,51 @@ namespace Mina.Core.Service
 
             public void SessionCreated(IoSession session)
             {
-                Action<IoSession> act = _service.SessionCreated;
+                EventHandler<IoSessionEventArgs> act = _service.SessionCreated;
                 if (act != null)
-                    act(session);
+                    act(_service, new IoSessionEventArgs(session));
             }
 
             void IoHandler.SessionOpened(IoSession session)
             {
-                Action<IoSession> act = _service.SessionOpened;
+                EventHandler<IoSessionEventArgs> act = _service.SessionOpened;
                 if (act != null)
-                    act(session);
+                    act(_service, new IoSessionEventArgs(session));
             }
 
             void IoHandler.SessionClosed(IoSession session)
             {
-                Action<IoSession> act = _service.SessionClosed;
+                EventHandler<IoSessionEventArgs> act = _service.SessionClosed;
                 if (act != null)
-                    act(session);
+                    act(_service, new IoSessionEventArgs(session));
             }
 
             void IoHandler.SessionIdle(IoSession session, IdleStatus status)
             {
-                Action<IoSession, IdleStatus> act = _service.SessionIdle;
+                EventHandler<IoSessionIdleEventArgs> act = _service.SessionIdle;
                 if (act != null)
-                    act(session, status);
+                    act(_service, new IoSessionIdleEventArgs(session, status));
             }
 
             void IoHandler.ExceptionCaught(IoSession session, Exception cause)
             {
-                Action<IoSession, Exception> act = _service.ExceptionCaught;
+                EventHandler<IoSessionExceptionEventArgs> act = _service.ExceptionCaught;
                 if (act != null)
-                    act(session, cause);
+                    act(_service, new IoSessionExceptionEventArgs(session, cause));
             }
 
             void IoHandler.MessageReceived(IoSession session, Object message)
             {
-                Action<IoSession, Object> act = _service.MessageReceived;
+                EventHandler<IoSessionMessageEventArgs> act = _service.MessageReceived;
                 if (act != null)
-                    act(session, message);
+                    act(_service, new IoSessionMessageEventArgs(session, message));
             }
 
             void IoHandler.MessageSent(IoSession session, Object message)
             {
-                Action<IoSession, Object> act = _service.MessageSent;
+                EventHandler<IoSessionMessageEventArgs> act = _service.MessageSent;
                 if (act != null)
-                    act(session, message);
+                    act(_service, new IoSessionMessageEventArgs(session, message));
             }
         }
     }

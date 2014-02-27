@@ -23,31 +23,31 @@ namespace Mina.Example.SumUp
 
             acceptor.FilterChain.AddLast("logger", new LoggingFilter());
 
-            acceptor.SessionOpened += s =>
+            acceptor.SessionOpened += (s, e) =>
             {
-                s.Config.SetIdleTime(IdleStatus.BothIdle, 60);
-                s.SetAttribute(SUM_KEY, 0);
+                e.Session.Config.SetIdleTime(IdleStatus.BothIdle, 60);
+                e.Session.SetAttribute(SUM_KEY, 0);
             };
 
-            acceptor.SessionIdle += (s, i) =>
+            acceptor.SessionIdle += (s, e) =>
             {
-                s.Close(true);
+                e.Session.Close(true);
             };
 
             acceptor.ExceptionCaught += (s, e) =>
             {
-                Console.WriteLine(e);
-                s.Close(true);
+                Console.WriteLine(e.Exception);
+                e.Session.Close(true);
             };
 
-            acceptor.MessageReceived += (s, m) =>
+            acceptor.MessageReceived += (s, e) =>
             {
                 // client only sends AddMessage. otherwise, we will have to identify
                 // its type using instanceof operator.
-                AddMessage am = (AddMessage)m;
+                AddMessage am = (AddMessage)e.Message;
 
                 // add the value to the current sum.
-                Int32 sum = s.GetAttribute<Int32>(SUM_KEY);
+                Int32 sum = e.Session.GetAttribute<Int32>(SUM_KEY);
                 Int32 value = am.Value;
                 Int64 expectedSum = (Int64)sum + value;
                 if (expectedSum > Int32.MaxValue || expectedSum < Int32.MinValue)
@@ -56,20 +56,20 @@ namespace Mina.Example.SumUp
                     ResultMessage rm = new ResultMessage();
                     rm.Sequence = am.Sequence; // copy sequence
                     rm.OK = false;
-                    s.Write(rm);
+                    e.Session.Write(rm);
                 }
                 else
                 {
                     // sum up
                     sum = (int)expectedSum;
-                    s.SetAttribute(SUM_KEY, sum);
+                    e.Session.SetAttribute(SUM_KEY, sum);
 
                     // return the result message
                     ResultMessage rm = new ResultMessage();
                     rm.Sequence = am.Sequence; // copy sequence
                     rm.OK = true;
                     rm.Value = sum;
-                    s.Write(rm);
+                    e.Session.Write(rm);
                 }
             };
 

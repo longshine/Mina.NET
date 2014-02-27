@@ -41,7 +41,7 @@ namespace Mina.Example.SumUp
 
             connector.FilterChain.AddLast("logger", new LoggingFilter());
 
-            connector.SessionOpened += s =>
+            connector.SessionOpened += (s, e) =>
             {
                 // send summation requests
                 for (int i = 0; i < values.Length; i++)
@@ -49,21 +49,21 @@ namespace Mina.Example.SumUp
                     AddMessage m = new AddMessage();
                     m.Sequence = i;
                     m.Value = values[i];
-                    s.Write(m);
+                    e.Session.Write(m);
                 }
             };
 
             connector.ExceptionCaught += (s, e) =>
             {
                 Console.WriteLine(e);
-                s.Close(true);
+                e.Session.Close(true);
             };
 
-            connector.MessageReceived += (s, m) =>
+            connector.MessageReceived += (s, e) =>
             {
                 // server only sends ResultMessage. otherwise, we will have to identify
                 // its type using instanceof operator.
-                ResultMessage rm = (ResultMessage)m;
+                ResultMessage rm = (ResultMessage)e.Message;
                 if (rm.OK)
                 {
                     // server returned OK code.
@@ -74,14 +74,14 @@ namespace Mina.Example.SumUp
                     {
                         // print the sum and disconnect.
                         Console.WriteLine("The sum: " + rm.Value);
-                        s.Close(true);
+                        e.Session.Close(true);
                     }
                 }
                 else
                 {
                     // seever returned error code because of overflow, etc.
                     Console.WriteLine("Server error, disconnecting...");
-                    s.Close(true);
+                    e.Session.Close(true);
                 }
             };
 

@@ -119,8 +119,8 @@ namespace Mina.Core
 
             IoFuture f1 = null, f2 = null;
 
-            future.Complete += f => f1 = f;
-            future.Complete += f => f2 = f;
+            future.Complete += (s, e) => f1 = e.Future;
+            future.Complete += (s, e) => f2 = e.Future;
 
             TestThread thread = new TestThread(future);
             thread.Start();
@@ -154,7 +154,7 @@ namespace Mina.Core
             Assert.IsTrue(future.Closed);
 
             IoFuture f1 = null;
-            future.Complete += f => f1 = f;
+            future.Complete += (s, e) => f1 = e.Future;
             Assert.AreSame(future, f1);
         }
         
@@ -166,8 +166,8 @@ namespace Mina.Core
             Assert.IsFalse(future.Closed);
 
             IoFuture f1 = null, f2 = null;
-            Action<IoFuture> listener1 = f => f1 = f;
-            Action<IoFuture> listener2 = f => f2 = f;
+            EventHandler<IoFutureEventArgs> listener1 = (s, e) => f1 = e.Future;
+            EventHandler<IoFutureEventArgs> listener2 = (s, e) => f2 = e.Future;
 
             future.Complete += listener1;
             future.Complete += listener2;
@@ -195,8 +195,8 @@ namespace Mina.Core
             Assert.IsFalse(future.Closed);
 
             IoFuture f1 = null, f2 = null;
-            Action<IoFuture> listener1 = f => f1 = f;
-            Action<IoFuture> listener2 = f => f2 = f;
+            EventHandler<IoFutureEventArgs> listener1 = (s, e) => f1 = e.Future;
+            EventHandler<IoFutureEventArgs> listener2 = (s, e) => f2 = e.Future;
 
             future.Complete += listener1;
             future.Complete += listener2;

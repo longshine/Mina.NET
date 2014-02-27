@@ -59,9 +59,9 @@ namespace Mina.Filter.Ssl
             // Inject the TestLine codec filter
             filters.AddLast("text", new ProtocolCodecFilter(new TextLineCodecFactory()));
 
-            acceptor.MessageReceived += (s, m) =>
+            acceptor.MessageReceived += (s, e) =>
             {
-                String line = (String)m;
+                String line = (String)e.Message;
 
                 if (line.StartsWith("hello"))
                 {
@@ -71,7 +71,7 @@ namespace Mina.Filter.Ssl
                 else if (line.StartsWith("send"))
                 {
                     Debug.WriteLine("Server got: 'send', sending 'data'");
-                    s.Write("data");
+                    e.Session.Write("data");
                 }
             };
 

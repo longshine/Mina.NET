@@ -151,7 +151,7 @@ namespace Mina.Transport.Socket
             BeginAccept((ListenerContext)state);
         }
 
-        private void OnSessionDestroyed(IoSession session)
+        private void OnSessionDestroyed(Object sender, IoSessionEventArgs e)
         {
             if (_connectionPool != null)
                 _connectionPool.Release();

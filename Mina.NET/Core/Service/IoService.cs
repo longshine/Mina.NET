@@ -49,13 +49,17 @@ namespace Mina.Core.Service
 
         IEnumerable<IWriteFuture> Broadcast(Object message);
 
-        event Action<IoSession> SessionCreated;
-        event Action<IoSession> SessionOpened;
-        event Action<IoSession> SessionClosed;
-        event Action<IoSession, IdleStatus> SessionIdle;
-        event Action<IoSession, Exception> ExceptionCaught;
-        event Action<IoSession, Object> MessageReceived;
-        event Action<IoSession, Object> MessageSent;
+        event EventHandler Activated;
+        event EventHandler<IdleStatusEventArgs> Idle;
+        event EventHandler Deactivated;
+        event EventHandler<IoSessionEventArgs> SessionCreated;
+        event EventHandler<IoSessionEventArgs> SessionDestroyed;
+        event EventHandler<IoSessionEventArgs> SessionOpened;
+        event EventHandler<IoSessionEventArgs> SessionClosed;
+        event EventHandler<IoSessionIdleEventArgs> SessionIdle;
+        event EventHandler<IoSessionExceptionEventArgs> ExceptionCaught;
+        event EventHandler<IoSessionMessageEventArgs> MessageReceived;
+        event EventHandler<IoSessionMessageEventArgs> MessageSent;
 
         /// <summary>
         /// Gets the IoServiceStatistics object for this service.

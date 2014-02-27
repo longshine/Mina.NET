@@ -24,24 +24,26 @@ namespace EchoServer
 
             acceptor.FilterChain.AddLast("logger", new LoggingFilter());
 
-            acceptor.SessionCreated += s => s.Config.SetIdleTime(IdleStatus.BothIdle, 10);
-            acceptor.SessionOpened += s => Console.WriteLine("OPENED");
-            acceptor.SessionClosed += s => Console.WriteLine("CLOSED");
-            acceptor.SessionIdle += (s, i) => Console.WriteLine("*** IDLE #" + s.GetIdleCount(IdleStatus.BothIdle) + " ***");
-            acceptor.ExceptionCaught += (s, e) => s.Close(true);
-            acceptor.MessageReceived += (s, m) =>
+            acceptor.Activated += (s, e) => Console.WriteLine("ACTIVATED");
+            acceptor.Deactivated += (s, e) => Console.WriteLine("DEACTIVATED");
+            acceptor.SessionCreated += (s, e) => e.Session.Config.SetIdleTime(IdleStatus.BothIdle, 10);
+            acceptor.SessionOpened += (s, e) => Console.WriteLine("OPENED");
+            acceptor.SessionClosed += (s, e) => Console.WriteLine("CLOSED");
+            acceptor.SessionIdle += (s, e) => Console.WriteLine("*** IDLE #" + e.Session.GetIdleCount(IdleStatus.BothIdle) + " ***");
+            acceptor.ExceptionCaught += (s, e) => e.Session.Close(true);
+            acceptor.MessageReceived += (s, e) =>
             {
-                Console.WriteLine("Received : " + m);
-                IoBuffer income = (IoBuffer)m;
+                Console.WriteLine("Received : " + e.Message);
+                IoBuffer income = (IoBuffer)e.Message;
                 IoBuffer outcome = IoBuffer.Allocate(income.Remaining);
                 outcome.Put(income);
                 outcome.Flip();
-                s.Write(outcome);
+                e.Session.Write(outcome);
             };
 
             acceptor.Bind(new IPEndPoint(IPAddress.Any, port));
 
-            Console.WriteLine("Listening on port " + port);
+            Console.WriteLine("Listening on " + acceptor.LocalEndPoint);
 
             while (true)
             {
