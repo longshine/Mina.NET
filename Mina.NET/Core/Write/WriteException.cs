@@ -37,6 +37,13 @@ namespace Mina.Core.Write
             get { return _requests; }
         }
 
+        public override void GetObjectData(
+            System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
+
         private static IList<IWriteRequest> AsRequestList(IWriteRequest request)
         {
             if (request == null)
