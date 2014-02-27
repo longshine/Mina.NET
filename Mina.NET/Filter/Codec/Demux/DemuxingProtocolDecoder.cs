@@ -143,10 +143,10 @@ namespace Mina.Filter.Codec.Demux
                     throw new InvalidOperationException("Unexpected decode result (see your decode()): " + result);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 state.currentDecoder = null;
-                throw e;
+                throw;
             }
         }
 
