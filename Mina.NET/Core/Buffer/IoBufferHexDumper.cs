@@ -6,7 +6,7 @@ namespace Mina.Core.Buffer
     /// <summary>
     /// Provides utility methods to dump an <see cref="IoBuffer"/> into a hex formatted string.
     /// </summary>
-    class IoBufferHexDumper
+    static class IoBufferHexDumper
     {
         private static readonly Char[] highDigits;
         private static readonly Char[] lowDigits;

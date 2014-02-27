@@ -37,7 +37,7 @@ namespace Mina.Core.Service
         public event EventHandler<IoSessionMessageEventArgs> MessageReceived;
         public event EventHandler<IoSessionMessageEventArgs> MessageSent;
 
-        public AbstractIoService(IoSessionConfig sessionConfig)
+        protected AbstractIoService(IoSessionConfig sessionConfig)
         {
             _sessionConfig = sessionConfig;
             _handler = new InnerHandler(this);
@@ -50,7 +50,7 @@ namespace Mina.Core.Service
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Handler");
+                    throw new ArgumentNullException("value");
                 _handler = value;
             }
         }
@@ -82,7 +82,7 @@ namespace Mina.Core.Service
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("value");
                 else if (Active)
                     throw new InvalidOperationException();
                 _sessionDataStructureFactory = value;

@@ -25,11 +25,11 @@ namespace Mina.Transport.Socket
         private Boolean _disposed;
         private readonly Dictionary<EndPoint, System.Net.Sockets.Socket> _listenSockets = new Dictionary<EndPoint, System.Net.Sockets.Socket>();
 
-        public AbstractSocketAcceptor()
+        protected AbstractSocketAcceptor()
             : this(1024)
         { }
 
-        public AbstractSocketAcceptor(Int32 maxConnections)
+        protected AbstractSocketAcceptor(Int32 maxConnections)
             : base(new DefaultSocketSessionConfig())
         {
             _maxConnections = maxConnections;
@@ -55,7 +55,6 @@ namespace Mina.Transport.Socket
         protected override IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints)
         {
             Dictionary<EndPoint, System.Net.Sockets.Socket> newListeners = new Dictionary<EndPoint, System.Net.Sockets.Socket>();
-            Exception exception = null;
             try
             {
                 // Process all the addresses
@@ -67,29 +66,22 @@ namespace Mina.Transport.Socket
                     newListeners[listenSocket.LocalEndPoint] = listenSocket;
                 }
             }
-            catch (Exception ex)
-            {
-                exception = ex;
-            }
-            finally
+            catch (Exception)
             {
                 // Roll back if failed to bind all addresses
-                if (exception != null)
+                foreach (System.Net.Sockets.Socket listenSocket in newListeners.Values)
                 {
-                    foreach (System.Net.Sockets.Socket listenSocket in newListeners.Values)
+                    try
                     {
-                        try
-                        {
-                            listenSocket.Close();
-                        }
-                        catch (Exception ex)
-                        {
-                            ExceptionMonitor.Instance.ExceptionCaught(ex);
-                        }
+                        listenSocket.Close();
                     }
-
-                    throw exception;
+                    catch (Exception ex)
+                    {
+                        ExceptionMonitor.Instance.ExceptionCaught(ex);
+                    }
                 }
+
+                throw;
             }
 
             if (MaxConnections > 0)

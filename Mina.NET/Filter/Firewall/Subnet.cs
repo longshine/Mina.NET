@@ -8,8 +8,8 @@ namespace Mina.Filter.Firewall
     /// </summary>
     public class Subnet
     {
-        private static readonly uint IP_MASK = 0x80000000;
-        private static readonly int BYTE_MASK = 0xFF;
+        private const uint IP_MASK = 0x80000000;
+        private const int BYTE_MASK = 0xFF;
 
         private IPAddress _subnet;
         private int _subnetInt;
@@ -30,7 +30,7 @@ namespace Mina.Filter.Firewall
             this._suffix = mask;
 
             // binary mask for this subnet
-            this._subnetMask = (int)IP_MASK >> (mask - 1);
+            this._subnetMask = (int)(IP_MASK >> (mask - 1));
         }
 
         public Boolean InSubnet(IPAddress address)

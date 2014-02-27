@@ -71,7 +71,7 @@ namespace Mina.Core.Session
                 case IdleStatus.BothIdle:
                     return _idleTimeForBoth;
                 default:
-                    throw new ArgumentException("status");
+                    throw new ArgumentException("Unknown status", "status");
             }
         }
 
@@ -94,7 +94,7 @@ namespace Mina.Core.Session
                     _idleTimeForBoth = idleTime;
                     break;
                 default:
-                    throw new ArgumentException("status");
+                    throw new ArgumentException("Unknown status", "status");
             }
         }
 

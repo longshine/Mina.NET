@@ -20,7 +20,7 @@ namespace Mina.Filter.Stream
         protected readonly AttributeKey WRITE_REQUEST_QUEUE;
         protected readonly AttributeKey CURRENT_WRITE_REQUEST;
 
-        public AbstractStreamWriteFilter()
+        protected AbstractStreamWriteFilter()
         { 
             CURRENT_STREAM = new AttributeKey(GetType(), "stream");
             WRITE_REQUEST_QUEUE = new AttributeKey(GetType(), "queue");

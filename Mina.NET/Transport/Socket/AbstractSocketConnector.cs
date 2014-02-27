@@ -12,7 +12,7 @@ namespace Mina.Transport.Socket
     {
         protected readonly IoProcessor<SocketSession> _processor = new AsyncSocketProcessor();
 
-        public AbstractSocketConnector()
+        protected AbstractSocketConnector()
             : base(new DefaultSocketSessionConfig())
         { }
 

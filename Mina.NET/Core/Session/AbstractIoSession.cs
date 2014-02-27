@@ -29,7 +29,7 @@ namespace Mina.Core.Session
         private volatile Boolean _closing;
         private readonly ICloseFuture _closeFuture;
 
-        public AbstractIoSession(IoService service)
+        protected AbstractIoSession(IoService service)
         {
             _service = service;
             _handler = service.Handler;
@@ -375,7 +375,7 @@ namespace Mina.Core.Session
                 case IdleStatus.WriterIdle:
                     return _idleCountForWrite > 0;
                 default:
-                    throw new ArgumentException("status");
+                    throw new ArgumentException("Unknown status", "status");
             }
         }
 
@@ -421,7 +421,7 @@ namespace Mina.Core.Session
                 case IdleStatus.WriterIdle:
                     return _idleCountForWrite;
                 default:
-                    throw new ArgumentException("status");
+                    throw new ArgumentException("Unknown status", "status");
             }
         }
 
@@ -451,7 +451,7 @@ namespace Mina.Core.Session
                 case IdleStatus.WriterIdle:
                     return _lastIdleTimeForWrite;
                 default:
-                    throw new ArgumentException("status");
+                    throw new ArgumentException("Unknown status", "status");
             }
         }
 
@@ -487,7 +487,7 @@ namespace Mina.Core.Session
                     _lastIdleTimeForWrite = currentTime;
                     break;
                 default:
-                    throw new ArgumentException("status");
+                    throw new ArgumentException("Unknown status", "status");
             }
         }
 

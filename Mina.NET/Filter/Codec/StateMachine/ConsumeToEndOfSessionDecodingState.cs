@@ -19,7 +19,7 @@ namespace Mina.Filter.Codec.StateMachine
         /// If the max is reached a <see cref="ProtocolDecoderException"/> will be 
         /// thrown by <code>Decode(IoBuffer, IProtocolDecoderOutput)</code>
         /// </remarks>
-        public ConsumeToEndOfSessionDecodingState(Int32 maxLength)
+        protected ConsumeToEndOfSessionDecodingState(Int32 maxLength)
         {
             _maxLength = maxLength;
         }

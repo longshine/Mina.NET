@@ -13,7 +13,7 @@ namespace Mina.Core.Service
         private Int64 _connectTimeoutInMillis = 60000L;
         private EndPoint _defaultRemoteEP;
 
-        public AbstractIoConnector(IoSessionConfig sessionConfig)
+        protected AbstractIoConnector(IoSessionConfig sessionConfig)
             : base(sessionConfig)
         { }
 

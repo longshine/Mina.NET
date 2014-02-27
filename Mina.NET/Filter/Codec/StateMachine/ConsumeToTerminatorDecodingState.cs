@@ -16,7 +16,7 @@ namespace Mina.Filter.Codec.StateMachine
         /// Creates a new instance using the specified terminator character.
         /// </summary>
         /// <param name="terminator">the terminator character</param>
-        public ConsumeToTerminatorDecodingState(Byte terminator)
+        protected ConsumeToTerminatorDecodingState(Byte terminator)
         {
             _terminator = terminator;
         }

@@ -78,7 +78,7 @@ namespace Mina.Filter.Firewall
         public void SetBlacklist(IEnumerable<IPAddress> addresses)
         {
             if (addresses == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("addresses");
             lock (((IList)_blacklist).SyncRoot)
             {
                 _blacklist.Clear();
@@ -95,7 +95,7 @@ namespace Mina.Filter.Firewall
         public void SetSubnetBlacklist(Subnet[] subnets)
         {
             if (subnets == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("subnets");
             lock (((IList)_blacklist).SyncRoot)
             {
                 _blacklist.Clear();
@@ -112,7 +112,7 @@ namespace Mina.Filter.Firewall
         public void Block(IPAddress address)
         {
             if (address == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("address");
             Block(new Subnet(address, 32));
         }
 
@@ -122,7 +122,7 @@ namespace Mina.Filter.Firewall
         public void Block(Subnet subnet)
         {
             if (subnet == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("subnet");
             lock (((IList)_blacklist).SyncRoot)
             {
                 _blacklist.Add(subnet);
@@ -135,7 +135,7 @@ namespace Mina.Filter.Firewall
         public void Unblock(IPAddress address)
         {
             if (address == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("address");
             Unblock(new Subnet(address, 32));
         }
 
@@ -145,7 +145,7 @@ namespace Mina.Filter.Firewall
         private void Unblock(Subnet subnet)
         {
             if (subnet == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("subnet");
             lock (((IList)_blacklist).SyncRoot)
             {
                 _blacklist.Remove(subnet);

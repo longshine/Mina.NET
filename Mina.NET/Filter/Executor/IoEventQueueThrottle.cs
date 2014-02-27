@@ -40,7 +40,7 @@ namespace Mina.Filter.Executor
             set
             {
                 if (value <= 0)
-                    throw new ArgumentException();
+                    throw new ArgumentException("Threshold should be greater than 0", "value");
                 _threshold = value;
             }
         }

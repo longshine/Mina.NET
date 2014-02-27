@@ -114,9 +114,9 @@ namespace Mina.Filter.Codec
             if (writeRequest is EncodedWriteRequest)
                 return;
 
-            if (writeRequest is MessageWriteRequest)
+            MessageWriteRequest wrappedRequest = writeRequest as MessageWriteRequest;
+            if (wrappedRequest != null)
             {
-                MessageWriteRequest wrappedRequest = (MessageWriteRequest)writeRequest;
                 nextFilter.MessageSent(session, wrappedRequest.InnerRequest);
             }
             else
@@ -163,7 +163,8 @@ namespace Mina.Filter.Codec
                             break;
 
                         // Flush only when the buffer has remaining.
-                        if (!(encodedMessage is IoBuffer) || ((IoBuffer)encodedMessage).HasRemaining)
+                        IoBuffer buf = encodedMessage as IoBuffer;
+                        if (buf == null || buf.HasRemaining)
                         {
                             IWriteRequest encodedWriteRequest = new EncodedWriteRequest(encodedMessage, null);
                             nextFilter.FilterWrite(session, encodedWriteRequest);
@@ -292,7 +293,8 @@ namespace Mina.Filter.Codec
                         break;
 
                     // Flush only when the buffer has remaining.
-                    if (!(encodedMessage is IoBuffer) || ((IoBuffer)encodedMessage).HasRemaining)
+                    IoBuffer buf = encodedMessage as IoBuffer;
+                    if (buf == null || buf.HasRemaining)
                     {
                         future = new DefaultWriteFuture(_session);
                         _nextFilter.FilterWrite(_session, new EncodedWriteRequest(encodedMessage, future));

@@ -56,7 +56,7 @@ namespace Mina.Core.Write
         private static IList<IWriteRequest> AsRequestList(IEnumerable<IWriteRequest> requests)
         {
             if (requests == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException("requests");
             List<IWriteRequest> newRequests = new List<IWriteRequest>(requests);
             return newRequests.AsReadOnly();
         }

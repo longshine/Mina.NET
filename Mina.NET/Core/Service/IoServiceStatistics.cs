@@ -189,7 +189,7 @@ namespace Mina.Core.Service
             set
             {
                 if (value < 0)
-                    throw new ArgumentException();
+                    throw new ArgumentException("ThroughputCalculationInterval should be greater than 0", "value");
                 _throughputCalculationInterval = value;
             }
         }

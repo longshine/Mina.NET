@@ -37,7 +37,7 @@ namespace Mina.Core.Future
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("value");
                 Value = value;
             }
         }
@@ -47,8 +47,9 @@ namespace Mina.Core.Future
             get
             {
                 Object val = Value;
-                if (val is Exception)
-                    throw (Exception)val;
+                Exception ex = val as Exception;
+                if (ex != null)
+                    throw ex;
                 else
                     return val as IoSession;
             }

@@ -23,8 +23,9 @@ namespace Mina.Core.Future
                     Object val = Value;
                     if (Object.ReferenceEquals(val, CLOSED))
                         return null;
-                    if (val is Exception)
-                        throw (Exception)val;
+                    Exception ex = val as Exception;
+                    if (ex != null)
+                        throw ex;
                     return val;
                 }
 
@@ -33,7 +34,7 @@ namespace Mina.Core.Future
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("value");
                 Value = value;
             }
         }
@@ -70,7 +71,7 @@ namespace Mina.Core.Future
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("value");
                 Value = value;
             }
         }

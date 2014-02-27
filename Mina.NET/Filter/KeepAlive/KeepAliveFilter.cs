@@ -89,7 +89,7 @@ namespace Mina.Filter.KeepAlive
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("value");
                 _requestTimeoutHandler = value;
             }
         }

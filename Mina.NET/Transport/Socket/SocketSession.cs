@@ -19,7 +19,7 @@ namespace Mina.Transport.Socket
         private readonly IoFilterChain _filterChain;
         private Int32 _writing;
 
-        public SocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
+        protected SocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
             : base(service)
         {
             _socket = socket;

@@ -41,17 +41,17 @@ namespace Mina.Core.Filterchain
         private readonly Func<TFilter, TFilter, Boolean> _equalsFunc;
         private readonly Func<TChain, Entry, Entry, String, TFilter, Entry> _entryFactory;
 
-        public Chain(Func<Entry, TNextFilter> nextFilterFactory, Func<TFilter> headFilterFactory, Func<TFilter> tailFilterFactory)
+        protected Chain(Func<Entry, TNextFilter> nextFilterFactory, Func<TFilter> headFilterFactory, Func<TFilter> tailFilterFactory)
             : this((chain, prev, next, name, filter) => new Entry(chain, prev, next, name, filter, nextFilterFactory),
             headFilterFactory, tailFilterFactory)
         { }
 
-        public Chain(Func<TChain, Entry, Entry, String, TFilter, Entry> entryFactory,
+        protected Chain(Func<TChain, Entry, Entry, String, TFilter, Entry> entryFactory,
             Func<TFilter> headFilterFactory, Func<TFilter> tailFilterFactory)
             : this(entryFactory, headFilterFactory, tailFilterFactory, (t1, t2) => Object.ReferenceEquals(t1, t2))
         { }
 
-        public Chain(Func<TChain, Entry, Entry, String, TFilter, Entry> entryFactory, 
+        protected Chain(Func<TChain, Entry, Entry, String, TFilter, Entry> entryFactory, 
             Func<TFilter> headFilterFactory, Func<TFilter> tailFilterFactory,
             Func<TFilter, TFilter, Boolean> equalsFunc)
         {
@@ -347,7 +347,7 @@ namespace Mina.Core.Filterchain
                 set
                 {
                     if (value == null)
-                        throw new ArgumentNullException();
+                        throw new ArgumentNullException("value");
                     _filter = value;
                 }
             }

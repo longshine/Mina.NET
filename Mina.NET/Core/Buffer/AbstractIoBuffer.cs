@@ -16,7 +16,7 @@ namespace Mina.Core.Buffer
         protected Boolean _recapacityAllowed = true;
         private Int32 _minimumCapacity;
 
-        public AbstractIoBuffer(IoBufferAllocator allocator, Int32 mark, Int32 pos, Int32 lim, Int32 cap)
+        protected AbstractIoBuffer(IoBufferAllocator allocator, Int32 mark, Int32 pos, Int32 lim, Int32 cap)
             : base(mark, pos, lim, cap)
         {
             _allocator = allocator;
@@ -25,7 +25,7 @@ namespace Mina.Core.Buffer
             _minimumCapacity = cap;
         }
 
-        public AbstractIoBuffer(AbstractIoBuffer parent, Int32 mark, Int32 pos, Int32 lim, Int32 cap)
+        protected AbstractIoBuffer(AbstractIoBuffer parent, Int32 mark, Int32 pos, Int32 lim, Int32 cap)
             : base(mark, pos, lim, cap)
         {
             _allocator = parent._allocator;
@@ -46,7 +46,7 @@ namespace Mina.Core.Buffer
             set
             {
                 if (value < 0)
-                    throw new ArgumentException();
+                    throw new ArgumentException("MinimumCapacity");
                 _minimumCapacity = value;
             }
         }
@@ -488,7 +488,7 @@ namespace Mina.Core.Buffer
         public override IoBuffer Put(IoBuffer src)
         {
             if (Object.ReferenceEquals(src, this))
-                throw new ArgumentException();
+                throw new ArgumentException("Cannot put myself", "src");
 
             AutoExpand0(src.Remaining);
             PutInternal(src);

@@ -34,7 +34,7 @@ namespace Mina.Util
         /// <param name="item">The SocketAsyncEventArgs instance to add to the pool</param>
         public void Push(T item)
         {
-            if (item == null) { throw new ArgumentNullException("Items added to a SocketAsyncEventArgsPool cannot be null"); }
+            if (item == null) { throw new ArgumentNullException("item", "Items added to a SocketAsyncEventArgsPool cannot be null"); }
             m_pool.Push(item);
         }
 

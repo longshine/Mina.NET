@@ -14,7 +14,7 @@ namespace Mina.Filter.Codec.StateMachine
         private IDecodingState _currentState;
         private Boolean _initialized;
 
-        public DecodingStateMachine()
+        protected DecodingStateMachine()
         {
             _childOutput = new ChildOutput(this);
         }

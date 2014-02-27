@@ -12,7 +12,7 @@ namespace Mina.Core.Service
         private readonly List<EndPoint> _boundEndPoints = new List<EndPoint>();
         private Boolean _disconnectOnUnbind = true;
 
-        public AbstractIoAcceptor(IoSessionConfig sessionConfig)
+        protected AbstractIoAcceptor(IoSessionConfig sessionConfig)
             : base(sessionConfig)
         { }
 
@@ -78,7 +78,9 @@ namespace Mina.Core.Service
 
         public void Bind(params EndPoint[] localEndPoints)
         {
-            if (localEndPoints.Length == 0)
+            if (localEndPoints == null)
+                throw new ArgumentNullException("localEndPoints");
+            else if (localEndPoints.Length == 0)
                 Bind(DefaultLocalEndPoints);
             else
                 Bind((IEnumerable<EndPoint>)localEndPoints);

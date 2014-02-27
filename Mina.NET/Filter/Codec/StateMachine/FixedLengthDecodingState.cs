@@ -18,7 +18,7 @@ namespace Mina.Filter.Codec.StateMachine
         /// Constructs a new instance using the specified decode length.
         /// </summary>
         /// <param name="length">the number of bytes to read</param>
-        public FixedLengthDecodingState(Int32 length)
+        protected FixedLengthDecodingState(Int32 length)
         {
             _length = length;
         }

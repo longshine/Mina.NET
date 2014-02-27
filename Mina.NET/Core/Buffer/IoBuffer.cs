@@ -16,7 +16,7 @@ namespace Mina.Core.Buffer
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("value");
                 if (allocator != null && allocator != value && allocator is IDisposable)
                     ((IDisposable)allocator).Dispose();
                 allocator = value;

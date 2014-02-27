@@ -16,17 +16,17 @@ namespace Mina.Core.Buffer
         /// Creates a new buffer with the given mark, position, limit, and capacity,
         /// after checking invariants.
         /// </summary>
-        public Buffer(Int32 mark, Int32 pos, Int32 lim, Int32 cap)
+        protected Buffer(Int32 mark, Int32 pos, Int32 lim, Int32 cap)
         {
             if (cap < 0)
-                throw new ArgumentException("cap");
+                throw new ArgumentException("Capacity should be >= 0", "cap");
             _capacity = cap;
             Limit = lim;
             Position = pos;
             if (mark >= 0)
             {
                 if (mark > pos)
-                    throw new ArgumentException();
+                    throw new ArgumentException("Invalid mark position", "mark");
                 _mark = mark;
             }
         }
@@ -49,7 +49,7 @@ namespace Mina.Core.Buffer
             set
             {
                 if ((value > _limit) || (value < 0))
-                    throw new ArgumentException();
+                    throw new ArgumentException("Invalid position", "value");
                 _position = value;
                 if (_mark > _position) _mark = -1;
             }
@@ -66,7 +66,7 @@ namespace Mina.Core.Buffer
             set
             {
                 if ((value > _capacity) || (value < 0))
-                    throw new ArgumentException();
+                    throw new ArgumentException("Invalid limit", "value");
                 _limit = value;
                 if (_position > _limit) _position = _limit;
                 if (_mark > _limit) _mark = -1;

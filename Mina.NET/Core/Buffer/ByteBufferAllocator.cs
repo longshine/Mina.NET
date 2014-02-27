@@ -13,7 +13,7 @@ namespace Mina.Core.Buffer
         public IoBuffer Allocate(Int32 capacity)
         {
             if (capacity < 0)
-                throw new ArgumentException();
+                throw new ArgumentException("Capacity should be >= 0", "capacity");
             return new ByteBuffer(this, capacity, capacity);
         }
 
