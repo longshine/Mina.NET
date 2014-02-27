@@ -49,7 +49,7 @@ namespace Mina.Transport.Socket
             ArraySegment<Byte> array = buf.GetRemaining();
             try
             {
-                Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, Socket);
+                Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, new SendingContext(Socket, buf));
             }
             catch (ObjectDisposedException)
             {
@@ -59,19 +59,15 @@ namespace Mina.Transport.Socket
             {
                 ExceptionMonitor.Instance.ExceptionCaught(ex);
             }
-            finally
-            {
-                buf.Position += array.Count;
-            }
         }
 
         private void SendCallback(IAsyncResult ar)
         {
-            System.Net.Sockets.Socket socket = (System.Net.Sockets.Socket)ar.AsyncState;
+            SendingContext sc = (SendingContext)ar.AsyncState;
             Int32 written;
             try
             {
-                written = socket.EndSend(ar);
+                written = sc.socket.EndSend(ar);
             }
             catch (Exception ex)
             {
@@ -83,7 +79,20 @@ namespace Mina.Transport.Socket
                 return;
             }
 
+            sc.buffer.Position += written;
             EndSend(written);
+        }
+
+        class SendingContext
+        {
+            public readonly System.Net.Sockets.Socket socket;
+            public readonly IoBuffer buffer;
+
+            public SendingContext(System.Net.Sockets.Socket s, IoBuffer b)
+            {
+                socket = s;
+                buffer = b;
+            }
         }
     }
 }
