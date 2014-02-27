@@ -13,7 +13,7 @@ namespace Mina.Core.Service
     /// <summary>
     /// Base implementation of <see cref="IoService"/>s.
     /// </summary>
-    public abstract class AbstractIoService : IoService, IoServiceSupport, IoHandler, IDisposable
+    public abstract class AbstractIoService : IoService, IoServiceSupport, IDisposable
     {
         private Int32 _active = 0;
         private DateTime _activationTime;
@@ -40,7 +40,7 @@ namespace Mina.Core.Service
         public AbstractIoService(IoSessionConfig sessionConfig)
         {
             _sessionConfig = sessionConfig;
-            _handler = this;
+            _handler = new InnerHandler(this);
             _stats = new IoServiceStatistics(this);
         }
 
@@ -235,57 +235,63 @@ namespace Mina.Core.Service
 
         #endregion
 
-        #region IoHandler
-
-        void IoHandler.SessionCreated(IoSession session)
+        class InnerHandler : IoHandler
         {
-            Action<IoSession> act = SessionCreated;
-            if (act != null)
-                act(session);
-        }
+            private readonly AbstractIoService _service;
 
-        void IoHandler.SessionOpened(IoSession session)
-        {
-            Action<IoSession> act = SessionOpened;
-            if (act != null)
-                act(session);
-        }
+            public InnerHandler(AbstractIoService service)
+            {
+                _service = service;
+            }
 
-        void IoHandler.SessionClosed(IoSession session)
-        {
-            Action<IoSession> act = SessionClosed;
-            if (act != null)
-                act(session);
-        }
+            public void SessionCreated(IoSession session)
+            {
+                Action<IoSession> act = _service.SessionCreated;
+                if (act != null)
+                    act(session);
+            }
 
-        void IoHandler.SessionIdle(IoSession session, IdleStatus status)
-        {
-            Action<IoSession, IdleStatus> act = SessionIdle;
-            if (act != null)
-                act(session, status);
-        }
+            void IoHandler.SessionOpened(IoSession session)
+            {
+                Action<IoSession> act = _service.SessionOpened;
+                if (act != null)
+                    act(session);
+            }
 
-        void IoHandler.ExceptionCaught(IoSession session, Exception cause)
-        {
-            Action<IoSession, Exception> act = ExceptionCaught;
-            if (act != null)
-                act(session, cause);
-        }
+            void IoHandler.SessionClosed(IoSession session)
+            {
+                Action<IoSession> act = _service.SessionClosed;
+                if (act != null)
+                    act(session);
+            }
 
-        void IoHandler.MessageReceived(IoSession session, Object message)
-        {
-            Action<IoSession, Object> act = MessageReceived;
-            if (act != null)
-                act(session, message);
-        }
+            void IoHandler.SessionIdle(IoSession session, IdleStatus status)
+            {
+                Action<IoSession, IdleStatus> act = _service.SessionIdle;
+                if (act != null)
+                    act(session, status);
+            }
 
-        void IoHandler.MessageSent(IoSession session, Object message)
-        {
-            Action<IoSession, Object> act = MessageSent;
-            if (act != null)
-                act(session, message);
-        }
+            void IoHandler.ExceptionCaught(IoSession session, Exception cause)
+            {
+                Action<IoSession, Exception> act = _service.ExceptionCaught;
+                if (act != null)
+                    act(session, cause);
+            }
 
-        #endregion
+            void IoHandler.MessageReceived(IoSession session, Object message)
+            {
+                Action<IoSession, Object> act = _service.MessageReceived;
+                if (act != null)
+                    act(session, message);
+            }
+
+            void IoHandler.MessageSent(IoSession session, Object message)
+            {
+                Action<IoSession, Object> act = _service.MessageSent;
+                if (act != null)
+                    act(session, message);
+            }
+        }
     }
 }
