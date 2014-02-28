@@ -13,6 +13,8 @@ namespace Mina.Core.Session
         private readonly IoSession _session;
         private readonly Object _parameter;
 
+        /// <summary>
+        /// </summary>
         public IoEvent(IoEventType eventType, IoSession session, Object parameter)
         {
             if (session == null)
@@ -22,21 +24,33 @@ namespace Mina.Core.Session
             _parameter = parameter;
         }
 
+        /// <summary>
+        /// Gets the <see cref="IoEventType"/> of this event.
+        /// </summary>
         public IoEventType EventType
         {
             get { return _eventType; }
         }
 
+        /// <summary>
+        /// Gets the <see cref="IoSession"/> of this event.
+        /// </summary>
         public IoSession Session
         {
             get { return _session; }
         }
 
+        /// <summary>
+        /// Gets the parameter of this event.
+        /// </summary>
         public Object Parameter
         {
             get { return _parameter; }
         }
 
+        /// <summary>
+        /// Fires this event.
+        /// </summary>
         public virtual void Fire()
         {
             switch (_eventType)
@@ -73,6 +87,7 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <inheritdoc/>
         public override String ToString()
         {
             if (_parameter == null)

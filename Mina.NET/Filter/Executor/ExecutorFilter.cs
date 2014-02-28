@@ -46,12 +46,14 @@ namespace Mina.Filter.Executor
             get { return _executor; }
         }
 
+        /// <inheritdoc/>
         public override void OnPreAdd(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             if (parent.Contains(this))
                 throw new ArgumentException("You can't add the same filter instance more than once. Create another instance and add it.");
         }
 
+        /// <inheritdoc/>
         public override void SessionOpened(INextFilter nextFilter, IoSession session)
         {
             if ((_eventTypes & IoEventType.SessionOpened) == IoEventType.SessionOpened)
@@ -65,6 +67,7 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <inheritdoc/>
         public override void SessionClosed(INextFilter nextFilter, IoSession session)
         {
             if ((_eventTypes & IoEventType.SessionClosed) == IoEventType.SessionClosed)
@@ -78,6 +81,7 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <inheritdoc/>
         public override void SessionIdle(INextFilter nextFilter, IoSession session, IdleStatus status)
         {
             if ((_eventTypes & IoEventType.SessionIdle) == IoEventType.SessionIdle)
@@ -91,6 +95,7 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <inheritdoc/>
         public override void ExceptionCaught(INextFilter nextFilter, IoSession session, Exception cause)
         {
             if ((_eventTypes & IoEventType.ExceptionCaught) == IoEventType.ExceptionCaught)
@@ -104,6 +109,7 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
             if ((_eventTypes & IoEventType.MessageReceived) == IoEventType.MessageReceived)
@@ -117,6 +123,7 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             if ((_eventTypes & IoEventType.MessageSent) == IoEventType.MessageSent)
@@ -130,6 +137,7 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <inheritdoc/>
         public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             if ((_eventTypes & IoEventType.Write) == IoEventType.Write)
@@ -143,6 +151,7 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <inheritdoc/>
         public override void FilterClose(INextFilter nextFilter, IoSession session)
         {
             if ((_eventTypes & IoEventType.Close) == IoEventType.Close)

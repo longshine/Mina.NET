@@ -47,18 +47,79 @@ namespace Mina.Core.Service
         /// </summary>
         IoSessionDataStructureFactory SessionDataStructureFactory { get; set; }
 
+        /// <summary>
+        /// Writes the specified message to all the <see cref="IoSession"/>s
+        /// managed by this service.
+        /// </summary>
         IEnumerable<IWriteFuture> Broadcast(Object message);
 
+        /// <summary>
+        /// Fires when this service is activated.
+        /// </summary>
         event EventHandler Activated;
-        event EventHandler<IdleStatusEventArgs> Idle;
+        /// <summary>
+        /// Fires when this service is idle.
+        /// </summary>
+        event EventHandler<IdleEventArgs> Idle;
+        /// <summary>
+        /// Fires when this service is deactivated.
+        /// </summary>
         event EventHandler Deactivated;
+        /// <summary>
+        /// Fires when a new session is created.
+        /// </summary>
         event EventHandler<IoSessionEventArgs> SessionCreated;
+        /// <summary>
+        /// Fires when a new session is being destroyed.
+        /// </summary>
         event EventHandler<IoSessionEventArgs> SessionDestroyed;
+        /// <summary>
+        /// Fires when a session is opened. Only available when
+        /// no <see cref="IoHandler"/> is set to <see cref="Handler"/>.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="Handler"/> is set, use <see cref="IoHandler.SessionOpened(IoSession)"/> instead.
+        /// </remarks>
         event EventHandler<IoSessionEventArgs> SessionOpened;
+        /// <summary>
+        /// Fires when a session is closed. Only available when
+        /// no <see cref="IoHandler"/> is set to <see cref="Handler"/>.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="Handler"/> is set, use <see cref="IoHandler.SessionClosed(IoSession)"/> instead.
+        /// </remarks>
         event EventHandler<IoSessionEventArgs> SessionClosed;
+        /// <summary>
+        /// Fires when a session is idle. Only available when
+        /// no <see cref="IoHandler"/> is set to <see cref="Handler"/>.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="Handler"/> is set, use <see cref="IoHandler.SessionIdle(IoSession, IdleStatus)"/> instead.
+        /// </remarks>
         event EventHandler<IoSessionIdleEventArgs> SessionIdle;
+        /// <summary>
+        /// Fires when any exception is thrown. Only available when
+        /// no <see cref="IoHandler"/> is set to <see cref="Handler"/>.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="Handler"/> is set, use <see cref="IoHandler.ExceptionCaught(IoSession, Exception)"/> instead.
+        /// </remarks>
         event EventHandler<IoSessionExceptionEventArgs> ExceptionCaught;
+        /// <summary>
+        /// Fires when a message is received. Only available when
+        /// no <see cref="IoHandler"/> is set to <see cref="Handler"/>.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="Handler"/> is set, use <see cref="IoHandler.MessageReceived(IoSession, Object)"/> instead.
+        /// </remarks>
         event EventHandler<IoSessionMessageEventArgs> MessageReceived;
+        /// <summary>
+        /// Fires when a message is sent. Only available when
+        /// no <see cref="IoHandler"/> is set to <see cref="Handler"/>.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="Handler"/> is set, use <see cref="IoHandler.MessageSent(IoSession, Object)"/> instead.
+        /// </remarks>
         event EventHandler<IoSessionMessageEventArgs> MessageSent;
 
         /// <summary>

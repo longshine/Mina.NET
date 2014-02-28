@@ -21,11 +21,14 @@ namespace Mina.Core.Future
         private EventHandler<IoFutureEventArgs> _complete;
         private Boolean _disposed;
 
+        /// <summary>
+        /// </summary>
         public DefaultIoFuture(IoSession session)
         {
             _session = session;
         }
 
+        /// <inheritdoc/>
         public event EventHandler<IoFutureEventArgs> Complete
         {
             add
@@ -57,16 +60,21 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <inheritdoc/>
         public virtual IoSession Session
         {
             get { return _session; }
         }
 
+        /// <inheritdoc/>
         public Boolean Done
         {
             get { return _ready; }
         }
 
+        /// <summary>
+        /// Gets or sets the value associated with this future.
+        /// </summary>
         public Object Value
         {
             get { return _value; }
@@ -84,23 +92,31 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <inheritdoc/>
         public IoFuture Await()
         {
             Await0(Timeout.Infinite);
             return this;
         }
 
+        /// <inheritdoc/>
         public Boolean Await(Int32 millisecondsTimeout)
         {
             return Await0(millisecondsTimeout);
         }
 
+        /// <summary>
+        /// Disposes resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Disposes resources.
+        /// </summary>
         protected virtual void Dispose(Boolean disposing)
         {
             if (!_disposed)

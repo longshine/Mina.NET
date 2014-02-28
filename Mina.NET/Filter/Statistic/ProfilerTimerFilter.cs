@@ -115,31 +115,37 @@ namespace Mina.Filter.Statistic
             return GetTimerWorker(type).maximum;
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
             Profile(_profileMessageReceived, _messageReceivedTimerWorker, () => nextFilter.MessageReceived(session, message));
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             Profile(_profileMessageSent, _messageSentTimerWorker, () => nextFilter.MessageSent(session, writeRequest));
         }
 
+        /// <inheritdoc/>
         public override void SessionCreated(INextFilter nextFilter, IoSession session)
         {
             Profile(_profileSessionCreated, _sessionCreatedTimerWorker, () => nextFilter.SessionCreated(session));
         }
 
+        /// <inheritdoc/>
         public override void SessionOpened(INextFilter nextFilter, IoSession session)
         {
             Profile(_profileSessionOpened, _sessionOpenedTimerWorker, () => nextFilter.SessionOpened(session));
         }
 
+        /// <inheritdoc/>
         public override void SessionIdle(INextFilter nextFilter, IoSession session, IdleStatus status)
         {
             Profile(_profileSessionIdle, _sessionIdleTimerWorker, () => nextFilter.SessionIdle(session, status));
         }
 
+        /// <inheritdoc/>
         public override void SessionClosed(INextFilter nextFilter, IoSession session)
         {
             Profile(_profileSessionClosed, _sessionClosedTimerWorker, () => nextFilter.SessionClosed(session));

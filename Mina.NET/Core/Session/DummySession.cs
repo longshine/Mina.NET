@@ -18,6 +18,8 @@ namespace Mina.Core.Session
         private readonly IoFilterChain _filterChain;
         private volatile EndPoint _remoteAddress = AnonymousEndPoint.Instance;
 
+        /// <summary>
+        /// </summary>
         public DummySession()
             : base(new DummyService(new DummyConfig()))
         {
@@ -29,36 +31,45 @@ namespace Mina.Core.Session
             SetWriteRequestQueue(factory.GetWriteRequestQueue(this));
         }
 
+        /// <inheritdoc/>
         public override IoProcessor Processor
         {
             get { return _processor; }
         }
 
+        /// <inheritdoc/>
         public override IoHandler Handler
         {
             get { return _handler; }
         }
 
+        /// <inheritdoc/>
         public override IoFilterChain FilterChain
         {
             get { return _filterChain; }
         }
 
+        /// <inheritdoc/>
         public override EndPoint LocalEndPoint
         {
             get { return AnonymousEndPoint.Instance; }
         }
 
+        /// <inheritdoc/>
         public override EndPoint RemoteEndPoint
         {
             get { return _remoteAddress; }
         }
 
+        /// <summary>
+        /// </summary>
         public void SetRemoteEndPoint(EndPoint ep)
         {
             _remoteAddress = ep;
         }
 
+        /// <summary>
+        /// </summary>
         public void SetHandler(IoHandler handler)
         {
             _handler = handler;

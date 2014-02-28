@@ -19,7 +19,7 @@ namespace Mina.Core.Session
         private static Int64 idGenerator = 0;
         private Int64 _id;
         private Object _syncRoot = new Byte[0];
-        protected IoSessionConfig _config;
+        private IoSessionConfig _config;
         private readonly IoService _service;
         private readonly IoHandler _handler;
         private IoSessionAttributeMap _attributes;
@@ -29,6 +29,8 @@ namespace Mina.Core.Session
         private volatile Boolean _closing;
         private readonly ICloseFuture _closeFuture;
 
+        /// <summary>
+        /// </summary>
         protected AbstractIoSession(IoService service)
         {
             _service = service;
@@ -44,55 +46,69 @@ namespace Mina.Core.Session
             _closeFuture.Complete += ResetCounter;
         }
 
+        /// <inheritdoc/>
         public Int64 Id
         {
             get { return _id; }
         }
 
+        /// <inheritdoc/>
         public IoSessionConfig Config
         {
             get { return _config; }
+            protected set { _config = value; }
         }
 
+        /// <inheritdoc/>
         public IoService Service
         {
             get { return _service; }
         }
 
+        /// <inheritdoc/>
         public abstract IoProcessor Processor { get; }
 
+        /// <inheritdoc/>
         public virtual IoHandler Handler
         {
             get { return _handler; }
         }
 
+        /// <inheritdoc/>
         public abstract IoFilterChain FilterChain { get; }
 
+        /// <inheritdoc/>
         public Boolean Connected
         {
             get { return !_closeFuture.Closed; }
         }
 
+        /// <inheritdoc/>
         public Boolean Closing
         {
             get { return _closing || _closeFuture.Closed; }
         }
 
+        /// <inheritdoc/>
         public ICloseFuture CloseFuture
         {
             get { return _closeFuture; }
         }
 
+        /// <inheritdoc/>
         public abstract EndPoint LocalEndPoint { get; }
 
+        /// <inheritdoc/>
         public abstract EndPoint RemoteEndPoint { get; }
 
+        /// <inheritdoc/>
         public IoSessionAttributeMap AttributeMap
         {
             get { return _attributes; }
             set { _attributes = value; }
         }
 
+        /// <inheritdoc/>
         public IWriteRequestQueue WriteRequestQueue
         {
             get
@@ -103,17 +119,20 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <inheritdoc/>
         public IWriteRequest CurrentWriteRequest
         {
             get { return _currentWriteRequest; }
             set { _currentWriteRequest = value; }
         }
 
+        /// <inheritdoc/>
         public void SetWriteRequestQueue(IWriteRequestQueue queue)
         {
             _writeRequestQueue = new CloseAwareWriteQueue(this, queue);
         }
 
+        /// <inheritdoc/>
         public IWriteFuture Write(Object message)
         {
             if (message == null)
@@ -141,6 +160,7 @@ namespace Mina.Core.Session
             return writeFuture;
         }
 
+        /// <inheritdoc/>
         public ICloseFuture Close(Boolean rightNow)
         {
             if (Closing)
@@ -157,6 +177,7 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <inheritdoc/>
         public ICloseFuture Close()
         {
             lock (_syncRoot)
@@ -176,62 +197,78 @@ namespace Mina.Core.Session
             return _closeFuture;
         }
 
+        /// <inheritdoc/>
         public Object GetAttribute(Object key)
         {
             return GetAttribute(key, null);
         }
 
+        /// <inheritdoc/>
         public Object GetAttribute(Object key, Object defaultValue)
         {
             return _attributes.GetAttribute(this, key, defaultValue);
         }
 
+        /// <inheritdoc/>
         public T GetAttribute<T>(Object key)
         {
             return GetAttribute<T>(key, default(T));
         }
 
+        /// <inheritdoc/>
         public T GetAttribute<T>(Object key, T defaultValue)
         {
             return (T)_attributes.GetAttribute(this, key, defaultValue);
         }
 
+        /// <inheritdoc/>
         public Object SetAttribute(Object key, Object value)
         {
             return _attributes.SetAttribute(this, key, value);
         }
 
+        /// <inheritdoc/>
         public Object SetAttribute(Object key)
         {
             return SetAttribute(key, true);
         }
 
+        /// <inheritdoc/>
         public Object SetAttributeIfAbsent(Object key, Object value)
         {
             return _attributes.SetAttributeIfAbsent(this, key, value);
         }
 
+        /// <inheritdoc/>
         public Object SetAttributeIfAbsent(Object key)
         {
             return SetAttributeIfAbsent(key, true);
         }
 
+        /// <inheritdoc/>
         public Object RemoveAttribute(Object key)
         {
             return _attributes.RemoveAttribute(this, key);
         }
 
+        /// <inheritdoc/>
         public Boolean ContainsAttribute(Object key)
         {
             return _attributes.ContainsAttribute(this, key);
         }
 
+        /// <summary>
+        /// Disposes resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Disposes resources.
+        /// </summary>
         protected virtual void Dispose(Boolean disposing)
         {
             if (disposing)
@@ -245,32 +282,38 @@ namespace Mina.Core.Session
         private Boolean _readSuspended = false;
         private Boolean _writeSuspended = false;
 
+        /// <inheritdoc/>
         public Boolean ReadSuspended
         {
             get { return _readSuspended; }
         }
 
+        /// <inheritdoc/>
         public Boolean WriteSuspended
         {
             get { return _writeSuspended; }
         }
 
+        /// <inheritdoc/>
         public void SuspendRead()
         {
             _readSuspended = true;
             // TODO getProcessor().updateTrafficControl(this);
         }
 
+        /// <inheritdoc/>
         public void SuspendWrite()
         {
             _writeSuspended = true;
         }
 
+        /// <inheritdoc/>
         public void ResumeRead()
         {
             _readSuspended = false;
         }
 
+        /// <inheritdoc/>
         public void ResumeWrite()
         {
             _writeSuspended = false;
@@ -304,66 +347,79 @@ namespace Mina.Core.Session
         private DateTime _lastIdleTimeForRead;
         private DateTime _lastIdleTimeForWrite;
 
+        /// <inheritdoc/>
         public Int64 ReadBytes
         {
             get { return _readBytes; }
         }
 
+        /// <inheritdoc/>
         public Int64 WrittenBytes
         {
             get { return _writtenBytes; }
         }
 
+        /// <inheritdoc/>
         public Int64 ReadMessages
         {
             get { return _readMessages; }
         }
 
+        /// <inheritdoc/>
         public Int64 WrittenMessages
         {
             get { return _writtenMessages; }
         }
 
+        /// <inheritdoc/>
         public Double ReadBytesThroughput
         {
             get { return _readBytesThroughput; }
         }
 
+        /// <inheritdoc/>
         public Double WrittenBytesThroughput
         {
             get { return _writtenBytesThroughput; }
         }
 
+        /// <inheritdoc/>
         public Double ReadMessagesThroughput
         {
             get { return _readMessagesThroughput; }
         }
 
+        /// <inheritdoc/>
         public Double WrittenMessagesThroughput
         {
             get { return _writtenMessagesThroughput; }
         }
 
+        /// <inheritdoc/>
         public DateTime CreationTime
         {
             get { return _creationTime; }
         }
 
+        /// <inheritdoc/>
         public DateTime LastIoTime
         {
             get { return _lastReadTime > _lastWriteTime ? _lastReadTime : _lastWriteTime; }
         }
 
+        /// <inheritdoc/>
         public DateTime LastReadTime
         {
             get { return _lastReadTime; }
         }
 
+        /// <inheritdoc/>
         public DateTime LastWriteTime
         {
             get { return _lastWriteTime; }
         }
 
+        /// <inheritdoc/>
         public Boolean IsIdle(IdleStatus status)
         {
             switch (status)
@@ -379,21 +435,25 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <inheritdoc/>
         public Boolean IsReaderIdle
         {
             get { return IsIdle(IdleStatus.ReaderIdle); }
         }
 
+        /// <inheritdoc/>
         public Boolean IsWriterIdle
         {
             get { return IsIdle(IdleStatus.WriterIdle); }
         }
 
+        /// <inheritdoc/>
         public Boolean IsBothIdle
         {
             get { return IsIdle(IdleStatus.BothIdle); }
         }
 
+        /// <inheritdoc/>
         public Int32 GetIdleCount(IdleStatus status)
         {
             if (Config.GetIdleTime(status) == 0)
@@ -425,21 +485,25 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <inheritdoc/>
         public Int32 BothIdleCount
         {
             get { return GetIdleCount(IdleStatus.BothIdle); }
         }
 
+        /// <inheritdoc/>
         public Int32 ReaderIdleCount
         {
             get { return GetIdleCount(IdleStatus.ReaderIdle); }
         }
 
+        /// <inheritdoc/>
         public Int32 WriterIdleCount
         {
             get { return GetIdleCount(IdleStatus.WriterIdle); }
         }
 
+        /// <inheritdoc/>
         public DateTime GetLastIdleTime(IdleStatus status)
         {
             switch (status)
@@ -455,16 +519,19 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <inheritdoc/>
         public DateTime LastBothIdleTime
         {
             get { return GetLastIdleTime(IdleStatus.BothIdle); }
         }
 
+        /// <inheritdoc/>
         public DateTime LastReaderIdleTime
         {
             get { return GetLastIdleTime(IdleStatus.ReaderIdle); }
         }
 
+        /// <inheritdoc/>
         public DateTime LastWriterIdleTime
         {
             get { return GetLastIdleTime(IdleStatus.WriterIdle); }
@@ -559,6 +626,7 @@ namespace Mina.Core.Session
             this.Service.Statistics.DecreaseScheduledWriteMessages();
         }
 
+        /// <inheritdoc/>
         public void UpdateThroughput(DateTime currentTime, Boolean force)
         {
             UInt64 interval = (UInt64)(currentTime - _lastThroughputCalculationTime).TotalMilliseconds;
@@ -611,6 +679,10 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <summary>
+        /// Fires a <see cref="IoEventType.SessionIdle"/> event if applicable for the
+        /// specified <see cref="IoSession"/>.
+        /// </summary>
         public static void NotifyIdleSession(IoSession session, DateTime currentTime)
         {
             NotifyIdleSession(session, currentTime, IdleStatus.BothIdle, session.LastIoTime);
@@ -660,17 +732,21 @@ namespace Mina.Core.Session
             private readonly AbstractIoSession _session;
             private readonly IWriteRequestQueue _queue;
 
+            /// <summary>
+            /// </summary>
             public CloseAwareWriteQueue(AbstractIoSession session, IWriteRequestQueue queue)
             {
                 _session = session;
                 _queue = queue;
             }
 
+            /// <inheritdoc/>
             public Int32 Size
             {
                 get { return _queue.Size; }
             }
 
+            /// <inheritdoc/>
             public IWriteRequest Poll(IoSession session)
             {
                 IWriteRequest answer = _queue.Poll(session);
@@ -683,21 +759,25 @@ namespace Mina.Core.Session
                 return answer;
             }
 
+            /// <inheritdoc/>
             public void Offer(IoSession session, IWriteRequest writeRequest)
             {
                 _queue.Offer(session, writeRequest);
             }
 
+            /// <inheritdoc/>
             public Boolean IsEmpty(IoSession session)
             {
                 return _queue.IsEmpty(session);
             }
 
+            /// <inheritdoc/>
             public void Clear(IoSession session)
             {
                 _queue.Clear(session);
             }
 
+            /// <inheritdoc/>
             public void Dispose(IoSession session)
             {
                 _queue.Dispose(session);

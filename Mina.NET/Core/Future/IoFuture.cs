@@ -33,15 +33,23 @@ namespace Mina.Core.Future
         Boolean Await(Int32 millisecondsTimeout);
     }
 
+    /// <summary>
+    /// Contains data for events of <see cref="IoFuture"/>.
+    /// </summary>
     public class IoFutureEventArgs : EventArgs
     {
         private readonly IoFuture _future;
 
+        /// <summary>
+        /// </summary>
         public IoFutureEventArgs(IoFuture future)
         {
             _future = future;
         }
 
+        /// <summary>
+        /// Gets the associated future.
+        /// </summary>
         public IoFuture Future
         {
             get { return _future; }

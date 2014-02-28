@@ -41,11 +41,13 @@ namespace Mina.Filter.Firewall
             return ToSubnet(address) == _subnetInt;
         }
 
+        /// <inheritdoc/>
         public override String ToString()
         {
             return _subnet + "/" + _suffix;
         }
 
+        /// <inheritdoc/>
         public override Boolean Equals(Object obj)
         {
             Subnet other = obj as Subnet;
@@ -56,6 +58,7 @@ namespace Mina.Filter.Firewall
             return other._subnetInt == _subnetInt && other._suffix == _suffix;
         }
 
+        /// <inheritdoc/>
         public override Int32 GetHashCode()
         {
             return 17 * _subnetInt + _suffix;

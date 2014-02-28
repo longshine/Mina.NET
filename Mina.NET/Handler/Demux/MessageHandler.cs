@@ -12,9 +12,13 @@ namespace Mina.Handler.Demux
 
         private readonly Action<IoSession, T> _act;
 
+        /// <summary>
+        /// </summary>
         public MessageHandler()
         { }
 
+        /// <summary>
+        /// </summary>
         public MessageHandler(Action<IoSession, T> act)
         {
             if (act == null)
@@ -22,6 +26,7 @@ namespace Mina.Handler.Demux
             _act = act;
         }
 
+        /// <inheritdoc/>
         public virtual void HandleMessage(IoSession session, T message)
         {
             if (_act != null)

@@ -45,11 +45,13 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <inheritdoc/>
         public Boolean Accept(Object source, IoEvent ioe)
         {
             return true;
         }
 
+        /// <inheritdoc/>
         public void Offered(Object source, IoEvent ioe)
         {
             Int32 eventSize = EstimateSize(ioe);
@@ -62,6 +64,7 @@ namespace Mina.Filter.Executor
                 Block();
         }
 
+        /// <inheritdoc/>
         public void Polled(Object source, IoEvent ioe)
         {
             Int32 eventSize = EstimateSize(ioe);

@@ -10,14 +10,20 @@ namespace Mina.Core.Write
     [Serializable]
     public class WriteToClosedSessionException : WriteException
     {
+        /// <summary>
+        /// </summary>
         public WriteToClosedSessionException(IWriteRequest request)
             : base(request)
         { }
 
+        /// <summary>
+        /// </summary>
         public WriteToClosedSessionException(IEnumerable<IWriteRequest> requests)
             : base(requests)
         { }
 
+        /// <summary>
+        /// </summary>
         protected WriteToClosedSessionException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context)

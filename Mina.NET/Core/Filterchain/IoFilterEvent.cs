@@ -15,6 +15,8 @@ namespace Mina.Core.Filterchain
 
         private readonly INextFilter _nextFilter;
 
+        /// <summary>
+        /// </summary>
         public IoFilterEvent(INextFilter nextFilter, IoEventType eventType, IoSession session, Object parameter)
             : base(eventType, session, parameter)
         {
@@ -23,11 +25,15 @@ namespace Mina.Core.Filterchain
             _nextFilter = nextFilter;
         }
 
+        /// <summary>
+        /// Gets the next filter.
+        /// </summary>
         public INextFilter NextFilter
         {
             get { return _nextFilter; }
         }
 
+        /// <inheritdoc/>
         public override void Fire()
         {
             if (log.IsDebugEnabled)

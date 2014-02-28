@@ -44,6 +44,7 @@ namespace Mina.Filter.Ssl
             get { return _serverCertificate; }
         }
 
+        /// <inheritdoc/>
         public override void OnPreAdd(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             if (parent.Contains<SslFilter>())
@@ -56,12 +57,14 @@ namespace Mina.Filter.Ssl
             session.SetAttribute(SSL_HANDLER, handler);
         }
 
+        /// <inheritdoc/>
         public override void OnPostAdd(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             SslHandler handler = GetSslSessionHandler(parent.Session);
             handler.Handshake(nextFilter);
         }
 
+        /// <inheritdoc/>
         public override void OnPreRemove(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             IoSession session = parent.Session;
@@ -69,6 +72,7 @@ namespace Mina.Filter.Ssl
             session.RemoveAttribute(SSL_HANDLER);
         }
 
+        /// <inheritdoc/>
         public override void SessionClosed(INextFilter nextFilter, IoSession session)
         {
             SslHandler handler = GetSslSessionHandler(session);
@@ -84,6 +88,7 @@ namespace Mina.Filter.Ssl
             }
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
             IoBuffer buf = (IoBuffer)message;
@@ -92,6 +97,7 @@ namespace Mina.Filter.Ssl
             handler.MessageReceived(nextFilter, buf);
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             EncryptedWriteRequest encryptedWriteRequest = writeRequest as EncryptedWriteRequest;
@@ -105,17 +111,20 @@ namespace Mina.Filter.Ssl
             }
         }
 
+        /// <inheritdoc/>
         public override void ExceptionCaught(INextFilter nextFilter, IoSession session, Exception cause)
         {
             base.ExceptionCaught(nextFilter, session, cause);
         }
 
+        /// <inheritdoc/>
         public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             SslHandler handler = GetSslSessionHandler(session);
             handler.ScheduleFilterWrite(nextFilter, writeRequest);
         }
 
+        /// <inheritdoc/>
         public override void FilterClose(INextFilter nextFilter, IoSession session)
         {
             SslHandler handler = session.GetAttribute<SslHandler>(SSL_HANDLER);

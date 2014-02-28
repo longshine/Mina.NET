@@ -30,6 +30,7 @@
     <DefineConstants>TRACE;NET20</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\NET20\Mina.NET.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -206,7 +207,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Service\IoAcceptor.cs" />
     <Compile Include="Core\Service\IoService.cs" />
-
     <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
     <Compile Include="Transport\Socket\AbstractSocketConnector.cs" />
     <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />

@@ -62,7 +62,7 @@ namespace Mina.Filter.Codec.PrefixedString
         /// Gets or sets the maximum allowed value specified as data length in the decoded data.
         /// <remarks>
         /// Useful for preventing an OutOfMemory attack by the peer.
-        /// The decoder will throw a <see cref="BufferDataException"/> when data length
+        /// The decoder will throw a <see cref="Core.Buffer.BufferDataException"/> when data length
         /// specified in the incoming data is greater than MaxDataLength.
         /// The default value is <see cref="PrefixedStringCodecFactory.DefaultMaxDataLength"/>.
         /// </remarks>
@@ -73,11 +73,13 @@ namespace Mina.Filter.Codec.PrefixedString
             set { _decoder.MaxDataLength = value; }
         }
 
+        /// <inheritdoc/>
         public IProtocolEncoder GetEncoder(IoSession session)
         {
             return _encoder;
         }
 
+        /// <inheritdoc/>
         public IProtocolDecoder GetDecoder(IoSession session)
         {
             return _decoder;

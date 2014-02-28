@@ -6,22 +6,29 @@ using Mina.Core.Session;
 
 namespace Mina.Core.Service
 {
+    /// <summary>
+    /// Base implementation of <see cref="IoAcceptor"/>.
+    /// </summary>
     public abstract class AbstractIoAcceptor : AbstractIoService, IoAcceptor
     {
         private readonly List<EndPoint> _defaultLocalEndPoints = new List<EndPoint>();
         private readonly List<EndPoint> _boundEndPoints = new List<EndPoint>();
         private Boolean _disconnectOnUnbind = true;
 
+        /// <summary>
+        /// </summary>
         protected AbstractIoAcceptor(IoSessionConfig sessionConfig)
             : base(sessionConfig)
         { }
 
+        /// <inheritdoc/>
         public Boolean CloseOnDeactivation
         {
             get { return _disconnectOnUnbind; }
             set { _disconnectOnUnbind = value; }
         }
 
+        /// <inheritdoc/>
         public IEnumerable<EndPoint> DefaultLocalEndPoints
         {
             get { return _defaultLocalEndPoints; }
@@ -38,6 +45,7 @@ namespace Mina.Core.Service
             }
         }
 
+        /// <inheritdoc/>
         public EndPoint DefaultLocalEndPoint
         {
             get { return _defaultLocalEndPoints.Count == 0 ? null : _defaultLocalEndPoints[0]; }
@@ -54,21 +62,25 @@ namespace Mina.Core.Service
             }
         }
 
+        /// <inheritdoc/>
         public IEnumerable<EndPoint> LocalEndPoints
         {
             get { return _boundEndPoints; }
         }
 
+        /// <inheritdoc/>
         public EndPoint LocalEndPoint
         {
             get { return _boundEndPoints.Count == 0 ? null : _boundEndPoints[0]; }
         }
 
+        /// <inheritdoc/>
         public void Bind()
         {
             Bind(DefaultLocalEndPoints);
         }
 
+        /// <inheritdoc/>
         public void Bind(EndPoint localEP)
         {
             if (localEP == null)
@@ -76,6 +88,7 @@ namespace Mina.Core.Service
             Bind(new EndPoint[] { localEP });
         }
 
+        /// <inheritdoc/>
         public void Bind(params EndPoint[] localEndPoints)
         {
             if (localEndPoints == null)
@@ -86,6 +99,7 @@ namespace Mina.Core.Service
                 Bind((IEnumerable<EndPoint>)localEndPoints);
         }
 
+        /// <inheritdoc/>
         public void Bind(IEnumerable<EndPoint> localEndPoints)
         {
             if (localEndPoints == null)
@@ -105,11 +119,13 @@ namespace Mina.Core.Service
                 ((IoServiceSupport)this).FireServiceActivated();
         }
 
+        /// <inheritdoc/>
         public void Unbind()
         {
             Unbind(LocalEndPoints);
         }
 
+        /// <inheritdoc/>
         public void Unbind(EndPoint localEP)
         {
             if (localEP == null)
@@ -117,11 +133,13 @@ namespace Mina.Core.Service
             Unbind(new EndPoint[] { localEP });
         }
 
+        /// <inheritdoc/>
         public void Unbind(params EndPoint[] localEndPoints)
         {
             Unbind((IEnumerable<EndPoint>)localEndPoints);
         }
 
+        /// <inheritdoc/>
         public void Unbind(IEnumerable<EndPoint> localEndPoints)
         {
             if (localEndPoints == null)
@@ -162,7 +180,16 @@ namespace Mina.Core.Service
                 ((IoServiceSupport)this).FireServiceDeactivated();
         }
 
+        /// <summary>
+        /// Implement this method to perform the actual bind operation.
+        /// </summary>
+        /// <param name="localEndPoints">the endpoints to bind</param>
+        /// <returns>the endpoints which is bound actually</returns>
         protected abstract IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints);
+        /// <summary>
+        /// Implement this method to perform the actual unbind operation.
+        /// </summary>
+        /// <param name="localEndPoints">the endpoints to unbind</param>
         protected abstract void UnbindInternal(IEnumerable<EndPoint> localEndPoints);
     }
 }

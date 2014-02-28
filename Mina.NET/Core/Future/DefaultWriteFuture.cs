@@ -8,6 +8,9 @@ namespace Mina.Core.Future
     /// </summary>
     public class DefaultWriteFuture : DefaultIoFuture, IWriteFuture
     {
+        /// <summary>
+        /// Returns a new <see cref="DefaultWriteFuture"/> which is already marked as 'written'.
+        /// </summary>
         public static IWriteFuture NewWrittenFuture(IoSession session)
         {
             DefaultWriteFuture writtenFuture = new DefaultWriteFuture(session);
@@ -15,6 +18,9 @@ namespace Mina.Core.Future
             return writtenFuture;
         }
 
+        /// <summary>
+        /// Returns a new <see cref="DefaultWriteFuture"/> which is already marked as 'not written'.
+        /// </summary>
         public static IWriteFuture NewNotWrittenFuture(IoSession session, Exception cause)
         {
             DefaultWriteFuture unwrittenFuture = new DefaultWriteFuture(session);
@@ -22,10 +28,13 @@ namespace Mina.Core.Future
             return unwrittenFuture;
         }
 
+        /// <summary>
+        /// </summary>
         public DefaultWriteFuture(IoSession session)
             : base(session)
         { }
 
+        /// <inheritdoc/>
         public Boolean Written
         {
             get
@@ -41,6 +50,7 @@ namespace Mina.Core.Future
             set { Value = true; }
         }
 
+        /// <inheritdoc/>
         public Exception Exception
         {
             get
@@ -59,6 +69,7 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <inheritdoc/>
         public new IWriteFuture Await()
         {
             return (IWriteFuture)base.Await();

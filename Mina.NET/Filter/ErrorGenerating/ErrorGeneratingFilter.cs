@@ -41,6 +41,7 @@ namespace Mina.Filter.ErrorGenerating
         private Boolean _manipulateReads;
         private Random _rng = new Random();
 
+        /// <inheritdoc/>
         public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             if (_manipulateWrites)
@@ -80,6 +81,7 @@ namespace Mina.Filter.ErrorGenerating
             base.FilterWrite(nextFilter, session, writeRequest);
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
             if (_manipulateReads)

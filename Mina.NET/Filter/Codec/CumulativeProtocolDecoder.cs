@@ -12,9 +12,12 @@ namespace Mina.Filter.Codec
     {
         private readonly AttributeKey BUFFER = new AttributeKey(typeof(CumulativeProtocolDecoder), "buffer");
 
+        /// <summary>
+        /// </summary>
         protected CumulativeProtocolDecoder()
         { }
 
+        /// <inheritdoc/>
         public override void Decode(IoSession session, IoBuffer input, IProtocolDecoderOutput output)
         {
             Boolean usingSessionBuffer = true;

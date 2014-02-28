@@ -40,6 +40,7 @@ namespace Mina.Filter.Codec.PrefixedString
         /// </summary>
         public Encoding Encoding { get; set; }
 
+        /// <inheritdoc/>
         public override void Encode(IoSession session, Object message, IProtocolEncoderOutput output)
         {
             String value = (String)message;

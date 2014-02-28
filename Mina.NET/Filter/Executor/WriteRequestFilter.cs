@@ -30,6 +30,7 @@ namespace Mina.Filter.Executor
             get { return _queueHandler; }
         }
 
+        /// <inheritdoc/>
         public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             IoEvent ioe = new IoEvent(IoEventType.Write, session, writeRequest);

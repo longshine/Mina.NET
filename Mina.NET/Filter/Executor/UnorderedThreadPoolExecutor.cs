@@ -27,6 +27,7 @@ namespace Mina.Filter.Executor
             get { return _queueHandler; }
         }
 
+        /// <inheritdoc/>
         public void Execute(IoEvent ioe)
         {
             Boolean offeredEvent = _queueHandler.Accept(this, ioe);

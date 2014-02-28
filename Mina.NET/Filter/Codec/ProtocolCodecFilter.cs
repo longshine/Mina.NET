@@ -40,18 +40,21 @@ namespace Mina.Filter.Codec
             _factory = new ProtocolCodecFactory(encoder, decoder);
         }
 
+        /// <inheritdoc/>
         public override void OnPreAdd(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             if (parent.Contains(this))
                 throw new ArgumentException("You can't add the same filter instance more than once.  Create another instance and add it.");
         }
 
+        /// <inheritdoc/>
         public override void OnPostRemove(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             // Clean everything
             DisposeCodec(parent.Session);
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
             //if (log.IsDebugEnabled)
@@ -109,6 +112,7 @@ namespace Mina.Filter.Codec
             }
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             if (writeRequest is EncodedWriteRequest)
@@ -125,6 +129,7 @@ namespace Mina.Filter.Codec
             }
         }
 
+        /// <inheritdoc/>
         public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             Object message = writeRequest.Message;
@@ -184,6 +189,7 @@ namespace Mina.Filter.Codec
             }
         }
 
+        /// <inheritdoc/>
         public override void SessionClosed(INextFilter nextFilter, IoSession session)
         {
             // Call finishDecode() first when a connection is closed.

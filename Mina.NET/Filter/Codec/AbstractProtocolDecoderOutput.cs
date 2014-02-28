@@ -17,6 +17,7 @@ namespace Mina.Filter.Codec
             get { return _queue; }
         }
 
+        /// <inheritdoc/>
         public void Write(Object message)
         {
             if (message == null)
@@ -24,6 +25,7 @@ namespace Mina.Filter.Codec
             _queue.Enqueue(message);
         }
 
+        /// <inheritdoc/>
         public abstract void Flush(INextFilter nextFilter, IoSession session);
     }
 }

@@ -13,9 +13,15 @@ namespace Mina.Core.Buffer
         private Boolean _derived;
         private Boolean _autoExpand;
         private Boolean _autoShrink;
+        /// <summary>
+        /// Indicating whether recapacity is allowed.
+        /// </summary>
         protected Boolean _recapacityAllowed = true;
         private Int32 _minimumCapacity;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected AbstractIoBuffer(IoBufferAllocator allocator, Int32 mark, Int32 pos, Int32 lim, Int32 cap)
             : base(mark, pos, lim, cap)
         {
@@ -25,6 +31,9 @@ namespace Mina.Core.Buffer
             _minimumCapacity = cap;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected AbstractIoBuffer(AbstractIoBuffer parent, Int32 mark, Int32 pos, Int32 lim, Int32 cap)
             : base(mark, pos, lim, cap)
         {
@@ -34,12 +43,14 @@ namespace Mina.Core.Buffer
             _minimumCapacity = parent._minimumCapacity;
         }
 
+        /// <inheritdoc/>
         public override ByteOrder Order
         {
             get { return _order; }
             set { _order = value; }
         }
 
+        /// <inheritdoc/>
         public override Int32 MinimumCapacity
         {
             get { return _minimumCapacity; }
@@ -51,11 +62,13 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <inheritdoc/>
         public override IoBufferAllocator BufferAllocator
         {
             get { return _allocator; }
         }
 
+        /// <inheritdoc/>
         public override Int32 Position
         {
             get { return base.Position; }
@@ -66,6 +79,7 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <inheritdoc/>
         public override Int32 Limit
         {
             get { return base.Limit; }
@@ -76,6 +90,7 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <inheritdoc/>
         public override Boolean AutoExpand
         {
             get { return _autoExpand && _recapacityAllowed; }
@@ -87,6 +102,7 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <inheritdoc/>
         public override Boolean AutoShrink
         {
             get { return _autoShrink && _recapacityAllowed; }
@@ -98,33 +114,39 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <inheritdoc/>
         public override Boolean Derived
         {
             get { return _derived; }
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Expand(Int32 expectedRemaining)
         {
             return Expand(Position, expectedRemaining, false);
         }
 
-        public override IoBuffer Expand(Int32 pos, Int32 expectedRemaining)
+        /// <inheritdoc/>
+        public override IoBuffer Expand(Int32 position, Int32 expectedRemaining)
         {
-            return Expand(pos, expectedRemaining, false);
+            return Expand(position, expectedRemaining, false);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Sweep()
         {
             Clear();
             return FillAndReset(Remaining);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Sweep(Byte value)
         {
             Clear();
             return FillAndReset(value, Remaining);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer FillAndReset(Int32 size)
         {
             AutoExpand0(size);
@@ -140,6 +162,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer FillAndReset(Byte value, Int32 size)
         {
             AutoExpand0(size);
@@ -155,6 +178,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Fill(Int32 size)
         {
             AutoExpand0(size);
@@ -190,6 +214,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Fill(Byte value, Int32 size)
         {
             AutoExpand0(size);
@@ -235,41 +260,25 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override String GetHexDump()
         {
             return GetHexDump(Int32.MaxValue);
         }
 
+        /// <inheritdoc/>
         public override String GetHexDump(Int32 lengthLimit)
         {
             return IoBufferHexDumper.GetHexdump(this, lengthLimit);
         }
 
-        /// <summary>
-        /// Returns true if this buffer contains a data which has a data
-        /// length as a prefix and the buffer has remaining data as enough as
-        /// specified in the data length field.
-        /// <remarks>
-        /// Please notes that using this method can allow DoS (Denial of Service)
-        /// attack in case the remote peer sends too big data length value.
-        /// It is recommended to use <see cref="PrefixedDataAvailable(Int32 prefixLength, Int32 maxDataLength)"/> instead.
-        /// </remarks>
-        /// </summary>
-        /// <param name="prefixLength">the length of the prefix field (1, 2, or 4)</param>
-        /// <returns>true if data available</returns>
+        /// <inheritdoc/>
         public override Boolean PrefixedDataAvailable(Int32 prefixLength)
         {
             return PrefixedDataAvailable(prefixLength, Int32.MaxValue);
         }
 
-        /// <summary>
-        /// Returns true if this buffer contains a data which has a data
-        /// length as a prefix and the buffer has remaining data as enough as
-        /// specified in the data length field.
-        /// </summary>
-        /// <param name="prefixLength">the length of the prefix field (1, 2, or 4)</param>
-        /// <param name="maxDataLength">the allowed maximum of the read data length</param>
-        /// <returns>true if data available</returns>
+        /// <inheritdoc/>
         public override Boolean PrefixedDataAvailable(Int32 prefixLength, Int32 maxDataLength)
         {
             if (Remaining < prefixLength)
@@ -299,6 +308,7 @@ namespace Mina.Core.Buffer
             return Remaining - prefixLength >= dataLength;
         }
 
+        /// <inheritdoc/>
         public override Int32 IndexOf(Byte b)
         {
             if (HasArray)
@@ -329,17 +339,13 @@ namespace Mina.Core.Buffer
             return -1;
         }
 
+        /// <inheritdoc/>
         public override String GetPrefixedString(Encoding encoding)
         {
             return GetPrefixedString(2, encoding);
         }
 
-        /// <summary>
-        /// Reads a string which has a length field before the actual encoded string.
-        /// </summary>
-        /// <param name="prefixLength">the length of the length field (1, 2, or 4)</param>
-        /// <param name="encoding">the encoding of the string</param>
-        /// <returns>the prefixed string</returns>
+        /// <inheritdoc/>
         public override String GetPrefixedString(Int32 prefixLength, Encoding encoding)
         {
             if (!PrefixedDataAvailable(prefixLength))
@@ -367,18 +373,13 @@ namespace Mina.Core.Buffer
             return encoding.GetString(bytes, 0, dataLength);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutPrefixedString(String value, Encoding encoding)
         {
             return PutPrefixedString(value, 2, encoding);
         }
 
-        /// <summary>
-        /// Writes the string into this buffer which has a prefixLength field
-        /// before the actual encoded string.
-        /// </summary>
-        /// <param name="value">the string to write</param>
-        /// <param name="prefixLength">the length of the length field (1, 2, or 4)</param>
-        /// <param name="encoding">the encoding of the string</param>
+        /// <inheritdoc/>
         public override IoBuffer PutPrefixedString(String value, Int32 prefixLength, Encoding encoding)
         {
             Int32 maxLength;
@@ -434,24 +435,28 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Slice()
         {
             _recapacityAllowed = false;
             return Slice0();
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Duplicate()
         {
             _recapacityAllowed = false;
             return Duplicate0();
         }
 
+        /// <inheritdoc/>
         public override IoBuffer AsReadOnlyBuffer()
         {
             _recapacityAllowed = false;
             return AsReadOnlyBuffer0();
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Skip(Int32 size)
         {
             AutoExpand0(size);
@@ -459,6 +464,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Put(Byte b)
         {
             AutoExpand0(1);
@@ -466,6 +472,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Put(Int32 i, Byte b)
         {
             AutoExpand0(i, 1);
@@ -473,6 +480,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Put(Byte[] src, Int32 offset, Int32 length)
         {
             CheckBounds(offset, length, src.Length);
@@ -485,6 +493,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Put(IoBuffer src)
         {
             if (Object.ReferenceEquals(src, this))
@@ -496,26 +505,35 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Put(Byte[] src)
         {
             return Put(src, 0, src.Length);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutString(String s)
         {
             return PutString(s, Encoding.UTF8);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutString(String s, Encoding encoding)
         {
             return Put(encoding.GetBytes(s));
         }
 
+        /// <summary>
+        /// Gets the actual position in internal buffer of the given index.
+        /// </summary>
         protected virtual Int32 Offset(Int32 i)
         {
             return i;
         }
 
+        /// <summary>
+        /// Writes an <see cref="IoBuffer"/>. Override this method for better implementation.
+        /// </summary>
         protected virtual void PutInternal(IoBuffer src)
         {
             Int32 n = src.Remaining;
@@ -527,6 +545,9 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <summary>
+        /// Writes an array of bytes. Override this method for better implementation.
+        /// </summary>
         protected virtual void PutInternal(Byte[] src, Int32 offset, Int32 length)
         {
             Int32 end = offset + length;
@@ -534,12 +555,31 @@ namespace Mina.Core.Buffer
                 Put(src[i]);
         }
 
+        /// <summary>
+        /// Gets the byte at the given index in internal buffer.
+        /// </summary>
+        /// <param name="i">the index from which the byte will be read</param>
+        /// <returns>the byte at the given index</returns>
         protected abstract Byte GetInternal(Int32 i);
 
+        /// <summary>
+        /// Pus the given byte into internal buffer at the given index.
+        /// </summary>
+        /// <param name="i">the index at which the byte will be written</param>
+        /// <param name="b">the byte to be written</param>
         protected abstract void PutInternal(Int32 i, Byte b);
 
+        /// <summary>
+        /// <see cref="Slice()"/>
+        /// </summary>
         protected abstract IoBuffer Slice0();
+        /// <summary>
+        /// <see cref="Duplicate()"/>
+        /// </summary>
         protected abstract IoBuffer Duplicate0();
+        /// <summary>
+        /// <see cref="AsReadOnlyBuffer()"/>
+        /// </summary>
         protected abstract IoBuffer AsReadOnlyBuffer0();
 
         private IoBuffer Expand(Int32 expectedRemaining, Boolean autoExpand)
@@ -588,16 +628,19 @@ namespace Mina.Core.Buffer
 
         #region
 
+        /// <inheritdoc/>
         public override Char GetChar()
         {
             return Bits.GetChar(this, Offset(NextGetIndex(2)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override Char GetChar(Int32 index)
         {
             return Bits.GetChar(this, Offset(CheckIndex(index, 2)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutChar(Char value)
         {
             AutoExpand0(2);
@@ -605,6 +648,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutChar(Int32 index, Char value)
         {
             AutoExpand0(index, 2);
@@ -612,16 +656,19 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override Int16 GetInt16()
         {
             return Bits.GetShort(this, Offset(NextGetIndex(2)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override Int16 GetInt16(Int32 index)
         {
             return Bits.GetShort(this, Offset(CheckIndex(index, 2)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutInt16(Int16 value)
         {
             AutoExpand0(2);
@@ -629,6 +676,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutInt16(Int32 index, Int16 value)
         {
             AutoExpand0(index, 2);
@@ -636,16 +684,19 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override Int32 GetInt32()
         {
             return Bits.GetInt(this, Offset(NextGetIndex(4)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override Int32 GetInt32(Int32 index)
         {
             return Bits.GetInt(this, Offset(CheckIndex(index, 4)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutInt32(Int32 value)
         {
             AutoExpand0(4);
@@ -653,6 +704,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutInt32(Int32 index, Int32 value)
         {
             AutoExpand0(index, 4);
@@ -660,16 +712,19 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override Int64 GetInt64()
         {
             return Bits.GetLong(this, Offset(NextGetIndex(8)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override Int64 GetInt64(Int32 index)
         {
             return Bits.GetLong(this, Offset(CheckIndex(index, 8)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutInt64(Int64 value)
         {
             AutoExpand0(8);
@@ -677,6 +732,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutInt64(Int32 index, Int64 value)
         {
             AutoExpand0(index, 8);
@@ -684,16 +740,19 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override Single GetSingle()
         {
             return Bits.GetFloat(this, Offset(NextGetIndex(4)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override Single GetSingle(Int32 index)
         {
             return Bits.GetFloat(this, Offset(CheckIndex(index, 4)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutSingle(Single value)
         {
             AutoExpand0(4);
@@ -701,6 +760,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutSingle(Int32 index, Single value)
         {
             AutoExpand0(index, 4);
@@ -708,16 +768,19 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override Double GetDouble()
         {
             return Bits.GetDouble(this, Offset(NextGetIndex(8)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override Double GetDouble(Int32 index)
         {
             return Bits.GetDouble(this, Offset(CheckIndex(index, 8)), Order == ByteOrder.BigEndian);
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutDouble(Double value)
         {
             AutoExpand0(8);
@@ -725,6 +788,7 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override IoBuffer PutDouble(Int32 index, Double value)
         {
             AutoExpand0(index, 8);

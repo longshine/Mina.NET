@@ -10,20 +10,25 @@ namespace Mina.Core.Future
     {
         private static readonly Object CANCELED = new Object();
 
+        /// <summary>
+        /// </summary>
         public DefaultConnectFuture()
             : base(null)
         { }
 
+        /// <inheritdoc/>
         public Boolean Connected
         {
             get { return Value is IoSession; }
         }
 
+        /// <inheritdoc/>
         public Boolean Canceled
         {
             get { return Object.ReferenceEquals(Value, CANCELED); }
         }
 
+        /// <inheritdoc/>
         public Exception Exception
         {
             get
@@ -42,6 +47,7 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <inheritdoc/>
         public override IoSession Session
         {
             get
@@ -55,6 +61,7 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <inheritdoc/>
         public void SetSession(IoSession session)
         {
             if (session == null)
@@ -62,11 +69,13 @@ namespace Mina.Core.Future
             Value = session;
         }
 
+        /// <inheritdoc/>
         public void Cancel()
         {
             Value = CANCELED;
         }
 
+        /// <inheritdoc/>
         public new IConnectFuture Await()
         {
             return (IConnectFuture)base.Await();

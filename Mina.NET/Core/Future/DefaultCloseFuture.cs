@@ -8,10 +8,13 @@ namespace Mina.Core.Future
     /// </summary>
     public class DefaultCloseFuture : DefaultIoFuture, ICloseFuture
     {
+        /// <summary>
+        /// </summary>
         public DefaultCloseFuture(IoSession session)
             : base(session)
         { }
 
+        /// <inheritdoc/>
         public Boolean Closed
         {
             get
@@ -27,6 +30,7 @@ namespace Mina.Core.Future
             set { Value = true; }
         }
 
+        /// <inheritdoc/>
         public new ICloseFuture Await()
         {
             return (ICloseFuture)base.Await();

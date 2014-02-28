@@ -14,52 +14,61 @@ namespace Mina.Core.Session
         private UInt32 _writeTimeout = 60U;
         private UInt32 _throughputCalculationInterval = 3U;
 
+        /// <inheritdoc/>
         public Int32 ReadBufferSize
         {
             get { return _readBufferSize; }
             set { _readBufferSize = value; }
         }
 
+        /// <inheritdoc/>
         public UInt32 ThroughputCalculationInterval
         {
             get { return _throughputCalculationInterval; }
             set { _throughputCalculationInterval = value; }
         }
 
+        /// <inheritdoc/>
         public UInt64 ThroughputCalculationIntervalInMillis
         {
             get { return _throughputCalculationInterval * 1000UL; }
         }
 
+        /// <inheritdoc/>
         public UInt32 WriteTimeout
         {
             get { return _writeTimeout; }
             set { _writeTimeout = value; }
         }
 
+        /// <inheritdoc/>
         public UInt64 WriteTimeoutInMillis
         {
             get { return _writeTimeout * 1000UL; }
         }
 
+        /// <inheritdoc/>
         public UInt32 ReaderIdleTime
         {
             get { return GetIdleTime(IdleStatus.ReaderIdle); }
             set { SetIdleTime(IdleStatus.ReaderIdle, value); }
         }
 
+        /// <inheritdoc/>
         public UInt32 WriterIdleTime
         {
             get { return GetIdleTime(IdleStatus.WriterIdle); }
             set { SetIdleTime(IdleStatus.WriterIdle, value); }
         }
 
+        /// <inheritdoc/>
         public UInt32 BothIdleTime
         {
             get { return GetIdleTime(IdleStatus.BothIdle); }
             set { SetIdleTime(IdleStatus.BothIdle, value); }
         }
 
+        /// <inheritdoc/>
         public UInt32 GetIdleTime(IdleStatus status)
         {
             switch (status)
@@ -75,6 +84,7 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <inheritdoc/>
         public UInt64 GetIdleTimeInMillis(IdleStatus status)
         {
             return GetIdleTime(status) * 1000UL;

@@ -10,6 +10,8 @@ namespace Mina.Core.Write
     {
         private readonly IWriteRequest _inner;
 
+        /// <summary>
+        /// </summary>
         public WriteRequestWrapper(IWriteRequest request)
         {
             if (request == null)
@@ -17,21 +19,25 @@ namespace Mina.Core.Write
             _inner = request;
         }
 
+        /// <inheritdoc/>
         public IWriteRequest OriginalRequest
         {
             get { return _inner.OriginalRequest; }
         }
 
+        /// <inheritdoc/>
         public virtual Object Message
         {
             get { return _inner.Message; }
         }
 
+        /// <inheritdoc/>
         public Boolean Encoded
         {
             get { return _inner.Encoded; }
         }
 
+        /// <inheritdoc/>
         public IWriteFuture Future
         {
             get { return _inner.Future; }

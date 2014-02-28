@@ -16,11 +16,13 @@ namespace Mina.Transport.Socket
             : base(new DefaultSocketSessionConfig())
         { }
 
+        /// <inheritdoc/>
         public new ISocketSessionConfig SessionConfig
         {
             get { return (ISocketSessionConfig)base.SessionConfig; }
         }
 
+        /// <inheritdoc/>
         protected override IConnectFuture Connect0(EndPoint remoteEP, EndPoint localEP, Action<IoSession, IConnectFuture> sessionInitializer)
         {
             System.Net.Sockets.Socket socket = new System.Net.Sockets.Socket(remoteEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -31,6 +33,7 @@ namespace Mina.Transport.Socket
             return ctx.Future;
         }
 
+        /// <inheritdoc/>
         protected abstract void BeginConnect(ConnectorContext connector);
 
         protected void EndConnect(IoSession session, ConnectorContext connector)

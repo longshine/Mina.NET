@@ -27,13 +27,13 @@ namespace Mina.Core.Service
         IEnumerable<EndPoint> LocalEndPoints { get; }
         /// <summary>
         /// Gets or sets the default local endpoint to bind when no
-        /// argument is specified in <see cref="Bind"/> method.
+        /// argument is specified in <see cref="Bind()"/> method.
         /// If more than one endpoint are set, only one of them will be returned.
         /// </summary>
         EndPoint DefaultLocalEndPoint { get; set; }
         /// <summary>
         /// Gets or sets the default local endpoints to bind when no
-        /// argument is specified in <see cref="Bind"/> method.
+        /// argument is specified in <see cref="Bind()"/> method.
         /// </summary>
         IEnumerable<EndPoint> DefaultLocalEndPoints { get; set; }
         /// <summary>
@@ -68,7 +68,7 @@ namespace Mina.Core.Service
         /// All managed connections will be closed if <see cref="CloseOnDeactivation"/> is <code>true</code>.
         /// This method returns silently if no local endpoints is bound yet.
         /// </summary>
-        /// <param name="localEndPoints">the local endpoint to unbind</param>
+        /// <param name="localEP">the local endpoint to unbind</param>
         void Unbind(EndPoint localEP);
         /// <summary>
         /// Unbinds from the specified local addresses and stop to accept incoming connections.

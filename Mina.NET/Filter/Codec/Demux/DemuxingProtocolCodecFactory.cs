@@ -19,11 +19,13 @@ namespace Mina.Filter.Codec.Demux
         private readonly DemuxingProtocolEncoder encoder = new DemuxingProtocolEncoder();
         private readonly DemuxingProtocolDecoder decoder = new DemuxingProtocolDecoder();
 
+        /// <inheritdoc/>
         public IProtocolEncoder GetEncoder(IoSession session)
         {
             return encoder;
         }
 
+        /// <inheritdoc/>
         public IProtocolDecoder GetDecoder(IoSession session)
         {
             return decoder;

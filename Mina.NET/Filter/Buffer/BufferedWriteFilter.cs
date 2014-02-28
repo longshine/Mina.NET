@@ -14,7 +14,7 @@ namespace Mina.Filter.Buffer
     /// It is also useful when a session is generating very small messages
     /// too frequently and consequently generating unnecessary traffic overhead.
     /// <remarks>
-    /// Please note that it should always be placed before the <see cref="IProtocolCodecFilter"/> 
+    /// Please note that it should always be placed before the <see cref="Filter.Codec.ProtocolCodecFilter"/> 
     /// as it only handles <see cref="IWriteRequest"/>s carrying <see cref="IoBuffer"/> objects.
     /// </remarks>
     /// </summary>
@@ -59,6 +59,7 @@ namespace Mina.Filter.Buffer
             set { _bufferSize = value; }
         }
 
+        /// <inheritdoc/>
         public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             IoBuffer buf = writeRequest.Message as IoBuffer;
@@ -68,12 +69,14 @@ namespace Mina.Filter.Buffer
                 Write(session, buf);
         }
 
+        /// <inheritdoc/>
         public override void SessionClosed(INextFilter nextFilter, IoSession session)
         {
             Free(session);
             base.SessionClosed(nextFilter, session);
         }
 
+        /// <inheritdoc/>
         public override void ExceptionCaught(INextFilter nextFilter, IoSession session, Exception cause)
         {
             Free(session);

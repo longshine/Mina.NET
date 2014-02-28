@@ -19,6 +19,8 @@ namespace Mina.Core.Filterchain
 
         private readonly AbstractIoSession _session;
 
+        /// <summary>
+        /// </summary>
         public DefaultIoFilterChain(AbstractIoSession session)
             : base(
             e => new NextFilter(e),
@@ -30,21 +32,27 @@ namespace Mina.Core.Filterchain
             _session = session;
         }
 
+        /// <summary>
+        /// Gets the <see cref="IoSession"/> this chain belongs to.
+        /// </summary>
         public IoSession Session
         {
             get { return _session; }
         }
 
+        /// <inheritdoc/>
         public void FireSessionCreated()
         {
             CallNextSessionCreated(_head, _session);
         }
 
+        /// <inheritdoc/>
         public void FireSessionOpened()
         {
             CallNextSessionOpened(_head, _session);
         }
 
+        /// <inheritdoc/>
         public void FireSessionClosed()
         {
             // update future
@@ -61,12 +69,14 @@ namespace Mina.Core.Filterchain
             CallNextSessionClosed(_head, _session);
         }
 
+        /// <inheritdoc/>
         public void FireSessionIdle(IdleStatus status)
         {
             _session.IncreaseIdleCount(status, DateTime.Now);
             CallNextSessionIdle(_head, _session, status);
         }
 
+        /// <inheritdoc/>
         public void FireMessageReceived(Object message)
         {
             IoBuffer buf = message as IoBuffer;
@@ -76,6 +86,7 @@ namespace Mina.Core.Filterchain
             CallNextMessageReceived(_head, _session, message);
         }
 
+        /// <inheritdoc/>
         public void FireMessageSent(IWriteRequest request)
         {
             _session.IncreaseWrittenMessages(request, DateTime.Now);
@@ -95,16 +106,19 @@ namespace Mina.Core.Filterchain
             }
         }
 
+        /// <inheritdoc/>
         public void FireExceptionCaught(Exception cause)
         {
             CallNextExceptionCaught(_head, _session, cause);
         }
 
+        /// <inheritdoc/>
         public void FireFilterWrite(IWriteRequest writeRequest)
         {
             CallPreviousFilterWrite(_tail, _session, writeRequest);
         }
 
+        /// <inheritdoc/>
         public void FireFilterClose()
         {
             CallPreviousFilterClose(_tail, _session);
@@ -207,6 +221,7 @@ namespace Mina.Core.Filterchain
                 });
         }
 
+        /// <inheritdoc/>
         public new void Clear()
         {
             try
@@ -220,6 +235,7 @@ namespace Mina.Core.Filterchain
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnPreAdd(Entry entry)
         {
             try
@@ -232,6 +248,7 @@ namespace Mina.Core.Filterchain
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnPostAdd(Entry entry)
         {
             try
@@ -245,6 +262,7 @@ namespace Mina.Core.Filterchain
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnPreRemove(Entry entry)
         {
             try
@@ -258,6 +276,7 @@ namespace Mina.Core.Filterchain
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnPostRemove(Entry entry)
         {
             try

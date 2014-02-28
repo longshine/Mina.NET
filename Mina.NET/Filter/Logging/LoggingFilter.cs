@@ -90,42 +90,49 @@ namespace Mina.Filter.Logging
         /// </summary>
         public LogLevel SessionClosedLevel { get; set; }
 
+        /// <inheritdoc/>
         public override void ExceptionCaught(INextFilter nextFilter, IoSession session, Exception cause)
         {
             Log(ExceptionCaughtLevel, "EXCEPTION :", cause);
             base.ExceptionCaught(nextFilter, session, cause);
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
             Log(MessageReceivedLevel, "RECEIVED: {0}", message);
             base.MessageReceived(nextFilter, session, message);
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             Log(MessageSentLevel, "SENT: {0}", writeRequest.Message);
             base.MessageSent(nextFilter, session, writeRequest);
         }
 
+        /// <inheritdoc/>
         public override void SessionCreated(INextFilter nextFilter, IoSession session)
         {
             Log(SessionCreatedLevel, "CREATED");
             base.SessionCreated(nextFilter, session);
         }
 
+        /// <inheritdoc/>
         public override void SessionOpened(INextFilter nextFilter, IoSession session)
         {
             Log(SessionOpenedLevel, "OPENED");
             base.SessionOpened(nextFilter, session);
         }
 
+        /// <inheritdoc/>
         public override void SessionIdle(INextFilter nextFilter, IoSession session, IdleStatus status)
         {
             Log(SessionIdleLevel, "IDLE"); 
             base.SessionIdle(nextFilter, session, status);
         }
 
+        /// <inheritdoc/>
         public override void SessionClosed(INextFilter nextFilter, IoSession session)
         {
             Log(SessionClosedLevel, "CLOSED"); 

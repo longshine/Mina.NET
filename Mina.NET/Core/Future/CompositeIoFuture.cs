@@ -14,6 +14,8 @@ namespace Mina.Core.Future
         private Int32 _unnotified;
         private volatile Boolean _constructionFinished;
 
+        /// <summary>
+        /// </summary>
         public CompositeIoFuture(IEnumerable<TFuture> children)
             : base(null)
         {

@@ -13,26 +13,31 @@ namespace Mina.Core.Service
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(IoHandlerAdapter));
 
+        /// <inheritdoc/>
         public virtual void SessionCreated(IoSession session)
         {
             // Empty handler
         }
 
+        /// <inheritdoc/>
         public virtual void SessionOpened(IoSession session)
         {
             // Empty handler
         }
 
+        /// <inheritdoc/>
         public virtual void SessionClosed(IoSession session)
         {
             // Empty handler
         }
 
+        /// <inheritdoc/>
         public virtual void SessionIdle(IoSession session, IdleStatus status)
         {
             // Empty handler
         }
 
+        /// <inheritdoc/>
         public virtual void ExceptionCaught(IoSession session, Exception cause)
         {
             if (log.IsWarnEnabled)
@@ -41,11 +46,13 @@ namespace Mina.Core.Service
             }
         }
 
+        /// <inheritdoc/>
         public virtual void MessageReceived(IoSession session, Object message)
         {
             // Empty handler
         }
 
+        /// <inheritdoc/>
         public virtual void MessageSent(IoSession session, Object message)
         {
             // Empty handler

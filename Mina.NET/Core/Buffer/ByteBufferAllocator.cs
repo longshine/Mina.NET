@@ -8,8 +8,12 @@ namespace Mina.Core.Buffer
     /// </summary>
     public class ByteBufferAllocator : IoBufferAllocator
     {
+        /// <summary>
+        /// Static instace of <see cref="ByteBufferAllocator"/>.
+        /// </summary>
         public static readonly ByteBufferAllocator Instance = new ByteBufferAllocator();
 
+        /// <inheritdoc/>
         public IoBuffer Allocate(Int32 capacity)
         {
             if (capacity < 0)
@@ -17,6 +21,7 @@ namespace Mina.Core.Buffer
             return new ByteBuffer(this, capacity, capacity);
         }
 
+        /// <inheritdoc/>
         public IoBuffer Wrap(Byte[] array, Int32 offset, Int32 length)
         {
             try
@@ -29,6 +34,7 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <inheritdoc/>
         public IoBuffer Wrap(Byte[] array)
         {
             return Wrap(array, 0, array.Length);

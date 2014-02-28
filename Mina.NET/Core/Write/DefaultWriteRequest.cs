@@ -19,21 +19,25 @@ namespace Mina.Core.Write
             _future = future ?? UnusedFuture.Instance;
         }
 
+        /// <inheritdoc/>
         public IWriteRequest OriginalRequest
         {
             get { return this; }
         }
 
+        /// <inheritdoc/>
         public Object Message
         {
             get { return _message; }
         }
 
+        /// <inheritdoc/>
         public IWriteFuture Future
         {
             get { return _future; }
         }
 
+        /// <inheritdoc/>
         public virtual Boolean Encoded
         {
             get { return false; }

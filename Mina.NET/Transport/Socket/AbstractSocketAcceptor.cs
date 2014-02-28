@@ -40,18 +40,25 @@ namespace Mina.Transport.Socket
 
         public Boolean ReuseAddress { get; set; }
 
+        /// <summary>
+        /// Gets or sets the backlog.
+        /// </summary>
         public Int32 Backlog
         {
             get { return _backlog; }
             set { _backlog = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the number of max connections.
+        /// </summary>
         public Int32 MaxConnections
         {
             get { return _maxConnections; }
             set { _maxConnections = value; }
         }
 
+        /// <inheritdoc/>
         protected override IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints)
         {
             Dictionary<EndPoint, System.Net.Sockets.Socket> newListeners = new Dictionary<EndPoint, System.Net.Sockets.Socket>();
@@ -98,6 +105,7 @@ namespace Mina.Transport.Socket
             return newListeners.Keys;
         }
 
+        /// <inheritdoc/>
         protected override void UnbindInternal(IEnumerable<EndPoint> localEndPoints)
         {
             foreach (EndPoint ep in localEndPoints)
@@ -149,10 +157,20 @@ namespace Mina.Transport.Socket
                 _connectionPool.Release();
         }
 
+        /// <inheritdoc/>
         protected abstract IoSession NewSession(IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket);
 
+        /// <summary>
+        /// Begins an accept operation.
+        /// </summary>
+        /// <param name="listener"></param>
         protected abstract void BeginAccept(ListenerContext listener);
 
+        /// <summary>
+        /// Ends an accept operation.
+        /// </summary>
+        /// <param name="socket">the accepted client socket</param>
+        /// <param name="listener">the <see cref="ListenerContext"/></param>
         protected void EndAccept(System.Net.Sockets.Socket socket, ListenerContext listener)
         {
             if (socket != null)
@@ -173,6 +191,7 @@ namespace Mina.Transport.Socket
             StartAccept(listener);
         }
 
+        /// <inheritdoc/>
         protected override void Dispose(Boolean disposing)
         {
             if (!_disposed)

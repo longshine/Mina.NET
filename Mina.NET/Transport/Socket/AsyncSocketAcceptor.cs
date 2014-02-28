@@ -27,6 +27,7 @@ namespace Mina.Transport.Socket
             this.SessionDestroyed += OnSessionDestroyed;
         }
 
+        /// <inheritdoc/>
         protected override IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints)
         {
             InitBuffer();
@@ -88,6 +89,7 @@ namespace Mina.Transport.Socket
             }
         }
 
+        /// <inheritdoc/>
         protected override void BeginAccept(ListenerContext listener)
         {
             SocketAsyncEventArgs acceptEventArg = (SocketAsyncEventArgs)listener.Tag;
@@ -128,6 +130,7 @@ namespace Mina.Transport.Socket
             }
         }
 
+        /// <inheritdoc/>
         protected override IoSession NewSession(IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
         {
             SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();

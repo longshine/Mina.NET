@@ -7,7 +7,6 @@ namespace Mina.Handler.Demux
     /// A handler interface that <see cref="DemuxingIoHandler"/> forwards
     /// <code>ExceptionCaught</code> events to.
     /// </summary>
-    /// <typeparam name="E"></typeparam>
     public interface IExceptionHandler
     {
         /// <summary>

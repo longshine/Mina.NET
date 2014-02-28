@@ -18,6 +18,7 @@ namespace Mina.Filter.Firewall
 
         private readonly List<Subnet> _blacklist = new List<Subnet>();
 
+        /// <inheritdoc/>
         public override void SessionCreated(INextFilter nextFilter, IoSession session)
         {
             if (IsBlocked(session))
@@ -27,6 +28,7 @@ namespace Mina.Filter.Firewall
                 base.SessionCreated(nextFilter, session);
         }
 
+        /// <inheritdoc/>
         public override void SessionOpened(INextFilter nextFilter, IoSession session)
         {
             if (IsBlocked(session))
@@ -36,6 +38,7 @@ namespace Mina.Filter.Firewall
                 base.SessionOpened(nextFilter, session);
         }
 
+        /// <inheritdoc/>
         public override void SessionClosed(INextFilter nextFilter, IoSession session)
         {
             if (IsBlocked(session))
@@ -45,6 +48,7 @@ namespace Mina.Filter.Firewall
                 base.SessionClosed(nextFilter, session);
         }
 
+        /// <inheritdoc/>
         public override void SessionIdle(INextFilter nextFilter, IoSession session, IdleStatus status)
         {
             if (IsBlocked(session))
@@ -54,6 +58,7 @@ namespace Mina.Filter.Firewall
                 base.SessionIdle(nextFilter, session, status);
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
             if (IsBlocked(session))
@@ -63,6 +68,7 @@ namespace Mina.Filter.Firewall
                 base.MessageReceived(nextFilter, session, message);
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             if (IsBlocked(session))

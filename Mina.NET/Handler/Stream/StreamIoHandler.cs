@@ -37,6 +37,7 @@ namespace Mina.Handler.Stream
             set { _writeTimeout = value; }
         }
 
+        /// <inheritdoc/>
         public override void SessionOpened(IoSession session)
         {
             // Set timeouts
@@ -51,6 +52,7 @@ namespace Mina.Handler.Stream
             ProcessStreamIo(session, input, output);
         }
 
+        /// <inheritdoc/>
         public override void SessionClosed(IoSession session)
         {
             IoSessionStream input = session.GetAttribute<IoSessionStream>(KEY_IN);
@@ -65,12 +67,14 @@ namespace Mina.Handler.Stream
             }
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(IoSession session, Object message)
         {
             IoSessionStream input = session.GetAttribute<IoSessionStream>(KEY_IN);
             input.Write((IoBuffer)message);
         }
 
+        /// <inheritdoc/>
         public override void ExceptionCaught(IoSession session, Exception cause)
         {
             IOException ioe = cause as IOException;
@@ -89,12 +93,19 @@ namespace Mina.Handler.Stream
             session.Close(true);
         }
 
+        /// <inheritdoc/>
         public override void SessionIdle(IoSession session, IdleStatus status)
         {
             if (status == IdleStatus.ReaderIdle)
                 throw new IOException("Read timeout");
         }
 
+        /// <summary>
+        /// Implement this method to execute your stream I/O logic.
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
         protected abstract void ProcessStreamIo(IoSession session, System.IO.Stream input, System.IO.Stream output);
     }
 }

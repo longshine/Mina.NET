@@ -20,7 +20,7 @@ namespace Mina.Filter.Codec.StateMachine
         IDecodingState Decode(IoBuffer input, IProtocolDecoderOutput output);
 
         /// <summary>
-        /// Invoked when the associated <see cref="IoSession"/> is closed.
+        /// Invoked when the associated <see cref="Core.Session.IoSession"/> is closed.
         /// This method is 
         /// useful when you deal with protocols which don't specify the length of a 
         /// message (e.g. HTTP responses without <tt>content-length</tt> header). 

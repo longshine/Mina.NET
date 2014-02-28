@@ -20,16 +20,16 @@ namespace Mina.Core.Service
         Int64 ConnectTimeoutInMillis { get; set; }
         /// <summary>
         /// Gets or sets the default remote endpoint to connect to when no argument
-        /// is specified in <see cref="Connect"/> method.
+        /// is specified in <see cref="Connect()"/> method.
         /// </summary>
         EndPoint DefaultRemoteEndPoint { get; set; }
         /// <summary>
-        /// Connects to the <see cref="DefaultEndPoint"/>.
+        /// Connects to the <see cref="DefaultRemoteEndPoint"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">if no default remoted address is set</exception>
         IConnectFuture Connect();
         /// <summary>
-        /// Connects to the <see cref="DefaultEndPoint"/> and invokes the <code>ioSessionInitializer</code>
+        /// Connects to the <see cref="DefaultRemoteEndPoint"/> and invokes the <code>ioSessionInitializer</code>
         /// when the IoSession is created but before <code>SessionCreated</code> is fired.
         /// </summary>
         /// <exception cref="InvalidOperationException">if no default remoted address is set</exception>

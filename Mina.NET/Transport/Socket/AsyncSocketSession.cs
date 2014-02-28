@@ -25,16 +25,23 @@ namespace Mina.Transport.Socket
             _completeHandler = saea_Completed;
         }
 
+        /// <summary>
+        /// Gets the reading buffer belonged to this session.
+        /// </summary>
         public SocketAsyncEventArgsBuffer ReadBuffer
         {
             get { return _readBuffer; }
         }
 
+        /// <summary>
+        /// Gets the writing buffer belonged to this session.
+        /// </summary>
         public SocketAsyncEventArgsBuffer WriteBuffer
         {
             get { return _writeBuffer; }
         }
 
+        /// <inheritdoc/>
         protected override void BeginSend(IoBuffer buf)
         {
             _writeBuffer.Clear();
@@ -84,6 +91,10 @@ namespace Mina.Transport.Socket
             ProcessSend(e);
         }
 
+        /// <summary>
+        /// Processes send events.
+        /// </summary>
+        /// <param name="e"></param>
         public void ProcessSend(SocketAsyncEventArgs e)
         {
             if (e.SocketError == SocketError.Success)
@@ -100,6 +111,7 @@ namespace Mina.Transport.Socket
             }
         }
 
+        /// <inheritdoc/>
         protected override void BeginReceive()
         {
             _readBuffer.Clear();
@@ -117,6 +129,10 @@ namespace Mina.Transport.Socket
             }
         }
 
+        /// <summary>
+        /// Processes receive events.
+        /// </summary>
+        /// <param name="e"></param>
         public void ProcessReceive(SocketAsyncEventArgs e)
         {
             if (e.SocketError == SocketError.Success)

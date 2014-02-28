@@ -19,15 +19,23 @@
         BothIdle
     }
 
-    public class IdleStatusEventArgs : System.EventArgs
+    /// <summary>
+    /// Provides data for idle events.
+    /// </summary>
+    public class IdleEventArgs : System.EventArgs
     {
         private readonly IdleStatus _idleStatus;
 
-        public IdleStatusEventArgs(IdleStatus idleStatus)
+        /// <summary>
+        /// </summary>
+        public IdleEventArgs(IdleStatus idleStatus)
         {
             _idleStatus = idleStatus;
         }
 
+        /// <summary>
+        /// Gets the idle status.
+        /// </summary>
         public IdleStatus IdleStatus
         {
             get { return _idleStatus; }

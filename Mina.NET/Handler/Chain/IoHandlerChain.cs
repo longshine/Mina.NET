@@ -15,6 +15,8 @@ namespace Mina.Handler.Chain
         private readonly Int32 _id = nextId++;
         private readonly String _nextCommandKey;
 
+        /// <summary>
+        /// </summary>
         public IoHandlerChain()
             : base(
             e => new NextCommand(e),
@@ -25,6 +27,7 @@ namespace Mina.Handler.Chain
             _nextCommandKey = ((TailCommand)_tail.Filter).nextCommandKey;
         }
 
+        /// <inheritdoc/>
         public void Execute(INextCommand next, IoSession session, Object message)
         {
             if (next != null)
@@ -40,6 +43,7 @@ namespace Mina.Handler.Chain
             }
         }
 
+        /// <inheritdoc/>
         public override String ToString()
         {
             StringBuilder buf = new StringBuilder();

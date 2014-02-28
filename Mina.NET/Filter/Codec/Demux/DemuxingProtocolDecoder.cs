@@ -45,12 +45,14 @@ namespace Mina.Filter.Codec.Demux
             _decoderFactories = newDecoderFactories;
         }
 
+        /// <inheritdoc/>
         public override void Dispose(IoSession session)
         {
             base.Dispose(session);
             session.RemoveAttribute(STATE);
         }
 
+        /// <inheritdoc/>
         public override void FinishDecode(IoSession session, IProtocolDecoderOutput output)
         {
             base.FinishDecode(session, output);
@@ -61,6 +63,7 @@ namespace Mina.Filter.Codec.Demux
             currentDecoder.FinishDecode(session, output);
         }
 
+        /// <inheritdoc/>
         protected override bool DoDecode(IoSession session, IoBuffer input, IProtocolDecoderOutput output)
         {
             State state = GetState(session);

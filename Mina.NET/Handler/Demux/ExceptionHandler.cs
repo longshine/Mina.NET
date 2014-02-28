@@ -13,9 +13,13 @@ namespace Mina.Handler.Demux
 
         private readonly Action<IoSession, E> _act;
 
+        /// <summary>
+        /// </summary>
         public ExceptionHandler()
         { }
 
+        /// <summary>
+        /// </summary>
         public ExceptionHandler(Action<IoSession, E> act)
         {
             if (act == null)
@@ -23,6 +27,7 @@ namespace Mina.Handler.Demux
             _act = act;
         }
 
+        /// <inheritdoc/>
         public virtual void ExceptionCaught(IoSession session, E cause)
         {
             if (_act != null)

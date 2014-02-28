@@ -42,12 +42,14 @@ namespace Mina.Filter.Stream
             }
         }
 
+        /// <inheritdoc/>
         public override void OnPreAdd(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             if (parent.Contains(GetType()))
                 throw new InvalidOperationException("Only one " + GetType().Name + " is permitted.");
         }
 
+        /// <inheritdoc/>
         public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             // If we're already processing a stream we need to queue the WriteRequest.
@@ -83,6 +85,7 @@ namespace Mina.Filter.Stream
             }
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             T stream = writeRequest.Message as T;

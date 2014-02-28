@@ -159,15 +159,21 @@ namespace Mina.Core.Buffer
             get { return _mark; }
         }
 
+        /// <summary>
+        /// Sets capacity.
+        /// </summary>
+        /// <param name="capacity">the new capacity</param>
         protected void Recapacity(Int32 capacity)
         {
             _capacity = capacity;
         }
 
         /// <summary>
-        /// Checks the given index against the limit, throwing an <see cref="IndexOutOfRangeException"/>
-        /// if it is not smaller than the limit or is smaller than zero.
+        /// Checks the given index against the limit.
         /// </summary>
+        /// <exception cref="IndexOutOfRangeException">
+        /// the index is not smaller than the limit or is smaller than zero
+        /// </exception>
         protected Int32 CheckIndex(Int32 i)
         {
             if ((i < 0) || (i >= _limit))
@@ -175,6 +181,12 @@ namespace Mina.Core.Buffer
             return i;
         }
 
+        /// <summary>
+        /// Checks the given index against the limit.
+        /// </summary>
+        /// <exception cref="IndexOutOfRangeException">
+        /// the index + number of bytes is not smaller than the limit or is smaller than zero
+        /// </exception>
         protected Int32 CheckIndex(Int32 i, Int32 nb)
         {
             if ((i < 0) || (nb > _limit - i))
@@ -183,10 +195,13 @@ namespace Mina.Core.Buffer
         }
 
         /// <summary>
-        /// Checks the current position against the limit, throwing a <see cref="BufferUnderflowException"/>
-        /// if it is not smaller than the limit, and then increments the position.
+        /// Checks the current position against the limit,
+        /// and then increments the position.
         /// </summary>
         /// <returns>the current position value, before it is incremented</returns>
+        /// <exception cref="BufferUnderflowException">
+        /// the current position is not smaller than the limit
+        /// </exception>
         protected Int32 NextGetIndex()
         {
             if (_position >= _limit)
@@ -194,6 +209,14 @@ namespace Mina.Core.Buffer
             return _position++;
         }
 
+        /// <summary>
+        /// Checks the current position against the limit,
+        /// and then increments the position with given number of bytes.
+        /// </summary>
+        /// <returns>the current position value, before it is incremented</returns>
+        /// <exception cref="BufferUnderflowException">
+        /// the current position is not enough for the given number of bytes
+        /// </exception>
         protected Int32 NextGetIndex(Int32 nb)
         {
             if (_limit - _position < nb)
@@ -204,10 +227,13 @@ namespace Mina.Core.Buffer
         }
 
         /// <summary>
-        /// Checks the current position against the limit, throwing a <see cref="OverflowException"/>
-        /// if it is not smaller than the limit, and then increments the position.
+        /// Checks the current position against the limit,
+        /// and then increments the position.
         /// </summary>
         /// <returns>the current position value, before it is incremented</returns>
+        /// <exception cref="OverflowException">
+        /// the current position is not smaller than the limit
+        /// </exception>
         protected Int32 NextPutIndex()
         {
             if (_position >= _limit)
@@ -215,6 +241,14 @@ namespace Mina.Core.Buffer
             return _position++;
         }
 
+        /// <summary>
+        /// Checks the current position against the limit,
+        /// and then increments the position with given number of bytes.
+        /// </summary>
+        /// <returns>the current position value, before it is incremented</returns>
+        /// <exception cref="OverflowException">
+        /// the current position is not enough for the given number of bytes
+        /// </exception>
         protected Int32 NextPutIndex(Int32 nb)
         {
             if (_limit - _position < nb)
@@ -224,6 +258,10 @@ namespace Mina.Core.Buffer
             return p;
         }
 
+        /// <summary>
+        /// Checks the bounds.
+        /// </summary>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         protected static void CheckBounds(Int32 off, Int32 len, Int32 size)
         {
             if ((off | len | (off + len) | (size - (off + len))) < 0)
@@ -231,9 +269,18 @@ namespace Mina.Core.Buffer
         }
     }
 
+    /// <summary>
+    /// Byte order
+    /// </summary>
     public enum ByteOrder
     {
+        /// <summary>
+        /// Big-endian
+        /// </summary>
         BigEndian,
+        /// <summary>
+        /// Little-endian
+        /// </summary>
         LittleEndian
     }
 }

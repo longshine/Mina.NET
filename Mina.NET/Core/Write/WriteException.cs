@@ -37,6 +37,7 @@ namespace Mina.Core.Write
             get { return _requests; }
         }
 
+        /// <inheritdoc/>
         public override void GetObjectData(
             System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context)

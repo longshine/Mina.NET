@@ -3,7 +3,7 @@
 namespace Mina.Core.Filterchain
 {
     /// <summary>
-    /// Represents a name-filter pair that an <see cref="IChain"/> contains.
+    /// Represents a name-filter pair that an <see cref="IChain&lt;TFilter, TNextFilter&gt;"/> contains.
     /// </summary>
     public interface IEntry<TFilter, TNextFilter>
     {

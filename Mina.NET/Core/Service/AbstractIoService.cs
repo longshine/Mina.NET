@@ -25,18 +25,31 @@ namespace Mina.Core.Service
 
         private ConcurrentDictionary<Int64, IoSession> _managedSessions = new ConcurrentDictionary<Int64, IoSession>();
 
+        /// <inheritdoc/>
         public event EventHandler Activated;
-        public event EventHandler<IdleStatusEventArgs> Idle;
+        /// <inheritdoc/>
+        public event EventHandler<IdleEventArgs> Idle;
+        /// <inheritdoc/>
         public event EventHandler Deactivated;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionEventArgs> SessionCreated;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionEventArgs> SessionOpened;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionEventArgs> SessionClosed;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionEventArgs> SessionDestroyed;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionIdleEventArgs> SessionIdle;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionExceptionEventArgs> ExceptionCaught;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionMessageEventArgs> MessageReceived;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionMessageEventArgs> MessageSent;
 
+        /// <summary>
+        /// </summary>
         protected AbstractIoService(IoSessionConfig sessionConfig)
         {
             _sessionConfig = sessionConfig;
@@ -44,6 +57,7 @@ namespace Mina.Core.Service
             _stats = new IoServiceStatistics(this);
         }
 
+        /// <inheritdoc/>
         public IoHandler Handler
         {
             get { return _handler; }
@@ -55,27 +69,32 @@ namespace Mina.Core.Service
             }
         }
 
+        /// <inheritdoc/>
         public IDictionary<Int64, IoSession> ManagedSessions
         {
             get { return _managedSessions; }
         }
 
+        /// <inheritdoc/>
         public IoSessionConfig SessionConfig
         {
             get { return _sessionConfig; }
         }
 
+        /// <inheritdoc/>
         public IoFilterChainBuilder FilterChainBuilder
         {
             get { return _filterChainBuilder; }
             set { _filterChainBuilder = value; }
         }
 
+        /// <inheritdoc/>
         public DefaultIoFilterChainBuilder FilterChain
         {
             get { return _filterChainBuilder as DefaultIoFilterChainBuilder; }
         }
 
+        /// <inheritdoc/>
         public IoSessionDataStructureFactory SessionDataStructureFactory
         {
             get { return _sessionDataStructureFactory; }
@@ -89,21 +108,25 @@ namespace Mina.Core.Service
             }
         }
 
+        /// <inheritdoc/>
         public Boolean Active
         {
             get { return _active > 0; }
         }
 
+        /// <inheritdoc/>
         public DateTime ActivationTime
         {
             get { return _activationTime; }
         }
 
+        /// <inheritdoc/>
         public IoServiceStatistics Statistics
         {
             get { return _stats; }
         }
 
+        /// <inheritdoc/>
         public IEnumerable<IWriteFuture> Broadcast(Object message)
         {
             List<IWriteFuture> answer = new List<IWriteFuture>(_managedSessions.Count);
@@ -125,12 +148,18 @@ namespace Mina.Core.Service
             return answer;
         }
 
+        /// <summary>
+        /// Disposes resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Initializes sessions.
+        /// </summary>
         protected void InitSession<TFuture>(IoSession session, TFuture future, Action<IoSession, TFuture> initializeSession)
             where TFuture : IoFuture
         {
@@ -159,6 +188,9 @@ namespace Mina.Core.Service
             // Do nothing. Extended class might add some specific code 
         }
 
+        /// <summary>
+        /// Disposes resources.
+        /// </summary>
         protected virtual void Dispose(Boolean disposing)
         { 
 
@@ -199,7 +231,7 @@ namespace Mina.Core.Service
 
         void IoServiceSupport.FireServiceIdle(IdleStatus idleStatus)
         {
-            DelegateUtils.SaveInvoke(Idle, this, new IdleStatusEventArgs(idleStatus));
+            DelegateUtils.SaveInvoke(Idle, this, new IdleEventArgs(idleStatus));
         }
 
         void IoServiceSupport.FireSessionCreated(IoSession session)

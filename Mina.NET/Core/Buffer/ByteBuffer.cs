@@ -41,6 +41,7 @@ namespace Mina.Core.Buffer
             : this(parent, mark, pos, lim, cap, buf, off)
         { }
 
+        /// <inheritdoc/>
         public override Int32 Capacity
         {
             get { return base.Capacity; }
@@ -65,21 +66,25 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <inheritdoc/>
         public override Boolean HasArray
         {
             get { return _hb != null && !_readOnly; }
         }
 
+        /// <inheritdoc/>
         public override Byte Get()
         {
             return _hb[Offset(NextGetIndex())];
         }
 
+        /// <inheritdoc/>
         public override Byte Get(Int32 index)
         {
             return _hb[Offset(CheckIndex(index))];
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Get(Byte[] dst, Int32 offset, Int32 length)
         {
             CheckBounds(offset, length, dst.Length);
@@ -90,16 +95,19 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override ArraySegment<Byte> GetRemaining()
         {
             return new ArraySegment<Byte>(_hb, Offset(Position), Remaining);
         }
 
+        /// <inheritdoc/>
         public override Boolean ReadOnly
         {
             get { return false; }
         }
 
+        /// <inheritdoc/>
         public override IoBuffer Compact()
         {
             Int32 remaining = Remaining;
@@ -146,32 +154,38 @@ namespace Mina.Core.Buffer
             return this;
         }
 
+        /// <inheritdoc/>
         public override void Free()
         {
             // do nothing
         }
 
+        /// <inheritdoc/>
         protected override IoBuffer Slice0()
         {
             return new ByteBuffer(this, _hb, -1, 0, Remaining, Remaining, Position + _offset);
         }
 
+        /// <inheritdoc/>
         protected override IoBuffer Duplicate0()
         {
             return new ByteBuffer(this, _hb, MarkValue, Position, Limit, Capacity, _offset);
         }
 
+        /// <inheritdoc/>
         protected override IoBuffer AsReadOnlyBuffer0()
         {
             return new ByteBufferR(this, _hb, MarkValue, Position, Limit, Capacity, _offset);
         }
 
+        /// <inheritdoc/>
         protected override void PutInternal(Byte[] src, Int32 offset, Int32 length)
         {
             System.Buffer.BlockCopy(src, offset, _hb, Offset(Position), length);
             Position += length;
         }
 
+        /// <inheritdoc/>
         protected override void PutInternal(IoBuffer src)
         {
             ByteBuffer bb = src as ByteBuffer;
@@ -190,16 +204,19 @@ namespace Mina.Core.Buffer
             }
         }
 
+        /// <inheritdoc/>
         protected override Byte GetInternal(Int32 i)
         {
             return _hb[i];
         }
 
+        /// <inheritdoc/>
         protected override void PutInternal(Int32 i, Byte b)
         {
             _hb[i] = b;
         }
 
+        /// <inheritdoc/>
         protected override Int32 Offset(Int32 i)
         {
             return i + _offset;

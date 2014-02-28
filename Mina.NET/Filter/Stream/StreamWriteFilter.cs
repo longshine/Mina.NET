@@ -5,7 +5,7 @@ namespace Mina.Filter.Stream
 {
     /// <summary>
     /// Filter implementation which makes it possible to write <see cref="System.IO.Stream"/>
-    /// objects directly using <see cref="IoSession.Write(Object)"/>.
+    /// objects directly using <see cref="Core.Session.IoSession.Write(Object)"/>.
     /// <remarks>
     /// When an <see cref="System.IO.Stream"/> is written to a session this filter will read the bytes
     /// from the stream into <see cref="IoBuffer"/> objects and write those buffers

@@ -10,10 +10,13 @@ namespace Mina.Core.Future
     {
         private static readonly Object CLOSED = new Object();
 
+        /// <summary>
+        /// </summary>
         public DefaultReadFuture(IoSession session)
             : base(session)
         { }
 
+        /// <inheritdoc/>
         public Object Message
         {
             get
@@ -39,6 +42,7 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <inheritdoc/>
         public Boolean Read
         {
             get
@@ -52,12 +56,14 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <inheritdoc/>
         public Boolean Closed
         {
             get { return Done && Object.ReferenceEquals(Value, CLOSED); }
             set { Value = CLOSED; }
         }
 
+        /// <inheritdoc/>
         public Exception Exception
         {
             get
@@ -76,6 +82,7 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <inheritdoc/>
         public new IReadFuture Await()
         {
             return (IReadFuture)base.Await();

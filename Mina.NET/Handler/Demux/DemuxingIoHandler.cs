@@ -6,6 +6,10 @@ using Mina.Core.Session;
 
 namespace Mina.Handler.Demux
 {
+    /// <summary>
+    /// A <see cref="IoHandler"/> that demuxes <code>MessageReceived</code> events
+    /// to the appropriate <see cref="IMessageHandler"/>.
+    /// </summary>
     public class DemuxingIoHandler : IoHandlerAdapter
     {
         private readonly ConcurrentDictionary<Type, IMessageHandler> _receivedMessageHandlers
@@ -23,38 +27,69 @@ namespace Mina.Handler.Demux
         private readonly ConcurrentDictionary<Type, IExceptionHandler> _exceptionHandlerCache
             = new ConcurrentDictionary<Type, IExceptionHandler>();
 
+        /// <summary>
+        /// Registers a <see cref="IMessageHandler&lt;T&gt;"/> that handles the received messages of
+        /// the specified <typeparamref name="T"/>.
+        /// </summary>
+        /// <returns>the old handler if there is already a registered handler for the specified type</returns>
         public IMessageHandler<T> AddReceivedMessageHandler<T>(IMessageHandler<T> handler)
         {
             return (IMessageHandler<T>)AddHandler(_receivedMessageHandlers, _receivedMessageHandlerCache, typeof(T), handler);
         }
 
+        /// <summary>
+        /// Deregisters a <see cref="IMessageHandler&lt;T&gt;"/> that handles the received messages of
+        /// the specified <typeparamref name="T"/>.
+        /// </summary>
+        /// <returns>the removed handler if successfully removed, null otherwise</returns>
         public IMessageHandler<T> RemoveReceivedMessageHandler<T>(IMessageHandler<T> handler)
         {
             return (IMessageHandler<T>)RemoveHandler(_receivedMessageHandlers, _receivedMessageHandlerCache, typeof(T));
         }
 
+        /// <summary>
+        /// Registers a <see cref="IMessageHandler&lt;T&gt;"/> that handles the sent messages of
+        /// the specified <typeparamref name="T"/>.
+        /// </summary>
+        /// <returns>the old handler if there is already a registered handler for the specified type</returns>
         public IMessageHandler<T> AddSentMessageHandler<T>(IMessageHandler<T> handler)
         {
             return (IMessageHandler<T>)AddHandler(_sentMessageHandlers, _sentMessageHandlerCache, typeof(T), handler);
         }
 
+        /// <summary>
+        /// Deregisters a <see cref="IMessageHandler&lt;T&gt;"/> that handles the sent messages of
+        /// the specified <typeparamref name="T"/>.
+        /// </summary>
+        /// <returns>the removed handler if successfully removed, null otherwise</returns>
         public IMessageHandler<T> RemoveSentMessageHandler<T>(IMessageHandler<T> handler)
         {
             return (IMessageHandler<T>)RemoveHandler(_sentMessageHandlers, _sentMessageHandlerCache, typeof(T));
         }
 
+        /// <summary>
+        /// Registers a <see cref="IMessageHandler&lt;T&gt;"/> that handles exceptions of
+        /// the specified <typeparamref name="E"/>.
+        /// </summary>
+        /// <returns>the old handler if there is already a registered handler for the specified type</returns>
         public IExceptionHandler<E> AddExceptionHandler<E>(IExceptionHandler<E> handler)
             where E : Exception
         {
             return (IExceptionHandler<E>)AddHandler(_exceptionHandlers, _exceptionHandlerCache, typeof(E), handler);
         }
 
+        /// <summary>
+        /// Deregisters a <see cref="IMessageHandler&lt;T&gt;"/> that handles exceptions of
+        /// the specified <typeparamref name="E"/>.
+        /// </summary>
+        /// <returns>the removed handler if successfully removed, null otherwise</returns>
         public IExceptionHandler<E> RemoveExceptionHandler<E>()
             where E : Exception
         {
             return (IExceptionHandler<E>)RemoveHandler(_exceptionHandlers, _exceptionHandlerCache, typeof(E));
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(IoSession session, Object message)
         {
             IMessageHandler handler = FindReceivedMessageHandler(message.GetType());
@@ -65,6 +100,7 @@ namespace Mina.Handler.Demux
                 handler.HandleMessage(session, message);
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(IoSession session, Object message)
         {
             IMessageHandler handler = FindSentMessageHandler(message.GetType());
@@ -75,6 +111,7 @@ namespace Mina.Handler.Demux
                 handler.HandleMessage(session, message);
         }
 
+        /// <inheritdoc/>
         public override void ExceptionCaught(IoSession session, Exception cause)
         {
             IExceptionHandler handler = FindExceptionHandler(cause.GetType());

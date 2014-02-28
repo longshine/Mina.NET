@@ -94,6 +94,7 @@ namespace Mina.Filter.KeepAlive
             }
         }
 
+        /// <inheritdoc/>
         public override void OnPreAdd(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             if (parent.Contains(this))
@@ -101,16 +102,19 @@ namespace Mina.Filter.KeepAlive
                     + "Create another instance and add it.");
         }
 
+        /// <inheritdoc/>
         public override void OnPostAdd(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             ResetStatus(parent.Session);
         }
 
+        /// <inheritdoc/>
         public override void OnPostRemove(IoFilterChain parent, String name, INextFilter nextFilter)
         {
             ResetStatus(parent.Session);
         }
 
+        /// <inheritdoc/>
         public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
         {
             try
@@ -133,6 +137,7 @@ namespace Mina.Filter.KeepAlive
             }
         }
 
+        /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
             Object message = writeRequest.Message;
@@ -140,6 +145,7 @@ namespace Mina.Filter.KeepAlive
                 nextFilter.MessageSent(session, writeRequest);
         }
 
+        /// <inheritdoc/>
         public override void SessionIdle(INextFilter nextFilter, IoSession session, IdleStatus status)
         {
             if (status == _interestedIdleStatus)

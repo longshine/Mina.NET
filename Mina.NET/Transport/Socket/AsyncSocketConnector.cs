@@ -6,6 +6,7 @@ namespace Mina.Transport.Socket
 {
     public class AsyncSocketConnector : AbstractSocketConnector
     {
+        /// <inheritdoc/>
         protected override void BeginConnect(ConnectorContext connector)
         {
             SocketAsyncEventArgs e = new SocketAsyncEventArgs();

@@ -14,7 +14,7 @@ namespace Mina.Filter.Codec.Demux
         /// <remarks>
         /// MINA invokes <code>Encode(IoSession, Object, ProtocolEncoderOutput)</code>
         /// method with message which is popped from the session write queue, and then
-        /// the encoder implementation puts encoded <see cref="IoBuffer"/>s into
+        /// the encoder implementation puts encoded <see cref="Core.Buffer.IoBuffer"/>s into
         /// <see cref="IProtocolEncoderOutput"/>.
         /// </remarks>
         void Encode(IoSession session, Object message, IProtocolEncoderOutput output);
@@ -32,7 +32,7 @@ namespace Mina.Filter.Codec.Demux
         /// <remarks>
         /// MINA invokes <code>Encode(IoSession, Object, ProtocolEncoderOutput)</code>
         /// method with message which is popped from the session write queue, and then
-        /// the encoder implementation puts encoded <see cref="IoBuffer"/>s into
+        /// the encoder implementation puts encoded <see cref="Core.Buffer.IoBuffer"/>s into
         /// <see cref="IProtocolEncoderOutput"/>.
         /// </remarks>
         void Encode(IoSession session, T message, IProtocolEncoderOutput output);

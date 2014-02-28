@@ -44,6 +44,7 @@ namespace Mina.Filter.Firewall
             set { _allowedInterval = value; }
         }
 
+        /// <inheritdoc/>
         public override void SessionCreated(INextFilter nextFilter, IoSession session)
         {
             if (!IsConnectionOk(session))

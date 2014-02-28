@@ -10,6 +10,9 @@ using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
+    /// <summary>
+    /// Base implementation of <see cref="IoSession"/> for socket transport (TCP/IP).
+    /// </summary>
     public abstract class SocketSession : AbstractIoSession
     {
         private readonly System.Net.Sockets.Socket _socket;
@@ -19,49 +22,65 @@ namespace Mina.Transport.Socket
         private readonly IoFilterChain _filterChain;
         private Int32 _writing;
 
+        /// <summary>
+        /// </summary>
         protected SocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
             : base(service)
         {
             _socket = socket;
             _localEP = socket.LocalEndPoint;
             _remoteEP = socket.RemoteEndPoint;
-            _config = new SessionConfigImpl(socket);
+            Config = new SessionConfigImpl(socket);
             if (service.SessionConfig != null)
-                _config.SetAll(service.SessionConfig);
+                Config.SetAll(service.SessionConfig);
             _processor = processor;
             _filterChain = new DefaultIoFilterChain(this);
         }
 
+        /// <inheritdoc/>
         public override IoProcessor Processor
         {
             get { return _processor; }
         }
 
+        /// <inheritdoc/>
         public override IoFilterChain FilterChain
         {
             get { return _filterChain; }
         }
 
+        /// <inheritdoc/>
         public override EndPoint LocalEndPoint
         {
             get { return _localEP; }
         }
 
+        /// <inheritdoc/>
         public override EndPoint RemoteEndPoint
         {
             get { return _remoteEP; }
         }
 
+        /// <summary>
+        /// Gets the <see cref="System.Net.Sockets.Socket"/>
+        /// associated with this session.
+        /// </summary>
         public System.Net.Sockets.Socket Socket
         {
             get { return _socket; }
         }
 
+        /// <summary>
+        /// Starts this session.
+        /// </summary>
         public void Start()
         {
             BeginReceive();
         }
 
+        /// <summary>
+        /// Flushes this session.
+        /// </summary>
         public void Flush()
         {
             if (Interlocked.CompareExchange(ref _writing, 1, 0) > 0)
@@ -100,8 +119,16 @@ namespace Mina.Transport.Socket
             }
         }
 
+        /// <summary>
+        /// Begins send operation.
+        /// </summary>
+        /// <param name="buf">the buffer to send</param>
         protected abstract void BeginSend(IoBuffer buf);
 
+        /// <summary>
+        /// Ends send operation.
+        /// </summary>
+        /// <param name="bytesTransferred">the bytes transferred in last send operation</param>
         protected void EndSend(Int32 bytesTransferred)
         {
             this.IncreaseWrittenBytes(bytesTransferred, DateTime.Now);
@@ -134,8 +161,15 @@ namespace Mina.Transport.Socket
                 BeginSend();
         }
 
+        /// <summary>
+        /// Begins receive operation.
+        /// </summary>
         protected abstract void BeginReceive();
 
+        /// <summary>
+        /// Ends receive operation.
+        /// </summary>
+        /// <param name="buf">the buffer received in last receive operation</param>
         protected void EndReceive(IoBuffer buf)
         {
             FilterChain.FireMessageReceived(buf);
