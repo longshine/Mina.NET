@@ -12,10 +12,9 @@ namespace Mina.Transport.Socket
 {
     public abstract class AbstractSocketAcceptor : AbstractIoAcceptor, ISocketAcceptor
     {
-        private readonly IoProcessor<SocketSession> _processor = new AsyncSocketProcessor();
+        private readonly AsyncSocketProcessor _processor;
         private Int32 _backlog;
         private Int32 _maxConnections;
-        private IdleStatusChecker _idleStatusChecker;
         private Semaphore _connectionPool;
 #if NET20
         private readonly WaitCallback _startAccept;
@@ -33,7 +32,7 @@ namespace Mina.Transport.Socket
             : base(new DefaultSocketSessionConfig())
         {
             _maxConnections = maxConnections;
-            _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
+            _processor = new AsyncSocketProcessor(() => ManagedSessions.Values);
             this.SessionDestroyed += OnSessionDestroyed;
             _startAccept = StartAccept0;
         }
@@ -100,7 +99,7 @@ namespace Mina.Transport.Socket
                 StartAccept(new ListenerContext(pair.Value));
             }
 
-            _idleStatusChecker.Start();
+            _processor.IdleStatusChecker.Start();
 
             return newListeners.Keys;
         }
@@ -119,7 +118,7 @@ namespace Mina.Transport.Socket
 
             if (_listenSockets.Count == 0)
             {
-                _idleStatusChecker.Stop();
+                _processor.IdleStatusChecker.Stop();
 
                 if (_connectionPool != null)
                 {
@@ -210,7 +209,7 @@ namespace Mina.Transport.Socket
                         ((IDisposable)_connectionPool).Dispose();
                         _connectionPool = null;
                     }
-                    _idleStatusChecker.Dispose();
+                    _processor.Dispose();
                     base.Dispose(disposing);
                     _disposed = true;
                 }

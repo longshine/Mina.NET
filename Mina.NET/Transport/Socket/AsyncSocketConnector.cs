@@ -48,7 +48,7 @@ namespace Mina.Transport.Socket
                 writeBuffer.SetBuffer(new Byte[SessionConfig.ReadBufferSize], 0, SessionConfig.ReadBufferSize);
                 writeBuffer.Completed += new EventHandler<SocketAsyncEventArgs>(SocketAsyncEventArgs_Completed);
 
-                EndConnect(new AsyncSocketSession(this, _processor, connector.Socket,
+                EndConnect(new AsyncSocketSession(this, Processor, connector.Socket,
                     new SocketAsyncEventArgsBuffer(readBuffer), new SocketAsyncEventArgsBuffer(writeBuffer)), connector);
             }
             else

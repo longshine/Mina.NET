@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Mina.Core.Buffer;
 using Mina.Core.Filterchain;
 using Mina.Core.Service;
@@ -7,8 +8,31 @@ using Mina.Core.Write;
 
 namespace Mina.Transport.Socket
 {
-    class AsyncSocketProcessor : IoProcessor<SocketSession>
+    class AsyncSocketProcessor : IoProcessor<SocketSession>, IDisposable
     {
+        private readonly IdleStatusChecker _idleStatusChecker;
+
+        public AsyncSocketProcessor(Func<IEnumerable<IoSession>> getSessionsFunc)
+        {
+            _idleStatusChecker = new IdleStatusChecker(getSessionsFunc);
+        }
+
+        public IdleStatusChecker IdleStatusChecker
+        {
+            get { return _idleStatusChecker; }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+            _idleStatusChecker.Dispose();
+        }
+
         public void Add(SocketSession session)
         {
             // Build the filter chain of this session.

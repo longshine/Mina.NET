@@ -10,16 +10,23 @@ namespace Mina.Transport.Socket
 {
     public abstract class AbstractSocketConnector : AbstractIoConnector, ISocketConnector
     {
-        protected readonly IoProcessor<SocketSession> _processor = new AsyncSocketProcessor();
+        private readonly AsyncSocketProcessor _processor;
 
         protected AbstractSocketConnector()
             : base(new DefaultSocketSessionConfig())
-        { }
+        {
+            _processor = new AsyncSocketProcessor(() => ManagedSessions.Values);
+        }
 
         /// <inheritdoc/>
         public new ISocketSessionConfig SessionConfig
         {
             get { return (ISocketSessionConfig)base.SessionConfig; }
+        }
+
+        protected IoProcessor<SocketSession> Processor
+        {
+            get { return _processor; }
         }
 
         /// <inheritdoc/>
@@ -47,6 +54,8 @@ namespace Mina.Transport.Socket
             {
                 ExceptionMonitor.Instance.ExceptionCaught(ex);
             }
+
+            _processor.IdleStatusChecker.Start();
         }
 
         protected void EndConnect(Exception cause, ConnectorContext connector)
