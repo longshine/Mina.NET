@@ -18,6 +18,7 @@ namespace Mina.Core.Service
         private Int32 _active = 0;
         private DateTime _activationTime;
         private IoHandler _handler;
+        private Boolean _hasHandler;
         private readonly IoSessionConfig _sessionConfig;
         private readonly IoServiceStatistics _stats;
         private IoFilterChainBuilder _filterChainBuilder = new DefaultIoFilterChainBuilder();
@@ -66,6 +67,7 @@ namespace Mina.Core.Service
                 if (value == null)
                     throw new ArgumentNullException("value");
                 _handler = value;
+                _hasHandler = true;
             }
         }
 
@@ -245,7 +247,7 @@ namespace Mina.Core.Service
             filterChain.FireSessionCreated();
             filterChain.FireSessionOpened();
 
-            if (_handler != this)
+            if (_hasHandler)
                 DelegateUtils.SaveInvoke(SessionCreated, this, new IoSessionEventArgs(session));
         }
 
