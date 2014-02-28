@@ -96,7 +96,7 @@ namespace Mina.Transport.Socket
             {
                 if (disposing)
                 {
-                    _socket.Dispose();
+                    ((IDisposable)_socket).Dispose();
                     _future.Dispose();
                 }
             }
