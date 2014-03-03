@@ -24,6 +24,20 @@ namespace Mina.Transport.Socket
             get { return (ISocketSessionConfig)base.SessionConfig; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to reuse the read buffer
+        /// sent to <see cref="SocketSession.FilterChain"/> by
+        /// <see cref="Core.Filterchain.IoFilterChain.FireMessageReceived(Object)"/>.
+        /// </summary>
+        /// <remarks>
+        /// If any thread model, i.e. an <see cref="Filter.Executor.ExecutorFilter"/>,
+        /// is added before filters that process the incoming <see cref="Core.Buffer.IoBuffer"/>
+        /// in <see cref="Core.Filterchain.IoFilter.MessageReceived(Core.Filterchain.INextFilter, IoSession, Object)"/>,
+        /// this must be set to <code>false</code> to avoid undetermined state
+        /// of the read buffer. The default value is <code>true</code>.
+        /// </remarks>
+        public Boolean ReuseBuffer { get; set; }
+
         protected IoProcessor<SocketSession> Processor
         {
             get { return _processor; }

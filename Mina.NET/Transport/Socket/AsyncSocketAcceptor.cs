@@ -150,7 +150,7 @@ namespace Mina.Transport.Socket
                 writeBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
             }
 
-            return new AsyncSocketSession(this, processor, socket, readBuffer, writeBuffer);
+            return new AsyncSocketSession(this, processor, socket, readBuffer, writeBuffer, ReuseBuffer);
         }
     }
 }

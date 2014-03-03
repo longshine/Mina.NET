@@ -44,7 +44,7 @@ namespace Mina.Transport.Socket
 
         protected override IoSession NewSession(IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
         {
-            return new AsyncSocketSession(this, processor, socket);
+            return new AsyncSocketSession(this, processor, socket, ReuseBuffer);
         }
     }
 }

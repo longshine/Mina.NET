@@ -22,7 +22,7 @@ namespace Mina.Transport.Socket
                 return;
             }
 
-            EndConnect(new AsyncSocketSession(this, Processor, connector.Socket), connector);
+            EndConnect(new AsyncSocketSession(this, Processor, connector.Socket, ReuseBuffer), connector);
         }
     }
 }

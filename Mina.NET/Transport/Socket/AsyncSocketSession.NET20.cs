@@ -6,15 +6,32 @@ using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
-    class AsyncSocketSession : SocketSession
+    public class AsyncSocketSession : SocketSession
     {
         private readonly Byte[] _readBuffer;
 
-        public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
+        public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor,
+            System.Net.Sockets.Socket socket, Boolean reuseBuffer)
             : base(service, processor, socket)
         {
             _readBuffer = new Byte[service.SessionConfig.ReadBufferSize];
+            ReuseBuffer = reuseBuffer;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to reuse the internal
+        /// <see cref="ReadBuffer"/> as the buffer sent to <see cref="SocketSession.FilterChain"/>
+        /// by <see cref="Core.Filterchain.IoFilterChain.FireMessageReceived(Object)"/>.
+        /// </summary>
+        /// <remarks>
+        /// If any thread model, i.e. an <see cref="Filter.Executor.ExecutorFilter"/>,
+        /// is added before filters that process the incoming <see cref="Core.Buffer.IoBuffer"/>
+        /// in <see cref="Core.Filterchain.IoFilter.MessageReceived(Core.Filterchain.INextFilter, IoSession, Object)"/>,
+        /// this must be set to <code>false</code> since the internal read buffer
+        /// will be reset every time a session begins to receive.
+        /// </remarks>
+        /// <seealso cref="AsyncSocketAcceptor.ReuseBuffer"/>
+        public Boolean ReuseBuffer { get; set; }
 
         protected override void BeginReceive()
         {
@@ -36,7 +53,17 @@ namespace Mina.Transport.Socket
 
             if (read > 0)
             {
-                EndReceive(ByteBufferAllocator.Instance.Wrap(_readBuffer, 0, read));
+                if (ReuseBuffer)
+                {
+                    EndReceive(IoBuffer.Wrap(_readBuffer, 0, read));
+                }
+                else
+                {
+                    IoBuffer buf = IoBuffer.Allocate(read);
+                    buf.Put(_readBuffer, 0, read);
+                    buf.Flip();
+                    EndReceive(buf);
+                }
                 return;
             }
 

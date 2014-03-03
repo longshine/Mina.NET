@@ -15,7 +15,7 @@ namespace Mina.Transport.Socket
         private readonly EventHandler<SocketAsyncEventArgs> _completeHandler;
 
         public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor,System.Net.Sockets.Socket socket,
-            SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer)
+            SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
             : base(service, processor, socket)
         {
             _readBuffer = readBuffer;
@@ -23,6 +23,7 @@ namespace Mina.Transport.Socket
             _writeBuffer = writeBuffer;
             _writeBuffer.SocketAsyncEventArgs.UserToken = this;
             _completeHandler = saea_Completed;
+            ReuseBuffer = reuseBuffer;
         }
 
         /// <summary>
@@ -40,6 +41,21 @@ namespace Mina.Transport.Socket
         {
             get { return _writeBuffer; }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to reuse the internal
+        /// <see cref="ReadBuffer"/> as the buffer sent to <see cref="SocketSession.FilterChain"/>
+        /// by <see cref="Core.Filterchain.IoFilterChain.FireMessageReceived(Object)"/>.
+        /// </summary>
+        /// <remarks>
+        /// If any thread model, i.e. an <see cref="Filter.Executor.ExecutorFilter"/>,
+        /// is added before filters that process the incoming <see cref="Core.Buffer.IoBuffer"/>
+        /// in <see cref="Core.Filterchain.IoFilter.MessageReceived(Core.Filterchain.INextFilter, IoSession, Object)"/>,
+        /// this must be set to <code>false</code> since the internal read buffer
+        /// will be reset every time a session begins to receive.
+        /// </remarks>
+        /// <seealso cref="AsyncSocketAcceptor.ReuseBuffer"/>
+        public Boolean ReuseBuffer { get; set; }
 
         /// <inheritdoc/>
         protected override void BeginSend(IoBuffer buf)
@@ -142,7 +158,18 @@ namespace Mina.Transport.Socket
                     _readBuffer.Position = e.BytesTransferred;
                     _readBuffer.Flip();
 
-                    EndReceive(_readBuffer);
+                    if (ReuseBuffer)
+                    {
+                        EndReceive(_readBuffer);
+                    }
+                    else
+                    {
+                        IoBuffer buf = IoBuffer.Allocate(_readBuffer.Remaining);
+                        buf.Put(_readBuffer);
+                        buf.Flip();
+                        EndReceive(buf);
+                    }
+
                     return;
                 }
             }
