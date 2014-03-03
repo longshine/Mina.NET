@@ -1,9 +1,9 @@
 Mina.NET
 ========
 
-.NET implementation of [Apache MINA] (http://mina.apache.org/)
+.NET implementation of [Apache MINA] (http://mina.apache.org/). I like the ideas in it, simple yet functional, but I failed to find one in .NET, finally I created one.
 
-Mina.NET is a network application framework which helps users develop high performance and high scalability network applications easily. It provides an abstract event-driven asynchronous API over various transports such as TCP/IP via async socket.
+Mina.NET is a network application framework which helps users develop high performance and high scalability network applications easily. It provides an abstract event-driven asynchronous API over various transports such as TCP/IP via **async socket**.
 
 Mina.NET is often called:
 
