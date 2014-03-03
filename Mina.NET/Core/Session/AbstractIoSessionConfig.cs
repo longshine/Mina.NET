@@ -8,11 +8,11 @@ namespace Mina.Core.Session
     public abstract class AbstractIoSessionConfig : IoSessionConfig
     {
         private Int32 _readBufferSize = 2048;
-        private UInt32 _idleTimeForRead;
-        private UInt32 _idleTimeForWrite;
-        private UInt32 _idleTimeForBoth;
-        private UInt32 _writeTimeout = 60U;
-        private UInt32 _throughputCalculationInterval = 3U;
+        private Int32 _idleTimeForRead;
+        private Int32 _idleTimeForWrite;
+        private Int32 _idleTimeForBoth;
+        private Int32 _writeTimeout = 60;
+        private Int32 _throughputCalculationInterval = 3;
 
         /// <inheritdoc/>
         public Int32 ReadBufferSize
@@ -22,54 +22,54 @@ namespace Mina.Core.Session
         }
 
         /// <inheritdoc/>
-        public UInt32 ThroughputCalculationInterval
+        public Int32 ThroughputCalculationInterval
         {
             get { return _throughputCalculationInterval; }
             set { _throughputCalculationInterval = value; }
         }
 
         /// <inheritdoc/>
-        public UInt64 ThroughputCalculationIntervalInMillis
+        public Int64 ThroughputCalculationIntervalInMillis
         {
-            get { return _throughputCalculationInterval * 1000UL; }
+            get { return _throughputCalculationInterval * 1000L; }
         }
 
         /// <inheritdoc/>
-        public UInt32 WriteTimeout
+        public Int32 WriteTimeout
         {
             get { return _writeTimeout; }
             set { _writeTimeout = value; }
         }
 
         /// <inheritdoc/>
-        public UInt64 WriteTimeoutInMillis
+        public Int64 WriteTimeoutInMillis
         {
-            get { return _writeTimeout * 1000UL; }
+            get { return _writeTimeout * 1000L; }
         }
 
         /// <inheritdoc/>
-        public UInt32 ReaderIdleTime
+        public Int32 ReaderIdleTime
         {
             get { return GetIdleTime(IdleStatus.ReaderIdle); }
             set { SetIdleTime(IdleStatus.ReaderIdle, value); }
         }
 
         /// <inheritdoc/>
-        public UInt32 WriterIdleTime
+        public Int32 WriterIdleTime
         {
             get { return GetIdleTime(IdleStatus.WriterIdle); }
             set { SetIdleTime(IdleStatus.WriterIdle, value); }
         }
 
         /// <inheritdoc/>
-        public UInt32 BothIdleTime
+        public Int32 BothIdleTime
         {
             get { return GetIdleTime(IdleStatus.BothIdle); }
             set { SetIdleTime(IdleStatus.BothIdle, value); }
         }
 
         /// <inheritdoc/>
-        public UInt32 GetIdleTime(IdleStatus status)
+        public Int32 GetIdleTime(IdleStatus status)
         {
             switch (status)
             {
@@ -85,12 +85,12 @@ namespace Mina.Core.Session
         }
 
         /// <inheritdoc/>
-        public UInt64 GetIdleTimeInMillis(IdleStatus status)
+        public Int64 GetIdleTimeInMillis(IdleStatus status)
         {
-            return GetIdleTime(status) * 1000UL;
+            return GetIdleTime(status) * 1000L;
         }
 
-        public void SetIdleTime(IdleStatus status, UInt32 idleTime)
+        public void SetIdleTime(IdleStatus status, Int32 idleTime)
         {
             switch (status)
             {

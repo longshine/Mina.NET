@@ -171,14 +171,8 @@ namespace Mina.Core.Filterchain
         where TChain : Chain<TChain, TFilter, TNextFilter>
     {
         private readonly IDictionary<String, Entry> _name2entry = new ConcurrentDictionary<String, Entry>();
-        /// <summary>
-        /// Head of this chain.
-        /// </summary>
-        protected readonly Entry _head;
-        /// <summary>
-        /// Tail of this chain.
-        /// </summary>
-        protected readonly Entry _tail;
+        private readonly Entry _head;
+        private readonly Entry _tail;
         private readonly Func<TFilter, TFilter, Boolean> _equalsFunc;
         private readonly Func<TChain, Entry, Entry, String, TFilter, Entry> _entryFactory;
 
@@ -201,6 +195,22 @@ namespace Mina.Core.Filterchain
             _head = entryFactory((TChain)this, null, null, "head", headFilterFactory());
             _tail = entryFactory((TChain)this, _head, null, "tail", tailFilterFactory());
             _head._nextEntry = _tail;
+        }
+
+        /// <summary>
+        /// Head of this chain.
+        /// </summary>
+        protected Entry Head
+        {
+            get { return _head; }
+        }
+
+        /// <summary>
+        /// Tail of this chain.
+        /// </summary>
+        protected Entry Tail
+        {
+            get { return _tail; }
         }
 
         /// <inheritdoc/>

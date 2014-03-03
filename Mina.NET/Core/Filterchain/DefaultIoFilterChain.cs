@@ -43,13 +43,13 @@ namespace Mina.Core.Filterchain
         /// <inheritdoc/>
         public void FireSessionCreated()
         {
-            CallNextSessionCreated(_head, _session);
+            CallNextSessionCreated(Head, _session);
         }
 
         /// <inheritdoc/>
         public void FireSessionOpened()
         {
-            CallNextSessionOpened(_head, _session);
+            CallNextSessionOpened(Head, _session);
         }
 
         /// <inheritdoc/>
@@ -66,14 +66,14 @@ namespace Mina.Core.Filterchain
             }
 
             // And start the chain.
-            CallNextSessionClosed(_head, _session);
+            CallNextSessionClosed(Head, _session);
         }
 
         /// <inheritdoc/>
         public void FireSessionIdle(IdleStatus status)
         {
             _session.IncreaseIdleCount(status, DateTime.Now);
-            CallNextSessionIdle(_head, _session, status);
+            CallNextSessionIdle(Head, _session, status);
         }
 
         /// <inheritdoc/>
@@ -83,7 +83,7 @@ namespace Mina.Core.Filterchain
             if (buf != null)
                 _session.IncreaseReadBytes(buf.Remaining, DateTime.Now);
 
-            CallNextMessageReceived(_head, _session, message);
+            CallNextMessageReceived(Head, _session, message);
         }
 
         /// <inheritdoc/>
@@ -102,26 +102,26 @@ namespace Mina.Core.Filterchain
 
             if (!request.Encoded)
             {
-                CallNextMessageSent(_head, _session, request);
+                CallNextMessageSent(Head, _session, request);
             }
         }
 
         /// <inheritdoc/>
         public void FireExceptionCaught(Exception cause)
         {
-            CallNextExceptionCaught(_head, _session, cause);
+            CallNextExceptionCaught(Head, _session, cause);
         }
 
         /// <inheritdoc/>
         public void FireFilterWrite(IWriteRequest writeRequest)
         {
-            CallPreviousFilterWrite(_tail, _session, writeRequest);
+            CallPreviousFilterWrite(Tail, _session, writeRequest);
         }
 
         /// <inheritdoc/>
         public void FireFilterClose()
         {
-            CallPreviousFilterClose(_tail, _session);
+            CallPreviousFilterClose(Tail, _session);
         }
 
         private void CallNext(IEntry<IoFilter, INextFilter> entry, Action<IoFilter, INextFilter> act, Action<Exception> error = null)

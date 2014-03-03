@@ -47,7 +47,7 @@ namespace Mina.Core.Buffer
             get { return base.Capacity; }
             set
             {
-                if (!_recapacityAllowed)
+                if (!RecapacityAllowed)
                     throw new InvalidOperationException("Derived buffers and their parent can't be expanded.");
                 
                 // Allocate a new buffer and transfer all settings to it.

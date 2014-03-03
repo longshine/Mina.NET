@@ -50,11 +50,11 @@ namespace Mina.Transport.Socket
         /// <remarks>
         /// If any thread model, i.e. an <see cref="Filter.Executor.ExecutorFilter"/>,
         /// is added before filters that process the incoming <see cref="Core.Buffer.IoBuffer"/>
-        /// in <see cref="Core.Filterchain.IoFilter.MessageReceived(Core.Filterchain.INextFilter, IoSession, Object)"/>,
+        /// in <see cref="Core.Filterchain.IoFilter.MessageReceived(Core.Filterchain.INextFilter, Core.Session.IoSession, Object)"/>,
         /// this must be set to <code>false</code> since the internal read buffer
         /// will be reset every time a session begins to receive.
         /// </remarks>
-        /// <seealso cref="AsyncSocketAcceptor.ReuseBuffer"/>
+        /// <seealso cref="AbstractSocketAcceptor.ReuseBuffer"/>
         public Boolean ReuseBuffer { get; set; }
 
         /// <inheritdoc/>

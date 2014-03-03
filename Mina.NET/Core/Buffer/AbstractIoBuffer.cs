@@ -13,10 +13,7 @@ namespace Mina.Core.Buffer
         private Boolean _derived;
         private Boolean _autoExpand;
         private Boolean _autoShrink;
-        /// <summary>
-        /// Indicating whether recapacity is allowed.
-        /// </summary>
-        protected Boolean _recapacityAllowed = true;
+        private Boolean _recapacityAllowed = true;
         private Int32 _minimumCapacity;
 
         /// <summary>
@@ -521,6 +518,14 @@ namespace Mina.Core.Buffer
         public override IoBuffer PutString(String s, Encoding encoding)
         {
             return Put(encoding.GetBytes(s));
+        }
+        
+        /// <summary>
+        /// Indicating whether recapacity is allowed.
+        /// </summary>
+        protected Boolean RecapacityAllowed
+        {
+            get { return _recapacityAllowed; }
         }
 
         /// <summary>

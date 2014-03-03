@@ -17,8 +17,8 @@ namespace Mina.Filter.KeepAlive
         private readonly IKeepAliveMessageFactory _messageFactory;
         private readonly IdleStatus _interestedIdleStatus;
         private volatile IKeepAliveRequestTimeoutHandler _requestTimeoutHandler;
-        private volatile UInt32 _requestInterval;
-        private volatile UInt32 _requestTimeout;
+        private volatile Int32 _requestInterval;
+        private volatile Int32 _requestTimeout;
         private volatile Boolean _forwardEvent;
 
         public KeepAliveFilter(IKeepAliveMessageFactory messageFactory)
@@ -39,7 +39,7 @@ namespace Mina.Filter.KeepAlive
         { }
 
         public KeepAliveFilter(IKeepAliveMessageFactory messageFactory, IdleStatus interestedIdleStatus,
-            IKeepAliveRequestTimeoutHandler strategy, UInt32 keepAliveRequestInterval, UInt32 keepAliveRequestTimeout)
+            IKeepAliveRequestTimeoutHandler strategy, Int32 keepAliveRequestInterval, Int32 keepAliveRequestTimeout)
         {
             if (messageFactory == null)
                 throw new ArgumentNullException("messageFactory");
@@ -55,23 +55,23 @@ namespace Mina.Filter.KeepAlive
             RequestTimeout = keepAliveRequestTimeout;
         }
 
-        public UInt32 RequestInterval
+        public Int32 RequestInterval
         {
             get { return _requestInterval; }
             set
             {
-                if (value == 0U)
+                if (value == 0)
                     throw new ArgumentException("RequestInterval must be a positive integer: " + value);
                 _requestInterval = value;
             }
         }
 
-        public UInt32 RequestTimeout
+        public Int32 RequestTimeout
         {
             get { return _requestTimeout; }
             set
             {
-                if (value == 0U)
+                if (value == 0)
                     throw new ArgumentException("RequestTimeout must be a positive integer: " + value);
                 _requestTimeout = value;
             }

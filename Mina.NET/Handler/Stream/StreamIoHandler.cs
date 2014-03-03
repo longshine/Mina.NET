@@ -16,13 +16,13 @@ namespace Mina.Handler.Stream
         private static readonly AttributeKey KEY_IN = new AttributeKey(typeof(StreamIoHandler), "in");
         private static readonly AttributeKey KEY_OUT = new AttributeKey(typeof(StreamIoHandler), "out");
 
-        private UInt32 _readTimeout;
-        private UInt32 _writeTimeout;
+        private Int32 _readTimeout;
+        private Int32 _writeTimeout;
 
         /// <summary>
         /// Gets or sets read timeout in seconds.
         /// </summary>
-        public UInt32 ReadTimeout
+        public Int32 ReadTimeout
         {
             get { return _readTimeout; }
             set { _readTimeout = value; }
@@ -31,7 +31,7 @@ namespace Mina.Handler.Stream
         /// <summary>
         /// Gets or sets write timeout in seconds.
         /// </summary>
-        public UInt32 WriteTimeout
+        public Int32 WriteTimeout
         {
             get { return _writeTimeout; }
             set { _writeTimeout = value; }

@@ -629,9 +629,9 @@ namespace Mina.Core.Session
         /// <inheritdoc/>
         public void UpdateThroughput(DateTime currentTime, Boolean force)
         {
-            UInt64 interval = (UInt64)(currentTime - _lastThroughputCalculationTime).TotalMilliseconds;
+            Int64 interval = (Int64)(currentTime - _lastThroughputCalculationTime).TotalMilliseconds;
 
-            UInt64 minInterval = Config.ThroughputCalculationIntervalInMillis;
+            Int64 minInterval = Config.ThroughputCalculationIntervalInMillis;
             if ((minInterval == 0) || (interval < minInterval))
             {
                 if (!force)
@@ -693,7 +693,7 @@ namespace Mina.Core.Session
 
         private static void NotifyIdleSession(IoSession session, DateTime currentTime, IdleStatus status, DateTime lastIoTime)
         {
-            UInt64 idleTime = session.Config.GetIdleTimeInMillis(status);
+            Int64 idleTime = session.Config.GetIdleTimeInMillis(status);
             if (idleTime > 0)
             {
                 DateTime lastIdleTime = session.GetLastIdleTime(status);
@@ -707,7 +707,7 @@ namespace Mina.Core.Session
 
         private static void NotifyWriteTimeout(IoSession session, DateTime currentTime)
         {
-            UInt64 writeTimeout = session.Config.WriteTimeoutInMillis;
+            Int64 writeTimeout = session.Config.WriteTimeoutInMillis;
             if ((writeTimeout > 0) && ((currentTime - session.LastWriteTime).TotalMilliseconds >= writeTimeout)
                     && !session.WriteRequestQueue.IsEmpty(session))
             {

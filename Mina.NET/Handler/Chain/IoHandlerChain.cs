@@ -24,7 +24,7 @@ namespace Mina.Handler.Chain
             () => new TailCommand(typeof(IoHandlerChain).Name + "." + Guid.NewGuid() + ".nextCommand")
             )
         {
-            _nextCommandKey = ((TailCommand)_tail.Filter).nextCommandKey;
+            _nextCommandKey = ((TailCommand)Tail.Filter).nextCommandKey;
         }
 
         /// <inheritdoc/>
@@ -35,7 +35,7 @@ namespace Mina.Handler.Chain
 
             try
             {
-                CallNextCommand(_head, session, message);
+                CallNextCommand(Head, session, message);
             }
             finally
             {
@@ -50,8 +50,8 @@ namespace Mina.Handler.Chain
             buf.Append("{ ");
 
             Boolean empty = true;
-            Entry e = _head.NextEntry;
-            while (e != _tail)
+            Entry e = Head.NextEntry;
+            while (e != Tail)
             {
                 if (empty)
                     empty = false;
