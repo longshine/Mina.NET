@@ -8,7 +8,7 @@ using Mina.Filter.Logging;
 using Mina.Filter.Ssl;
 using Mina.Transport.Socket;
 
-namespace EchoServer
+namespace Mina.Example.EchoServer
 {
     class Program
     {

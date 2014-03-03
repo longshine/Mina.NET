@@ -5,14 +5,14 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76}</ProjectGuid>
+    <ProjectGuid>{D89AD439-417D-4BFE-9DB7-E08CCFFF0690}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mina.Example.EchoServer</RootNamespace>
-    <AssemblyName>EchoServer</AssemblyName>
+    <RootNamespace>Mina.Example.Haiku</RootNamespace>
+    <AssemblyName>Haiku</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -35,12 +35,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Haiku.cs" />
+    <Compile Include="HaikuValidationServer.cs" />
+    <Compile Include="HaikuValidator.cs" />
+    <Compile Include="InvalidHaikuException.cs" />
+    <Compile Include="PhraseUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToHaikuIoFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Mina.NET\Mina.NET.csproj">
@@ -49,10 +52,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Cert\TempCert.cer">
-      <Link>TempCert.cer</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

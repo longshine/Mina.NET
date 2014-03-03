@@ -72,6 +72,7 @@
     <Compile Include="Filter\Stream\AbstractStreamWriteFilterTest.cs" />
     <Compile Include="Filter\Stream\StreamWriteFilterTest.cs" />
     <Compile Include="Handler\Chain\ChainedIoHandlerTest.cs" />
+    <Compile Include="Handler\Demux\DemuxingIoHandlerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
