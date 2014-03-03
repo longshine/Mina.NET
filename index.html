@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mina.NET by longshine</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Mina.NET</h1>
+        <p>.NET implementation of Apache MINA</p>
+
+        <p class="view"><a href="https://github.com/longshine/Mina.NET">View the Project on GitHub <small>longshine/Mina.NET</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/longshine/Mina.NET/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/longshine/Mina.NET/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/longshine/Mina.NET">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="minanet" class="anchor" href="#minanet"><span class="octicon octicon-link"></span></a>Mina.NET</h1>
+
+<p>.NET implementation of <a href="http://mina.apache.org/">Apache MINA</a>. I like the ideas in it, simple yet functional, but I failed to find one in .NET, finally I created one.</p>
+
+<p>Mina.NET is a network application framework which helps users develop high performance and high scalability network applications easily. It provides an abstract event-driven asynchronous API over various transports such as TCP/IP via <strong>async socket</strong>.</p>
+
+<p>Mina.NET is often called:</p>
+
+<ul>
+<li>NIO framework library,</li>
+<li>client server framework library, or</li>
+<li>a networking socket library</li>
+</ul><h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<p>Mina.NET is a simple yet full-featured network application framework which provides:</p>
+
+<ul>
+<li>Unified API for various transport types:
+
+<ul>
+<li>TCP/IP async socket</li>
+<li>Serial communication (Working in progrss)</li>
+<li>You can implement your own!</li>
+</ul>
+</li>
+<li>Filter interface as an extension point;</li>
+<li>Low-level and high-level API:
+
+<ul>
+<li>Low-level: uses ByteBuffers</li>
+<li>High-level: uses user-defined message objects and codecs</li>
+</ul>
+</li>
+<li>Highly customizable thread model:
+
+<ul>
+<li>Single thread</li>
+<li>One thread pool</li>
+<li>More than one thread pools</li>
+</ul>
+</li>
+<li>Out-of-the-box SSL · TLS</li>
+<li>Overload shielding &amp; traffic throttling</li>
+<li>Stream-based I/O support via StreamIoHandler</li>
+</ul><h2>
+<a name="quick-start" class="anchor" href="#quick-start"><span class="octicon octicon-link"></span></a>Quick Start</h2>
+
+<div class="highlight highlight-csharp"><pre>  <span class="n">IoAcceptor</span> <span class="n">acceptor</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AsyncSocketAcceptor</span><span class="p">();</span>
+
+  <span class="n">acceptor</span><span class="p">.</span><span class="n">FilterChain</span><span class="p">.</span><span class="n">AddLast</span><span class="p">(</span><span class="s">"logger"</span><span class="p">,</span> <span class="k">new</span> <span class="n">LoggingFilter</span><span class="p">());</span>
+  <span class="n">acceptor</span><span class="p">.</span><span class="n">FilterChain</span><span class="p">.</span><span class="n">AddLast</span><span class="p">(</span><span class="s">"codec"</span><span class="p">,</span> <span class="k">new</span> <span class="n">ProtocolCodecFilter</span><span class="p">(</span><span class="k">new</span> <span class="n">TextLineCodecFactory</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">)));</span>
+
+  <span class="n">acceptor</span><span class="p">.</span><span class="n">ExceptionCaught</span> <span class="p">+=</span>
+    <span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">Exception</span><span class="p">);</span>
+
+  <span class="n">acceptor</span><span class="p">.</span><span class="n">SessionIdle</span> <span class="p">+=</span>
+    <span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"IDLE "</span> <span class="p">+</span> <span class="n">e</span><span class="p">.</span><span class="n">Session</span><span class="p">.</span><span class="n">GetIdleCount</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">IdleStatus</span><span class="p">));</span>
+
+  <span class="n">acceptor</span><span class="p">.</span><span class="n">MessageReceived</span> <span class="p">+=</span> <span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="p">=&gt;</span>
+  <span class="p">{</span>
+    <span class="n">String</span> <span class="n">str</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Message</span><span class="p">.</span><span class="n">ToString</span><span class="p">();</span>
+
+    <span class="c1">// "Quit" ? let's get out ...</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">Trim</span><span class="p">().</span><span class="n">Equals</span><span class="p">(</span><span class="s">"quit"</span><span class="p">,</span> <span class="n">StringComparison</span><span class="p">.</span><span class="n">OrdinalIgnoreCase</span><span class="p">))</span>
+    <span class="p">{</span>
+      <span class="n">e</span><span class="p">.</span><span class="n">Session</span><span class="p">.</span><span class="n">Close</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Send the current date back to the client</span>
+    <span class="n">e</span><span class="p">.</span><span class="n">Session</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"Message written..."</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="n">acceptor</span><span class="p">.</span><span class="n">Bind</span><span class="p">(</span><span class="k">new</span> <span class="n">IPEndPoint</span><span class="p">(</span><span class="n">IPAddress</span><span class="p">.</span><span class="n">Any</span><span class="p">,</span> <span class="m">8080</span><span class="p">));</span>
+</pre></div>
+
+<p>See <a href="http://mina.apache.org/mina-project/userguide/user-guide-toc.html">http://mina.apache.org/mina-project/userguide/user-guide-toc.html</a> for more.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/longshine">longshine</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-44050658-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
