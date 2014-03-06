@@ -90,6 +90,7 @@ namespace Mina.Core.Session
             return GetIdleTime(status) * 1000L;
         }
 
+        /// <inheritdoc/>
         public void SetIdleTime(IdleStatus status, Int32 idleTime)
         {
             switch (status)
@@ -108,6 +109,7 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <inheritdoc/>
         public void SetAll(IoSessionConfig config)
         {
             if (config == null)

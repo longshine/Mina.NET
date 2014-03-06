@@ -205,6 +205,12 @@
     <Compile Include="Handler\Stream\IoSessionStream.cs" />
     <Compile Include="Handler\Stream\StreamIoHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transport\Serial\DefaultSerialSessionConfig.cs" />
+    <Compile Include="Transport\Serial\ISerialSession.cs" />
+    <Compile Include="Transport\Serial\ISerialSessionConfig.cs" />
+    <Compile Include="Transport\Serial\SerialConnector.cs" />
+    <Compile Include="Transport\Serial\SerialEndPoint.cs" />
+    <Compile Include="Transport\Serial\SerialSession.cs" />
     <Compile Include="Core\Service\IoAcceptor.cs" />
     <Compile Include="Core\Service\IoService.cs" />
     <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />

@@ -11,6 +11,16 @@ namespace Mina.Core.Future
         private static readonly Object CANCELED = new Object();
 
         /// <summary>
+        /// Returns a new <see cref="IConnectFuture"/> which is already marked as 'failed to connect'.
+        /// </summary>
+        public static IConnectFuture NewFailedFuture(Exception exception)
+        {
+            DefaultConnectFuture failedFuture = new DefaultConnectFuture();
+            failedFuture.Exception = exception;
+            return failedFuture;
+        }
+
+        /// <summary>
         /// </summary>
         public DefaultConnectFuture()
             : base(null)
