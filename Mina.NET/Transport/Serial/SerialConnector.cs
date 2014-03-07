@@ -102,7 +102,8 @@ namespace Mina.Transport.Serial
 
         private void UpdateTrafficControl(SerialSession session)
         {
-            throw new NotSupportedException();
+            if (!session.WriteSuspended)
+                Flush(session);
         }
 
         void IoProcessor<SerialSession>.Add(SerialSession session)

@@ -35,7 +35,7 @@ namespace Mina.Transport.Serial
 
         void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (e.EventType == SerialData.Eof)
+            if (ReadSuspended || e.EventType == SerialData.Eof)
                 return;
 
             Int32 bytesToRead = _serialPort.BytesToRead;
@@ -103,6 +103,8 @@ namespace Mina.Transport.Serial
 
         public void Flush()
         {
+            if (WriteSuspended)
+                return;
             if (Interlocked.CompareExchange(ref _writing, 1, 0) > 0)
                 return;
             BeginSend();
