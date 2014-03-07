@@ -35,6 +35,13 @@ namespace Mina.Core.Service
         /// </summary>
         /// <param name="session">the session to remove</param>
         void Remove(IoSession session);
+        /// <summary>
+        /// Controls the traffic of the specified <paramref name="session"/>
+        /// depending of the <see cref="IoSession.ReadSuspended"/>
+        /// and <see cref="IoSession.WriteSuspended"/> flags.
+        /// </summary>
+        /// <param name="session">the session to control</param>
+        void UpdateTrafficControl(IoSession session);
     }
 
     /// <summary>
@@ -71,5 +78,12 @@ namespace Mina.Core.Service
         /// </summary>
         /// <param name="session">the session to remove</param>
         void Remove(S session);
+        /// <summary>
+        /// Controls the traffic of the specified <paramref name="session"/>
+        /// depending of the <see cref="IoSession.ReadSuspended"/>
+        /// and <see cref="IoSession.WriteSuspended"/> flags.
+        /// </summary>
+        /// <param name="session">the session to control</param>
+        void UpdateTrafficControl(S session);
     }
 }

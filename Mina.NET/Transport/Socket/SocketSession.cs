@@ -15,12 +15,14 @@ namespace Mina.Transport.Socket
     /// </summary>
     public abstract class SocketSession : AbstractIoSession
     {
+        private static readonly Object dummy = IoBuffer.Wrap(new Byte[0]);
         private readonly System.Net.Sockets.Socket _socket;
         private readonly EndPoint _localEP;
         private readonly EndPoint _remoteEP;
         private readonly IoProcessor<SocketSession> _processor;
         private readonly IoFilterChain _filterChain;
         private Int32 _writing;
+        private Object _pendingReceivedMessage = dummy;
 
         /// <summary>
         /// </summary>
@@ -75,7 +77,16 @@ namespace Mina.Transport.Socket
         /// </summary>
         public void Start()
         {
-            BeginReceive();
+            if (ReadSuspended)
+                return;
+
+            if (_pendingReceivedMessage != null)
+            {
+                if (!Object.ReferenceEquals(_pendingReceivedMessage, dummy))
+                    FilterChain.FireMessageReceived(_pendingReceivedMessage);
+                _pendingReceivedMessage = null;
+                BeginReceive();
+            }
         }
 
         /// <summary>
@@ -83,6 +94,8 @@ namespace Mina.Transport.Socket
         /// </summary>
         public void Flush()
         {
+            if (WriteSuspended)
+                return;
             if (Interlocked.CompareExchange(ref _writing, 1, 0) > 0)
                 return;
             BeginSend();
@@ -172,10 +185,17 @@ namespace Mina.Transport.Socket
         /// <param name="buf">the buffer received in last receive operation</param>
         protected void EndReceive(IoBuffer buf)
         {
-            FilterChain.FireMessageReceived(buf);
+            if (ReadSuspended)
+            {
+                _pendingReceivedMessage = buf;
+            }
+            else
+            {
+                FilterChain.FireMessageReceived(buf);
 
-            if (Socket.Connected)
-                BeginReceive();
+                if (Socket.Connected)
+                    BeginReceive();
+            }
         }
 
         private void FireMessageSent(IWriteRequest req)

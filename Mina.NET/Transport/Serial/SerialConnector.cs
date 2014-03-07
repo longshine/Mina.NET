@@ -100,6 +100,11 @@ namespace Mina.Transport.Serial
                 support.FireSessionDestroyed(session);
         }
 
+        private void UpdateTrafficControl(SerialSession session)
+        {
+            throw new NotSupportedException();
+        }
+
         void IoProcessor<SerialSession>.Add(SerialSession session)
         {
             Add(session);
@@ -120,6 +125,11 @@ namespace Mina.Transport.Serial
             Remove(session);
         }
 
+        void IoProcessor<SerialSession>.UpdateTrafficControl(SerialSession session)
+        {
+            UpdateTrafficControl(session);
+        }
+
         void IoProcessor.Add(IoSession session)
         {
             Add((SerialSession)session);
@@ -138,6 +148,11 @@ namespace Mina.Transport.Serial
         void IoProcessor.Remove(IoSession session)
         {
             Remove((SerialSession)session);
+        }
+
+        void IoProcessor.UpdateTrafficControl(IoSession session)
+        {
+            UpdateTrafficControl((SerialSession)session);
         }
 
         #endregion

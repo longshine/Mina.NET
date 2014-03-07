@@ -298,25 +298,36 @@ namespace Mina.Core.Session
         public void SuspendRead()
         {
             _readSuspended = true;
-            // TODO getProcessor().updateTrafficControl(this);
+            if (Closing || !Connected)
+                return;
+            Processor.UpdateTrafficControl(this);
         }
 
         /// <inheritdoc/>
         public void SuspendWrite()
         {
             _writeSuspended = true;
+            if (Closing || !Connected)
+                return;
+            Processor.UpdateTrafficControl(this);
         }
 
         /// <inheritdoc/>
         public void ResumeRead()
         {
             _readSuspended = false;
+            if (Closing || !Connected)
+                return;
+            Processor.UpdateTrafficControl(this);
         }
 
         /// <inheritdoc/>
         public void ResumeWrite()
         {
             _writeSuspended = false;
+            if (Closing || !Connected)
+                return;
+            Processor.UpdateTrafficControl(this);
         }
 
         #endregion

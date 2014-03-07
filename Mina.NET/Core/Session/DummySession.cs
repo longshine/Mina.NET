@@ -126,6 +126,11 @@ namespace Mina.Core.Session
                 }
             }
 
+            public void UpdateTrafficControl(DummySession session)
+            {
+                // Do nothing
+            }
+
             void IoProcessor.Write(IoSession session, IWriteRequest writeRequest)
             {
                 Write((DummySession)session, writeRequest);
@@ -144,6 +149,11 @@ namespace Mina.Core.Session
             void IoProcessor.Remove(IoSession session)
             {
                 Remove((DummySession)session);
+            }
+
+            void IoProcessor.UpdateTrafficControl(IoSession session)
+            {
+                UpdateTrafficControl((DummySession)session);
             }
         }
 

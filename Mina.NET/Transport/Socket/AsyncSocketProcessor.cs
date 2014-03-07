@@ -69,6 +69,15 @@ namespace Mina.Transport.Socket
             session.Flush();
         }
 
+        public void UpdateTrafficControl(SocketSession session)
+        {
+            if (!session.ReadSuspended)
+                session.Start();
+
+            if (!session.WriteSuspended)
+                Flush(session);
+        }
+
         private void ClearWriteRequestQueue(SocketSession session)
         {
             IWriteRequestQueue writeRequestQueue = session.WriteRequestQueue;
@@ -137,6 +146,11 @@ namespace Mina.Transport.Socket
         void IoProcessor.Remove(IoSession session)
         {
             Remove((SocketSession)session);
+        }
+
+        void IoProcessor.UpdateTrafficControl(IoSession session)
+        {
+            UpdateTrafficControl((SocketSession)session);
         }
     }
 }
