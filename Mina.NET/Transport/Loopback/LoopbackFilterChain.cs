@@ -71,7 +71,7 @@ namespace Mina.Transport.Loopback
                         {
                             if (session.ReadSuspended)
                             {
-                                session.ReceivedMessageQueue.Add(data);
+                                session.ReceivedMessageQueue.Enqueue(data);
                             }
                             else
                             {
@@ -85,7 +85,7 @@ namespace Mina.Transport.Loopback
                     }
                     else
                     {
-                        session.ReceivedMessageQueue.Add(data);
+                        session.ReceivedMessageQueue.Enqueue(data);
                     }
                     break;
                 case IoEventType.Write:
@@ -274,7 +274,9 @@ namespace Mina.Transport.Loopback
             {
                 if (!session.ReadSuspended)
                 {
-                    foreach (Object item in session.ReceivedMessageQueue)
+                    ConcurrentQueue<Object> queue = session.ReceivedMessageQueue;
+                    Object item;
+                    while (queue.TryDequeue(out item))
                     {
                         _chain.FireMessageReceived(item);
                     }

@@ -153,9 +153,7 @@
     <Compile Include="Filter\Executor\ExecutorFilter.cs" />
     <Compile Include="Filter\Executor\IExecutor.cs" />
     <Compile Include="Filter\Executor\IoEventExecutor.cs" />
-    <Compile Include="Filter\Executor\IoEventQueueHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Filter\Executor\IoEventQueueHandler.cs"/>
     <Compile Include="Filter\Executor\IoEventQueueThrottle.cs" />
     <Compile Include="Filter\Executor\IoEventSizeEstimator.cs" />
     <Compile Include="Filter\Executor\OrderedThreadPoolExecutor.cs" />

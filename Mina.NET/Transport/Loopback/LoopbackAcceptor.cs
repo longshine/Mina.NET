@@ -26,7 +26,7 @@ namespace Mina.Transport.Loopback
 
         protected override IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints)
         {
-            HashSet<LoopbackEndPoint> newLocalEPs = new HashSet<LoopbackEndPoint>();
+            HashSet<EndPoint> newLocalEPs = new HashSet<EndPoint>();
 
             lock (BoundHandlers)
             {

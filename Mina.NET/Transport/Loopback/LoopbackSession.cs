@@ -15,7 +15,7 @@ namespace Mina.Transport.Loopback
         private readonly LoopbackEndPoint _localEP;
         private readonly LoopbackEndPoint _remoteEP;
         private readonly LoopbackFilterChain _filterChain;
-        private readonly BlockingCollection<Object> _receivedMessageQueue;
+        private readonly ConcurrentQueue<Object> _receivedMessageQueue;
         private readonly LoopbackSession _remoteSession;
         private readonly Object _lock;
 
@@ -31,7 +31,7 @@ namespace Mina.Transport.Loopback
             _localEP = localEP;
             _remoteEP = remoteEntry.Endpoint;
             _filterChain = new LoopbackFilterChain(this);
-            _receivedMessageQueue = new BlockingCollection<Object>();
+            _receivedMessageQueue = new ConcurrentQueue<Object>();
             _remoteSession = new LoopbackSession(this, remoteEntry);
         }
 
@@ -47,7 +47,7 @@ namespace Mina.Transport.Loopback
             _remoteEP = remoteSession._localEP;
             _filterChain = new LoopbackFilterChain(this);
             _remoteSession = remoteSession;
-            _receivedMessageQueue = new BlockingCollection<Object>();
+            _receivedMessageQueue = new ConcurrentQueue<Object>();
         }
 
         public override IoProcessor Processor
@@ -75,7 +75,7 @@ namespace Mina.Transport.Loopback
             get { return _remoteSession; }
         }
 
-        internal BlockingCollection<Object> ReceivedMessageQueue
+        internal ConcurrentQueue<Object> ReceivedMessageQueue
         {
             get { return _receivedMessageQueue; }
         }
