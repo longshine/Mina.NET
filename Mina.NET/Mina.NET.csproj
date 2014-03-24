@@ -42,12 +42,6 @@
       <HintPath>lib\NET40\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Buffer\AbstractIoBuffer.cs" />
@@ -153,7 +147,7 @@
     <Compile Include="Filter\Executor\ExecutorFilter.cs" />
     <Compile Include="Filter\Executor\IExecutor.cs" />
     <Compile Include="Filter\Executor\IoEventExecutor.cs" />
-    <Compile Include="Filter\Executor\IoEventQueueHandler.cs"/>
+    <Compile Include="Filter\Executor\IoEventQueueHandler.cs" />
     <Compile Include="Filter\Executor\IoEventQueueThrottle.cs" />
     <Compile Include="Filter\Executor\IoEventSizeEstimator.cs" />
     <Compile Include="Filter\Executor\OrderedThreadPoolExecutor.cs" />
