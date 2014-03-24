@@ -62,7 +62,6 @@ namespace Mina.Transport.Loopback
                 IoServiceSupport serviceSupport = this as IoServiceSupport;
                 if (serviceSupport != null)
                     serviceSupport.FireSessionCreated(localSession);
-                // TODO idleChecker.addSession(localSession);
             }
             catch (Exception ex)
             {
@@ -82,7 +81,6 @@ namespace Mina.Transport.Loopback
                 IoServiceSupport serviceSupport = entry.Acceptor as IoServiceSupport;
                 if (serviceSupport != null)
                     serviceSupport.FireSessionCreated(remoteSession);
-                // TODO idleChecker.addSession(remoteSession);
             }
             catch (Exception ex)
             {
