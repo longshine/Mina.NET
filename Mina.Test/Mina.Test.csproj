@@ -75,6 +75,8 @@
     <Compile Include="Handler\Demux\DemuxingIoHandlerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transport\AbstractTrafficControlTest.cs" />
+    <Compile Include="Transport\Loopback\LoopbackTrafficControlTest.cs" />
+    <Compile Include="Transport\Loopback\LoopbackEventOrderTest.cs" />
     <Compile Include="Transport\Socket\SocketTrafficControlTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -72,6 +72,7 @@
     <Compile Include="Core\Filterchain\IoFilterChainBuilder.cs" />
     <Compile Include="Core\Filterchain\IoFilterEvent.cs" />
     <Compile Include="Core\Filterchain\IoFilterLifeCycleException.cs" />
+    <Compile Include="Core\Filterchain\VirtualDefaultIoFilterChain.cs" />
     <Compile Include="Core\Future\CompositeIoFuture.cs" />
     <Compile Include="Core\Future\DefaultCloseFuture.cs" />
     <Compile Include="Core\Future\ICloseFuture.cs" />
@@ -207,6 +208,13 @@
     <Compile Include="Handler\Stream\IoSessionStream.cs" />
     <Compile Include="Handler\Stream\StreamIoHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transport\Loopback\DefaultLoopbackSessionConfig.cs" />
+    <Compile Include="Transport\Loopback\LoopbackAcceptor.cs" />
+    <Compile Include="Transport\Loopback\LoopbackConnector.cs" />
+    <Compile Include="Transport\Loopback\LoopbackFilterChain.cs" />
+    <Compile Include="Transport\Loopback\LoopbackPipe.cs" />
+    <Compile Include="Transport\Loopback\LoopbackEndPoint.cs" />
+    <Compile Include="Transport\Loopback\LoopbackSession.cs" />
     <Compile Include="Transport\Serial\DefaultSerialSessionConfig.cs" />
     <Compile Include="Transport\Serial\ISerialSession.cs" />
     <Compile Include="Transport\Serial\ISerialSessionConfig.cs" />
