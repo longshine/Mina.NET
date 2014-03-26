@@ -81,8 +81,11 @@ namespace Mina.Transport.Socket
                 // Process all the addresses
                 foreach (EndPoint localEP in localEndPoints)
                 {
-                    System.Net.Sockets.Socket listenSocket = new System.Net.Sockets.Socket(localEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                    listenSocket.Bind(localEP);
+                    EndPoint ep = localEP;
+                    if (ep == null)
+                        ep = new IPEndPoint(IPAddress.Any, 0);
+                    System.Net.Sockets.Socket listenSocket = new System.Net.Sockets.Socket(ep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    listenSocket.Bind(ep);
                     listenSocket.Listen(Backlog);
                     newListeners[listenSocket.LocalEndPoint] = listenSocket;
                 }
