@@ -22,7 +22,7 @@ namespace Mina.Transport
     public abstract class AbstractTrafficControlTest
     {
         protected Int32 port;
-        protected IoAcceptor acceptor;
+        protected readonly IoAcceptor acceptor;
 
         public AbstractTrafficControlTest(IoAcceptor acceptor)
         {
