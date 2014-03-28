@@ -69,6 +69,7 @@
     <Compile Include="Filter\Firewall\SubnetTest.cs" />
     <Compile Include="Filter\Ssl\SslTest.cs" />
     <Compile Include="Filter\Stream\AbstractStreamWriteFilterTest.cs" />
+    <Compile Include="Filter\Stream\FileRegionWriteFilterTest.cs" />
     <Compile Include="Filter\Stream\StreamWriteFilterTest.cs" />
     <Compile Include="Handler\Chain\ChainedIoHandlerTest.cs" />
     <Compile Include="Handler\Demux\DemuxingIoHandlerTest.cs" />

@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Mina.Filter.Stream
 {
     [TestClass]
-    public class StreamWriteFilterTest : AbstractStreamWriteFilterTest<System.IO.Stream>
+    public class StreamWriteFilterTest : AbstractStreamWriteFilterTest<System.IO.Stream, StreamWriteFilter>
     {
         protected override AbstractStreamWriteFilter<System.IO.Stream> CreateFilter()
         {

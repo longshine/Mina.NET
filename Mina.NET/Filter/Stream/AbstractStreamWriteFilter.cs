@@ -88,7 +88,7 @@ namespace Mina.Filter.Stream
         /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
-            T stream = writeRequest.Message as T;
+            T stream = session.GetAttribute(CURRENT_STREAM) as T;
 
             if (stream == null)
             {
