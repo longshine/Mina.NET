@@ -57,7 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Buffer\ByteBufferTest.cs" />
-    <Compile Include="Core\Buffer\SocketAsyncEventArgsBufferTest.cs" />
     <Compile Include="Core\DefaultIoFilterChainBuilderTest.cs" />
     <Compile Include="Core\FutureTest.cs" />
     <Compile Include="Core\IoFilterChainTest.cs" />

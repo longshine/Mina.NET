@@ -229,8 +229,6 @@
     <Compile Include="Transport\Socket\ISocketConnector.cs" />
     <Compile Include="Transport\Socket\ISocketSessionConfig.cs" />
     <Compile Include="Transport\Socket\SessionConfigImpl.cs" />
-    <Compile Include="Transport\Socket\SocketAsyncEventArgsBuffer.cs" />
-    <Compile Include="Transport\Socket\SocketAsyncEventArgsBufferAllocator.cs" />
     <Compile Include="Transport\Socket\AsyncSocketSession.NET20.cs" />
     <Compile Include="Transport\Socket\SocketSession.cs" />
     <Compile Include="Util\Delegates.cs" />
