@@ -33,6 +33,7 @@ namespace Mina.Transport.Socket
         /// <seealso cref="AbstractSocketAcceptor.ReuseBuffer"/>
         public Boolean ReuseBuffer { get; set; }
 
+        /// <inheritdoc/>
         protected override void BeginReceive()
         {
             Socket.BeginReceive(_readBuffer, 0, _readBuffer.Length, SocketFlags.None, ReceiveCallback, Socket);
@@ -71,12 +72,30 @@ namespace Mina.Transport.Socket
             Processor.Remove(this);
         }
 
+        /// <inheritdoc/>
         protected override void BeginSend(IoBuffer buf)
         {
             ArraySegment<Byte> array = buf.GetRemaining();
             try
             {
                 Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, new SendingContext(Socket, buf));
+            }
+            catch (ObjectDisposedException)
+            {
+                // ignore
+            }
+            catch (Exception ex)
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(ex);
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void BeginSendFile(System.IO.FileInfo file)
+        {
+            try
+            {
+                Socket.BeginSendFile(file.FullName, SendFileCallback, new SendingContext(Socket, file));
             }
             catch (ObjectDisposedException)
             {
@@ -110,15 +129,46 @@ namespace Mina.Transport.Socket
             EndSend(written);
         }
 
+        private void SendFileCallback(IAsyncResult ar)
+        {
+            SendingContext sc = (SendingContext)ar.AsyncState;
+            
+            try
+            {
+                sc.socket.EndSendFile(ar);
+            }
+            catch (Exception ex)
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(ex);
+
+                // closed
+                Processor.Remove(this);
+
+                return;
+            }
+
+            // TODO change written bytes to long?
+            EndSend((Int32)sc.file.Length);
+        }
+
         class SendingContext
         {
             public readonly System.Net.Sockets.Socket socket;
             public readonly IoBuffer buffer;
+            public readonly System.IO.FileInfo file;
 
             public SendingContext(System.Net.Sockets.Socket s, IoBuffer b)
             {
                 socket = s;
                 buffer = b;
+                file = null;
+            }
+
+            public SendingContext(System.Net.Sockets.Socket s, System.IO.FileInfo f)
+            {
+                socket = s;
+                buffer = null;
+                file = f;
             }
         }
     }

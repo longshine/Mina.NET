@@ -69,7 +69,8 @@ namespace Mina.Transport.Socket
             {
                 session.ProcessReceive(e);
             }
-            else if (e.LastOperation == SocketAsyncOperation.Send)
+            else if (e.LastOperation == SocketAsyncOperation.Send
+                || e.LastOperation == SocketAsyncOperation.SendPackets)
             {
                 session.ProcessSend(e);
             }

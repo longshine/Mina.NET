@@ -101,6 +101,28 @@ namespace Mina.Transport.Socket
             }
         }
 
+        /// <inheritdoc/>
+        protected override void BeginSendFile(System.IO.FileInfo file)
+        {
+            SocketAsyncEventArgs saea = _writeBuffer.SocketAsyncEventArgs;
+            saea.SendPacketsElements = new SendPacketsElement[] {
+                new SendPacketsElement(file.FullName)
+            };
+
+            try
+            {
+                Boolean willRaiseEvent = Socket.SendPacketsAsync(saea);
+                if (!willRaiseEvent)
+                {
+                    ProcessSend(saea);
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(ex);
+            }
+        }
+
         void saea_Completed(object sender, SocketAsyncEventArgs e)
         {
             e.Completed -= _completeHandler;

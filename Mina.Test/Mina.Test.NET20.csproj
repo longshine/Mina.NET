@@ -76,6 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transport\AbstractBindTest.cs" />
     <Compile Include="Transport\AbstractConnectorTest.cs" />
+    <Compile Include="Transport\AbstractFileTest.cs" />
     <Compile Include="Transport\AbstractTrafficControlTest.cs" />
     <Compile Include="Transport\Loopback\LoopbackTrafficControlTest.cs" />
     <Compile Include="Transport\Loopback\LoopbackEventOrderTest.cs" />
@@ -84,12 +85,7 @@
     <Compile Include="Transport\Socket\SocketBindTest.cs" />
     <Compile Include="Transport\Socket\SocketConnectorTest.cs" />
     <Compile Include="Transport\Socket\SocketTrafficControlTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Mina.NET\Mina.NET.csproj">
-      <Project>{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}</Project>
-      <Name>Mina.NET</Name>
-    </ProjectReference>
+    <Compile Include="Transport\Socket\SocketFileTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="测试引用\" />
@@ -100,6 +96,12 @@
       <Link>TempCert.cer</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mina.NET\Mina.NET20.csproj">
+      <Project>{28ABBF94-0584-4254-A8B4-4843E6F4E867}</Project>
+      <Name>Mina.NET20</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

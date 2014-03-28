@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
 using Mina.Core.Buffer;
@@ -113,18 +114,23 @@ namespace Mina.Transport.Socket
                     Interlocked.Exchange(ref _writing, 0);
                     return;
                 }
+                
+                CurrentWriteRequest = req;
             }
 
             IoBuffer buf = req.Message as IoBuffer;
 
             if (buf == null)
             {
-                throw new InvalidOperationException("Don't know how to handle message of type '"
+                FileInfo file = req.Message as FileInfo;
+                if (file == null)
+                    throw new InvalidOperationException("Don't know how to handle message of type '"
                             + req.Message.GetType().Name + "'.  Are you missing a protocol encoder?");
+                else
+                    BeginSendFile(file);
             }
             else
             {
-                CurrentWriteRequest = req;
                 if (buf.HasRemaining)
                     BeginSend(buf);
                 else
@@ -139,6 +145,12 @@ namespace Mina.Transport.Socket
         protected abstract void BeginSend(IoBuffer buf);
 
         /// <summary>
+        /// Begins to send a file.
+        /// </summary>
+        /// <param name="file">the file to send</param>
+        protected abstract void BeginSendFile(FileInfo file);
+
+        /// <summary>
         /// Ends send operation.
         /// </summary>
         /// <param name="bytesTransferred">the bytes transferred in last send operation</param>
@@ -150,20 +162,25 @@ namespace Mina.Transport.Socket
             if (req != null)
             {
                 IoBuffer buf = req.Message as IoBuffer;
-                if (!buf.HasRemaining)
+                if (buf == null)
+                {
+                    FileInfo file = req.Message as FileInfo;
+                    if (file != null)
+                    {
+                        FireMessageSent(req);
+                    }
+                    else
+                    {
+                        // we only send buffers and files so technically it shouldn't happen
+                    }
+                }
+                else if (!buf.HasRemaining)
                 {
                     // Buffer has been sent, clear the current request.
                     Int32 pos = buf.Position;
                     buf.Reset();
 
-                    try
-                    {
-                        FireMessageSent(req);
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionMonitor.Instance.ExceptionCaught(ex);
-                    }
+                    FireMessageSent(req);
 
                     // And set it back to its position
                     buf.Position = pos;
@@ -201,7 +218,14 @@ namespace Mina.Transport.Socket
         private void FireMessageSent(IWriteRequest req)
         {
             CurrentWriteRequest = null;
-            this.FilterChain.FireMessageSent(req);
+            try
+            {
+                this.FilterChain.FireMessageSent(req);
+            }
+            catch (Exception ex)
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(ex);
+            }
         }
     }
 }

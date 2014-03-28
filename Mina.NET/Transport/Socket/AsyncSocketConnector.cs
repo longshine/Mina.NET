@@ -29,6 +29,7 @@ namespace Mina.Transport.Socket
                     ((AsyncSocketSession)e.UserToken).ProcessReceive(e);
                     break;
                 case SocketAsyncOperation.Send:
+                case SocketAsyncOperation.SendPackets:
                     ((AsyncSocketSession)e.UserToken).ProcessSend(e);
                     break;
             }
