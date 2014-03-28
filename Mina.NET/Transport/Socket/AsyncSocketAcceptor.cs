@@ -106,7 +106,15 @@ namespace Mina.Transport.Socket
                 acceptEventArg.AcceptSocket = null;
             }
 
-            Boolean willRaiseEvent = listener.Socket.AcceptAsync(acceptEventArg);
+            Boolean willRaiseEvent;
+            try
+            {
+                willRaiseEvent = listener.Socket.AcceptAsync(acceptEventArg);
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
             if (!willRaiseEvent)
             {
                 ProcessAccept(acceptEventArg);

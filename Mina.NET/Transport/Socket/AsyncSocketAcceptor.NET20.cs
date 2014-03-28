@@ -17,7 +17,18 @@ namespace Mina.Transport.Socket
 
         protected override void BeginAccept(ListenerContext listener)
         {
-            listener.Socket.BeginAccept(AcceptCallback, listener);
+            try
+            {
+                listener.Socket.BeginAccept(AcceptCallback, listener);
+            }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                ExceptionMonitor.Instance.ExceptionCaught(ex);
+            }
         }
 
         private void AcceptCallback(IAsyncResult ar)
