@@ -44,8 +44,6 @@
       <HintPath>lib\NET20\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Buffer\AbstractIoBuffer.cs" />
@@ -58,6 +56,7 @@
     <Compile Include="Core\Buffer\IoBuffer.cs" />
     <Compile Include="Core\Buffer\IoBufferAllocator.cs" />
     <Compile Include="Core\Buffer\IoBufferHexDumper.cs" />
+    <Compile Include="Core\Buffer\IoBufferStream.cs" />
     <Compile Include="Core\Buffer\IoBufferWrapper.cs" />
     <Compile Include="Core\Filterchain\DefaultIoFilterChain.cs" />
     <Compile Include="Core\Filterchain\DefaultIoFilterChainBuilder.cs" />
@@ -151,7 +150,7 @@
     <Compile Include="Filter\Executor\ExecutorFilter.cs" />
     <Compile Include="Filter\Executor\IExecutor.cs" />
     <Compile Include="Filter\Executor\IoEventExecutor.cs" />
-    <Compile Include="Filter\Executor\IoEventQueueHandler.cs"/>
+    <Compile Include="Filter\Executor\IoEventQueueHandler.cs" />
     <Compile Include="Filter\Executor\IoEventQueueThrottle.cs" />
     <Compile Include="Filter\Executor\IoEventSizeEstimator.cs" />
     <Compile Include="Filter\Executor\OrderedThreadPoolExecutor.cs" />

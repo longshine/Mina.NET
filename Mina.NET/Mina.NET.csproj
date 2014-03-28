@@ -54,6 +54,7 @@
     <Compile Include="Core\Buffer\IoBuffer.cs" />
     <Compile Include="Core\Buffer\IoBufferAllocator.cs" />
     <Compile Include="Core\Buffer\IoBufferHexDumper.cs" />
+    <Compile Include="Core\Buffer\IoBufferStream.cs" />
     <Compile Include="Core\Buffer\IoBufferWrapper.cs" />
     <Compile Include="Core\Filterchain\DefaultIoFilterChain.cs" />
     <Compile Include="Core\Filterchain\DefaultIoFilterChainBuilder.cs" />

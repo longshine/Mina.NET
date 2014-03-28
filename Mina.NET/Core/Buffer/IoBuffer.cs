@@ -335,6 +335,16 @@ namespace Mina.Core.Buffer
         public abstract IoBuffer PutPrefixedString(String value, Int32 prefixLength, Encoding encoding);
 
         /// <summary>
+        /// Reads an object from the buffer.
+        /// </summary>
+        public abstract Object GetObject();
+
+        /// <summary>
+        /// Writes the specified object to the buffer.
+        /// </summary>
+        public abstract IoBuffer PutObject(Object o);
+
+        /// <summary>
         /// Reads the byte at this buffer's current position, and then increments the position. 
         /// </summary>
         /// <returns>the byte at the buffer's current position</returns>

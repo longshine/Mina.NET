@@ -211,6 +211,19 @@ namespace Mina.Core.Buffer
         }
 
         /// <inheritdoc/>
+        public override Object GetObject()
+        {
+            return _buf.GetObject();
+        }
+
+        /// <inheritdoc/>
+        public override IoBuffer PutObject(Object o)
+        {
+            _buf.PutObject(o);
+            return this;
+        }
+
+        /// <inheritdoc/>
         public override Byte Get()
         {
             return _buf.Get();

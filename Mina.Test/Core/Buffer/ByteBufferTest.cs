@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 #if !NETFX_CORE
 using NUnit.Framework;
@@ -78,6 +79,33 @@ namespace Mina.Core.Buffer
 
             time2 = DateTime.Now;
             //Console.WriteLine("Time for performance test 2: " + (time2 - time).TotalMilliseconds + "ms");
+        }
+
+        [TestMethod]
+        public void TestObjectSerialization()
+        {
+            IoBuffer buf = ByteBufferAllocator.Instance.Allocate(16);
+            buf.AutoExpand = true;
+            List<Object> o = new List<Object>();
+            o.Add(new DateTime());
+            o.Add(typeof(Int64));
+
+            // Test writing an object.
+            buf.PutObject(o);
+
+            // Test reading an object.
+            buf.Clear();
+            Object o2 = buf.GetObject();
+            Assert.IsInstanceOfType(o2, o.GetType());
+            List<Object> l2 = (List<Object>)o2;
+            Assert.AreEqual(o.Count, l2.Count);
+            for (Int32 i = 0; i < o.Count; i++)
+            {
+                Assert.AreEqual(o[i], l2[i]);
+            }
+
+            // This assertion is just to make sure that deserialization occurred.
+            Assert.AreNotSame(o, o2);
         }
 
         [TestMethod]

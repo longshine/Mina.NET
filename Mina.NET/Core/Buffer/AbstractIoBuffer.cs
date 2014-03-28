@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace Mina.Core.Buffer
 {
@@ -429,6 +431,21 @@ namespace Mina.Core.Buffer
                     break;
             }
             Put(bytes);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public override Object GetObject()
+        {
+            IFormatter formatter = new BinaryFormatter();
+            return formatter.Deserialize(new IoBufferStream(this));
+        }
+
+        /// <inheritdoc/>
+        public override IoBuffer PutObject(Object o)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(new IoBufferStream(this), o);
             return this;
         }
 
