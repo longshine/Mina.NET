@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using Mina.Core.Buffer;
+using Mina.Core.File;
 using Mina.Core.Filterchain;
 using Mina.Core.Service;
 using Mina.Core.Session;
@@ -122,7 +123,7 @@ namespace Mina.Transport.Socket
 
             if (buf == null)
             {
-                FileInfo file = req.Message as FileInfo;
+                IFileRegion file = req.Message as IFileRegion;
                 if (file == null)
                     throw new InvalidOperationException("Don't know how to handle message of type '"
                             + req.Message.GetType().Name + "'.  Are you missing a protocol encoder?");
@@ -148,7 +149,7 @@ namespace Mina.Transport.Socket
         /// Begins to send a file.
         /// </summary>
         /// <param name="file">the file to send</param>
-        protected abstract void BeginSendFile(FileInfo file);
+        protected abstract void BeginSendFile(IFileRegion file);
 
         /// <summary>
         /// Ends send operation.
@@ -164,7 +165,7 @@ namespace Mina.Transport.Socket
                 IoBuffer buf = req.Message as IoBuffer;
                 if (buf == null)
                 {
-                    FileInfo file = req.Message as FileInfo;
+                    IFileRegion file = req.Message as IFileRegion;
                     if (file != null)
                     {
                         FireMessageSent(req);

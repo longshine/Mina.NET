@@ -1,6 +1,7 @@
 ﻿using System;
 using Common.Logging;
 using Mina.Core.Buffer;
+using Mina.Core.File;
 using Mina.Core.Filterchain;
 using Mina.Core.Future;
 using Mina.Core.Session;
@@ -136,7 +137,7 @@ namespace Mina.Filter.Codec
 
             // Bypass the encoding if the message is contained in a IoBuffer,
             // as it has already been encoded before
-            if (message is IoBuffer)
+            if (message is IoBuffer || message is IFileRegion)
             {
                 nextFilter.FilterWrite(session, writeRequest);
                 return;

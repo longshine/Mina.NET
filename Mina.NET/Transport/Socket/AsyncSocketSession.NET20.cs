@@ -91,7 +91,7 @@ namespace Mina.Transport.Socket
         }
 
         /// <inheritdoc/>
-        protected override void BeginSendFile(System.IO.FileInfo file)
+        protected override void BeginSendFile(Core.File.IFileRegion file)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace Mina.Transport.Socket
         {
             public readonly System.Net.Sockets.Socket socket;
             public readonly IoBuffer buffer;
-            public readonly System.IO.FileInfo file;
+            public readonly Core.File.IFileRegion file;
 
             public SendingContext(System.Net.Sockets.Socket s, IoBuffer b)
             {
@@ -164,7 +164,7 @@ namespace Mina.Transport.Socket
                 file = null;
             }
 
-            public SendingContext(System.Net.Sockets.Socket s, System.IO.FileInfo f)
+            public SendingContext(System.Net.Sockets.Socket s, Core.File.IFileRegion f)
             {
                 socket = s;
                 buffer = null;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Mina.Core.Buffer;
+using Mina.Core.File;
 using Mina.Core.Filterchain;
 using Mina.Core.Future;
 using Mina.Core.Service;
@@ -147,6 +148,19 @@ namespace Mina.Core.Session
                 IWriteRequest request = new DefaultWriteRequest(message, future);
                 future.Exception = new WriteToClosedSessionException(request);
                 return future;
+            }
+
+            IoBuffer buf = message as IoBuffer;
+            if (buf == null)
+            {
+                System.IO.FileInfo fi = message as System.IO.FileInfo;
+                if (fi != null)
+                    message = new FileInfoFileRegion(fi);
+            }
+            else if (!buf.HasRemaining)
+            {
+                return DefaultWriteFuture.NewNotWrittenFuture(this,
+                    new ArgumentException("message is empty. Forgot to call flip()?", "message"));
             }
 
             // Now, we can write the message. First, create a future

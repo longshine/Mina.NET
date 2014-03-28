@@ -56,6 +56,8 @@
     <Compile Include="Core\Buffer\IoBufferHexDumper.cs" />
     <Compile Include="Core\Buffer\IoBufferStream.cs" />
     <Compile Include="Core\Buffer\IoBufferWrapper.cs" />
+    <Compile Include="Core\File\FileInfoFileRegion.cs" />
+    <Compile Include="Core\File\IFileRegion.cs" />
     <Compile Include="Core\Filterchain\DefaultIoFilterChain.cs" />
     <Compile Include="Core\Filterchain\DefaultIoFilterChainBuilder.cs" />
     <Compile Include="Core\Filterchain\IEntry.cs" />

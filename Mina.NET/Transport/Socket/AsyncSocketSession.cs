@@ -102,7 +102,7 @@ namespace Mina.Transport.Socket
         }
 
         /// <inheritdoc/>
-        protected override void BeginSendFile(System.IO.FileInfo file)
+        protected override void BeginSendFile(Core.File.IFileRegion file)
         {
             SocketAsyncEventArgs saea = _writeBuffer.SocketAsyncEventArgs;
             saea.SendPacketsElements = new SendPacketsElement[] {
