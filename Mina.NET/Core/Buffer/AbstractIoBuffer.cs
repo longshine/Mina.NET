@@ -534,7 +534,202 @@ namespace Mina.Core.Buffer
         /// <inheritdoc/>
         public override IoBuffer PutString(String s, Encoding encoding)
         {
-            return Put(encoding.GetBytes(s));
+            if (String.IsNullOrEmpty(s))
+                return this;
+            else
+                return Put(encoding.GetBytes(s));
+        }
+
+        /// <inheritdoc/>
+        public override IoBuffer PutString(String s, Int32 fieldSize, Encoding encoding)
+        {
+            if (fieldSize < 0)
+                throw new ArgumentException("fieldSize cannot be negative: " + fieldSize, "fieldSize");
+            else if (fieldSize == 0)
+                return this;
+
+            AutoExpand0(fieldSize);
+            Boolean utf16 = encoding.WebName.StartsWith("utf-16", StringComparison.OrdinalIgnoreCase);
+         
+            if (utf16 && (fieldSize & 1) != 0)
+                throw new ArgumentException("fieldSize is not even.", "fieldSize");
+
+            Int32 oldLimit = Limit;
+            Int32 end = Position + fieldSize;
+
+            if (oldLimit < end)
+                throw new OverflowException();
+
+            if (!String.IsNullOrEmpty(s))
+            {
+                Byte[] bytes = encoding.GetBytes(s);
+                Put(bytes, 0, fieldSize < bytes.Length ? fieldSize : bytes.Length);
+            }
+
+            if (Position < end)
+            {
+                if (utf16)
+                {
+                    Put((Byte)0x00);
+                    Put((Byte)0x00);
+                }
+                else
+                {
+                    Put((Byte)0x00);
+                }
+            }
+
+            Position = end;
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public override String GetString(Encoding encoding)
+        {
+            if (!HasRemaining)
+                return String.Empty;
+
+            Boolean utf16 = encoding.WebName.StartsWith("utf-16", StringComparison.OrdinalIgnoreCase);
+
+            Int32 oldPos = Position;
+            Int32 oldLimit = Limit;
+            Int32 end = -1;
+            Int32 newPos;
+
+            if (utf16)
+            {
+                Int32 i = oldPos;
+                while (true)
+                {
+                    Boolean wasZero = Get(i) == 0;
+                    i++;
+
+                    if (i >= oldLimit)
+                        break;
+
+                    if (Get(i) != 0)
+                    {
+                        i++;
+                        if (i >= oldLimit)
+                            break;
+                        continue;
+                    }
+
+                    if (wasZero)
+                    {
+                        end = i - 1;
+                        break;
+                    }
+                }
+
+                if (end < 0)
+                    newPos = end = oldPos + (Int32)(oldLimit - oldPos & 0xFFFFFFFE);
+                else if (end + 2 <= oldLimit)
+                    newPos = end + 2;
+                else
+                    newPos = end;
+            }
+            else
+            {
+                end = IndexOf(0x00);
+                if (end < 0)
+                    newPos = end = oldLimit;
+                else
+                    newPos = end + 1;
+            }
+
+            if (oldPos == end)
+            {
+                Position = newPos;
+                return String.Empty;
+            }
+
+            Limit = end;
+
+            String result;
+            if (HasArray)
+            {
+                ArraySegment<Byte> array = GetRemaining();
+                result = encoding.GetString(array.Array, array.Offset, array.Count);
+            }
+            else
+            {
+                Byte[] bytes = new Byte[Remaining];
+                Get(bytes, 0, bytes.Length);
+                result = encoding.GetString(bytes, 0, bytes.Length);
+            }
+
+            Limit = oldLimit;
+            Position = newPos;
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override String GetString(Int32 fieldSize, Encoding encoding)
+        {
+            if (fieldSize < 0)
+                throw new ArgumentException("fieldSize cannot be negative: " + fieldSize, "fieldSize");
+            if (fieldSize == 0 || !HasRemaining)
+                return String.Empty;
+
+            Boolean utf16 = encoding.WebName.StartsWith("utf-16", StringComparison.OrdinalIgnoreCase);
+
+            if (utf16 && (fieldSize & 1) != 0)
+                throw new ArgumentException("fieldSize is not even.", "fieldSize");
+
+            Int32 oldPos = Position;
+            Int32 oldLimit = Limit;
+            Int32 end = oldPos + fieldSize;
+
+            if (oldLimit < end)
+                throw new BufferUnderflowException();
+
+            Int32 i;
+
+            if (utf16)
+            {
+                for (i = oldPos; i < end; i += 2)
+                {
+                    if (Get(i) == 0 && Get(i + 1) == 0)
+                        break;
+                }
+
+                Limit = i;
+            }
+            else
+            {
+                for (i = oldPos; i < end; i++)
+                {
+                    if (Get(i) == 0)
+                        break;
+                }
+
+                Limit = i;
+            }
+
+            if (!HasRemaining)
+            {
+                Limit = oldLimit;
+                Position = end;
+                return String.Empty;
+            }
+
+            String result;
+            if (HasArray)
+            {
+                ArraySegment<Byte> array = GetRemaining();
+                result = encoding.GetString(array.Array, array.Offset, array.Count);
+            }
+            else
+            {
+                Byte[] bytes = new Byte[Remaining];
+                Get(bytes, 0, bytes.Length);
+                result = encoding.GetString(bytes, 0, bytes.Length);
+            }
+
+            Limit = oldLimit;
+            Position = end;
+            return result;
         }
         
         /// <summary>

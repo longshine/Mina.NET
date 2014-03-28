@@ -284,6 +284,124 @@ namespace Mina.Core.Buffer
         }
 
         [TestMethod]
+        public void TestGetString()
+        {
+            IoBuffer buf = ByteBufferAllocator.Instance.Allocate(16);
+            Encoding encoding = Encoding.UTF8;
+
+            buf.Clear();
+            buf.PutString("hello", encoding);
+            buf.Put((Byte)0);
+            buf.Flip();
+            Assert.AreEqual("hello", buf.GetString(encoding));
+
+            buf.Clear();
+            buf.PutString("hello", encoding);
+            buf.Flip();
+            Assert.AreEqual("hello", buf.GetString(encoding));
+
+            encoding = Encoding.GetEncoding("ISO-8859-1");
+            buf.Clear();
+            buf.Put((Byte)'A');
+            buf.Put((Byte)'B');
+            buf.Put((Byte)'C');
+            buf.Put((Byte)0);
+
+            buf.Position = 0;
+            Assert.AreEqual("ABC", buf.GetString(encoding));
+            Assert.AreEqual(4, buf.Position);
+
+            buf.Position = 0;
+            buf.Limit = 1;
+            Assert.AreEqual("A", buf.GetString(encoding));
+            Assert.AreEqual(1, buf.Position);
+
+            buf.Clear();
+            Assert.AreEqual("ABC", buf.GetString(10, encoding));
+            Assert.AreEqual(10, buf.Position);
+
+            buf.Clear();
+            Assert.AreEqual("A", buf.GetString(1, encoding));
+            Assert.AreEqual(1, buf.Position);
+
+            // Test a trailing garbage
+            buf.Clear();
+            buf.Put((Byte)'A');
+            buf.Put((Byte)'B');
+            buf.Put((Byte)0);
+            buf.Put((Byte)'C');
+            buf.Position = 0;
+            Assert.AreEqual("AB", buf.GetString(4, encoding));
+            Assert.AreEqual(4, buf.Position);
+
+            buf.Clear();
+            buf.FillAndReset(buf.Limit);
+            encoding = Encoding.GetEncoding("UTF-16BE");
+            buf.Put((Byte)0);
+            buf.Put((Byte)'A');
+            buf.Put((Byte)0);
+            buf.Put((Byte)'B');
+            buf.Put((Byte)0);
+            buf.Put((Byte)'C');
+            buf.Put((Byte)0);
+            buf.Put((Byte)0);
+
+            buf.Position = 0;
+            Assert.AreEqual("ABC", buf.GetString(encoding));
+            Assert.AreEqual(8, buf.Position);
+
+            buf.Position = 0;
+            buf.Limit = 2;
+            Assert.AreEqual("A", buf.GetString(encoding));
+            Assert.AreEqual(2, buf.Position);
+
+            buf.Position = 0;
+            buf.Limit = 3;
+            Assert.AreEqual("A", buf.GetString(encoding));
+            Assert.AreEqual(2, buf.Position);
+
+            buf.Clear();
+            Assert.AreEqual("ABC", buf.GetString(10, encoding));
+            Assert.AreEqual(10, buf.Position);
+
+            buf.Clear();
+            Assert.AreEqual("A", buf.GetString(2, encoding));
+            Assert.AreEqual(2, buf.Position);
+
+            buf.Clear();
+            try
+            {
+                buf.GetString(1, encoding);
+                Assert.Fail();
+            }
+            catch (Exception)
+            {
+                // Expected an Exception, signifies test success
+                Assert.IsTrue(true);
+            }
+
+            // Test getting strings from an empty buffer.
+            buf.Clear();
+            buf.Limit = 0;
+            Assert.AreEqual("", buf.GetString(encoding));
+            Assert.AreEqual("", buf.GetString(2, encoding));
+
+            // Test getting strings from non-empty buffer which is filled with 0x00
+            buf.Clear();
+            buf.PutInt32(0);
+            buf.Clear();
+            buf.Limit = 4;
+            Assert.AreEqual("", buf.GetString(encoding));
+            Assert.AreEqual(2, buf.Position);
+            Assert.AreEqual(4, buf.Limit);
+
+            buf.Position = 0;
+            Assert.AreEqual("", buf.GetString(2, encoding));
+            Assert.AreEqual(2, buf.Position);
+            Assert.AreEqual(4, buf.Limit);
+        }
+
+        [TestMethod]
         public void TestPutString()
         {
             IoBuffer buf = ByteBufferAllocator.Instance.Allocate(16);
@@ -292,22 +410,22 @@ namespace Mina.Core.Buffer
             buf.PutString("ABC", encoding);
             Assert.AreEqual(3, buf.Position);
             buf.Clear();
-            Assert.AreEqual((byte)'A', buf.Get(0));
-            Assert.AreEqual((byte)'B', buf.Get(1));
-            Assert.AreEqual((byte)'C', buf.Get(2));
+            Assert.AreEqual((Byte)'A', buf.Get(0));
+            Assert.AreEqual((Byte)'B', buf.Get(1));
+            Assert.AreEqual((Byte)'C', buf.Get(2));
 
-            //buf.PutString("D", 5, encoding);
-            //Assert.AreEqual(5, buf.Position);
-            //buf.Clear();
-            //Assert.AreEqual('D', buf.Get(0));
-            //Assert.AreEqual(0, buf.Get(1));
+            buf.PutString("D", 5, encoding);
+            Assert.AreEqual(5, buf.Position);
+            buf.Clear();
+            Assert.AreEqual((Byte)'D', buf.Get(0));
+            Assert.AreEqual(0, buf.Get(1));
 
-            //buf.PutString("EFG", 2, encoding);
-            //Assert.AreEqual(2, buf.Position);
-            //buf.Clear();
-            //Assert.AreEqual('E', buf.Get(0));
-            //Assert.AreEqual('F', buf.Get(1));
-            //Assert.AreEqual('C', buf.Get(2)); // C may not be overwritten
+            buf.PutString("EFG", 2, encoding);
+            Assert.AreEqual(2, buf.Position);
+            buf.Clear();
+            Assert.AreEqual((Byte)'E', buf.Get(0));
+            Assert.AreEqual((Byte)'F', buf.Get(1));
+            Assert.AreEqual((Byte)'C', buf.Get(2)); // C may not be overwritten
 
             // UTF-16: We specify byte order to omit BOM.
             encoding = Encoding.GetEncoding("UTF-16BE");
@@ -318,37 +436,37 @@ namespace Mina.Core.Buffer
             buf.Clear();
 
             Assert.AreEqual(0, buf.Get(0));
-            Assert.AreEqual((byte)'A', buf.Get(1));
+            Assert.AreEqual((Byte)'A', buf.Get(1));
             Assert.AreEqual(0, buf.Get(2));
-            Assert.AreEqual((byte)'B', buf.Get(3));
+            Assert.AreEqual((Byte)'B', buf.Get(3));
             Assert.AreEqual(0, buf.Get(4));
-            Assert.AreEqual((byte)'C', buf.Get(5));
+            Assert.AreEqual((Byte)'C', buf.Get(5));
 
-            //buf.PutString("D", 10, encoding);
-            //Assert.AreEqual(10, buf.Position);
-            //buf.Clear();
-            //Assert.AreEqual(0, buf.Get(0));
-            //Assert.AreEqual('D', buf.Get(1));
-            //Assert.AreEqual(0, buf.Get(2));
-            //Assert.AreEqual(0, buf.Get(3));
+            buf.PutString("D", 10, encoding);
+            Assert.AreEqual(10, buf.Position);
+            buf.Clear();
+            Assert.AreEqual(0, buf.Get(0));
+            Assert.AreEqual((Byte)'D', buf.Get(1));
+            Assert.AreEqual(0, buf.Get(2));
+            Assert.AreEqual(0, buf.Get(3));
 
-            //buf.PutString("EFG", 4, encoding);
-            //Assert.AreEqual(4, buf.Position);
-            //buf.Clear();
-            //Assert.AreEqual(0, buf.Get(0));
-            //Assert.AreEqual('E', buf.Get(1));
-            //Assert.AreEqual(0, buf.Get(2));
-            //Assert.AreEqual('F', buf.Get(3));
-            //Assert.AreEqual(0, buf.Get(4)); // C may not be overwritten
-            //Assert.AreEqual('C', buf.Get(5)); // C may not be overwritten
+            buf.PutString("EFG", 4, encoding);
+            Assert.AreEqual(4, buf.Position);
+            buf.Clear();
+            Assert.AreEqual(0, buf.Get(0));
+            Assert.AreEqual((Byte)'E', buf.Get(1));
+            Assert.AreEqual(0, buf.Get(2));
+            Assert.AreEqual((Byte)'F', buf.Get(3));
+            Assert.AreEqual(0, buf.Get(4)); // C may not be overwritten
+            Assert.AreEqual((Byte)'C', buf.Get(5)); // C may not be overwritten
 
             // Test putting an emptry string
             buf.PutString("", encoding);
             Assert.AreEqual(0, buf.Position);
-            //buf.PutString("", 4, encoding);
-            //Assert.AreEqual(4, buf.Position);
-            //Assert.AreEqual(0, buf.Get(0));
-            //Assert.AreEqual(0, buf.Get(1));
+            buf.PutString("", 4, encoding);
+            Assert.AreEqual(4, buf.Position);
+            Assert.AreEqual(0, buf.Get(0));
+            Assert.AreEqual(0, buf.Get(1));
         }
 
         [TestMethod]

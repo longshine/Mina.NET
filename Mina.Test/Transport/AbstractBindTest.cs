@@ -67,7 +67,7 @@ namespace Mina.Transport
                 acceptor.Bind();
                 Assert.Fail("Exception is not thrown");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Signifies a successfull test case execution
                 Assert.IsTrue(true);

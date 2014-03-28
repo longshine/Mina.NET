@@ -488,11 +488,42 @@ namespace Mina.Core.Buffer
         /// <summary>
         /// Writes the content of <paramref name="s"/> into this buffer using
         /// the specified <see cref="Encoding"/>.
+        /// This method doesn't terminate string with <tt>NUL</tt>.
+        /// You have to do it by yourself.
         /// </summary>
         /// <returns>itself</returns>
         /// <exception cref="OverflowException">there is insufficient space in this buffer</exception>
         /// <exception cref="InvalidOperationException">this buffer is read-only</exception>
         public abstract IoBuffer PutString(String s, Encoding encoding);
+
+        /// <summary>
+        /// Writes the content of <paramref name="s"/> into this buffer as a
+        /// <code>NUL</code>-terminated string using the specified <see cref="Encoding"/>.
+        /// </summary>
+        /// <remarks>
+        /// If the charset name of the encoder is UTF-16, you cannot specify odd
+        /// <code>fieldSize</code>, and this method will append two <code>NUL</code>s
+        /// as a terminator.
+        /// Please note that this method doesn't terminate with <code>NUL</code> if
+        /// the input string is longer than <tt>fieldSize</tt>.
+        /// </remarks>
+        /// <param name="s"></param>
+        /// <param name="fieldSize">the maximum number of bytes to write</param>
+        /// <param name="encoding"></param>
+        public abstract IoBuffer PutString(String s, Int32 fieldSize, Encoding encoding);
+
+        /// <summary>
+        /// Reads a NUL-terminated string from this buffer using the specified encoding.
+        /// This method reads until the limit of this buffer if no NUL is found.
+        /// </summary>
+        public abstract String GetString(Encoding encoding);
+
+        /// <summary>
+        /// Reads a NUL-terminated string from this buffer using the specified decoder and returns it.
+        /// </summary>
+        /// <param name="fieldSize">the maximum number of bytes to read</param>
+        /// <param name="encoding"></param>
+        public abstract String GetString(Int32 fieldSize, Encoding encoding);
 
         #region
 

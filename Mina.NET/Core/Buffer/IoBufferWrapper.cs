@@ -336,6 +336,24 @@ namespace Mina.Core.Buffer
         }
 
         /// <inheritdoc/>
+        public override IoBuffer PutString(String s, Int32 fieldSize, Encoding encoding)
+        {
+            return _buf.PutString(s, fieldSize, encoding);
+        }
+
+        /// <inheritdoc/>
+        public override String GetString(Encoding encoding)
+        {
+            return _buf.GetString(encoding);
+        }
+
+        /// <inheritdoc/>
+        public override String GetString(Int32 fieldSize, Encoding encoding)
+        {
+            return _buf.GetString(fieldSize, encoding);
+        }
+
+        /// <inheritdoc/>
         public override Char GetChar()
         {
             return _buf.GetChar();
