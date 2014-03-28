@@ -164,14 +164,26 @@ namespace Mina.Transport.Socket
 
         private void StartAccept0(Object state)
         {
-            _connectionPool.WaitOne();
+            Semaphore pool = _connectionPool;
+            if (pool == null)
+                // this might happen if has been unbound
+                return;
+            try
+            {
+                pool.WaitOne();
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
             BeginAccept((ListenerContext)state);
         }
 
         private void OnSessionDestroyed(Object sender, IoSessionEventArgs e)
         {
-            if (_connectionPool != null)
-                _connectionPool.Release();
+            Semaphore pool = _connectionPool;
+            if (pool != null)
+                pool.Release();
         }
 
         /// <inheritdoc/>
