@@ -19,6 +19,12 @@ namespace Mina.Transport.Socket
         }
 
         /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return SocketSession.Metadata; }
+        }
+
+        /// <inheritdoc/>
         public new ISocketSessionConfig SessionConfig
         {
             get { return (ISocketSessionConfig)base.SessionConfig; }

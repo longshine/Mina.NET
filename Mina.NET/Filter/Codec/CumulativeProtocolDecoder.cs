@@ -20,6 +20,17 @@ namespace Mina.Filter.Codec
         /// <inheritdoc/>
         public override void Decode(IoSession session, IoBuffer input, IProtocolDecoderOutput output)
         {
+            if (!session.TransportMetadata.HasFragmentation)
+            {
+                while (input.HasRemaining)
+                {
+                    if (!DoDecode(session, input, output))
+                        break;
+                }
+
+                return;
+            }
+
             Boolean usingSessionBuffer = true;
             IoBuffer buf = session.GetAttribute<IoBuffer>(BUFFER);
 

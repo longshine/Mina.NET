@@ -38,6 +38,12 @@ namespace Mina.Transport.Socket
             ReuseBuffer = true;
         }
 
+        /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return SocketSession.Metadata; }
+        }
+
         public Boolean ReuseAddress { get; set; }
 
         /// <summary>

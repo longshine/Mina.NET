@@ -12,6 +12,9 @@ namespace Mina.Transport.Loopback
     /// </summary>
     class LoopbackSession : AbstractIoSession
     {
+        public static readonly ITransportMetadata Metadata
+            = new DefaultTransportMetadata("mina", "loopback", false, false, typeof(LoopbackEndPoint));
+
         private readonly LoopbackEndPoint _localEP;
         private readonly LoopbackEndPoint _remoteEP;
         private readonly LoopbackFilterChain _filterChain;
@@ -68,6 +71,11 @@ namespace Mina.Transport.Loopback
         public override EndPoint RemoteEndPoint
         {
             get { return _remoteEP; }
+        }
+
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return Metadata; }
         }
 
         public LoopbackSession RemoteSession

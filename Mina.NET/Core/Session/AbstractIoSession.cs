@@ -79,6 +79,9 @@ namespace Mina.Core.Session
         public abstract IoFilterChain FilterChain { get; }
 
         /// <inheritdoc/>
+        public abstract ITransportMetadata TransportMetadata { get; }
+
+        /// <inheritdoc/>
         public Boolean Connected
         {
             get { return !_closeFuture.Closed; }

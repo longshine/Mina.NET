@@ -105,13 +105,25 @@ namespace Mina.Core.Service
             if (localEndPoints == null)
                 throw new ArgumentNullException("localEndPoints");
 
+            List<EndPoint> localEndPointsCopy = new List<EndPoint>();
+            foreach (EndPoint ep in localEndPoints)
+            {
+                if (ep != null && !TransportMetadata.EndPointType.IsAssignableFrom(ep.GetType()))
+                    throw new ArgumentException("localAddress type: " + ep.GetType().Name + " (expected: "
+                            + TransportMetadata.EndPointType.Name + ")");
+                localEndPointsCopy.Add(ep);
+            }
+
+            if (localEndPointsCopy.Count == 0)
+                throw new ArgumentException("localEndPoints is empty.", "localEndPoints");
+
             Boolean active = false;
             lock (((ICollection)_boundEndPoints).SyncRoot)
             {
                 if (_boundEndPoints.Count == 0)
                     active = true;
 
-                IEnumerable<EndPoint> eps = BindInternal(localEndPoints);
+                IEnumerable<EndPoint> eps = BindInternal(localEndPointsCopy);
                 _boundEndPoints.AddRange(eps);
             }
 
@@ -178,6 +190,19 @@ namespace Mina.Core.Service
 
             if (deactivate)
                 ((IoServiceSupport)this).FireServiceDeactivated();
+        }
+
+        /// <inheritdoc/>
+        public override String ToString()
+        {
+            ITransportMetadata m = TransportMetadata;
+            return '('
+                    + m.ProviderName
+                    + ' '
+                    + m.Name
+                    + " acceptor: "
+                    + (Active ? "localAddress(es): " + LocalEndPoints + ", managedSessionCount: "
+                            + ManagedSessions.Count : "not bound") + ')';
         }
 
         /// <summary>

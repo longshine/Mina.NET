@@ -23,7 +23,15 @@ namespace Mina.Core.Service
         public EndPoint DefaultRemoteEndPoint
         {
             get { return _defaultRemoteEP; }
-            set { _defaultRemoteEP = value; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+                if (!TransportMetadata.EndPointType.IsAssignableFrom(value.GetType()))
+                    throw new ArgumentException("defaultRemoteAddress type: " + value.GetType()
+                            + " (expected: " + TransportMetadata.EndPointType + ")");
+                _defaultRemoteEP = value;
+            }
         }
 
         /// <inheritdoc/>
@@ -80,7 +88,19 @@ namespace Mina.Core.Service
             if (remoteEP == null)
                 throw new ArgumentNullException("remoteEP");
 
+            if (!TransportMetadata.EndPointType.IsAssignableFrom(remoteEP.GetType()))
+                throw new ArgumentException("remoteAddress type: " + remoteEP.GetType() + " (expected: "
+                        + TransportMetadata.EndPointType + ")");
+
             return Connect0(remoteEP, localEP, sessionInitializer);
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            ITransportMetadata m = TransportMetadata;
+            return '(' + m.ProviderName + ' ' + m.Name + " connector: " + "managedSessionCount: "
+                    + ManagedSessions.Count + ')';
         }
 
         /// <summary>

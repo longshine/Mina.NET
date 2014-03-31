@@ -13,6 +13,9 @@ namespace Mina.Transport.Serial
 {
     class SerialSession : AbstractIoSession, ISerialSession
     {
+        public static readonly ITransportMetadata Metadata
+            = new DefaultTransportMetadata("mina", "serial", false, true, typeof(SerialEndPoint));
+
         private readonly IoProcessor _processor;
         private readonly SerialEndPoint _endpoint;
         private readonly SerialPort _serialPort;
@@ -72,6 +75,11 @@ namespace Mina.Transport.Serial
         public override EndPoint RemoteEndPoint
         {
             get { return _endpoint; }
+        }
+
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return Metadata; }
         }
 
         public new ISerialSessionConfig Config

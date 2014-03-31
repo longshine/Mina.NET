@@ -24,6 +24,13 @@ namespace Mina.Transport.Loopback
             _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
         }
 
+        /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return LoopbackSession.Metadata; }
+        }
+
+        /// <inheritdoc/>
         protected override IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints)
         {
             HashSet<EndPoint> newLocalEPs = new HashSet<EndPoint>();
@@ -83,6 +90,7 @@ namespace Mina.Transport.Loopback
             return newLocalEPs;
         }
 
+        /// <inheritdoc/>
         protected override void UnbindInternal(IEnumerable<EndPoint> localEndPoints)
         {
             lock (BoundHandlers)
@@ -99,6 +107,7 @@ namespace Mina.Transport.Loopback
             }
         }
 
+        /// <inheritdoc/>
         protected override void Dispose(Boolean disposing)
         {
             base.Dispose(disposing);

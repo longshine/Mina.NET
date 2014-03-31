@@ -13,10 +13,14 @@ namespace Mina.Core.Session
     /// </summary>
     public class DummySession : AbstractIoSession
     {
+        private static readonly ITransportMetadata Metadata
+            = new DefaultTransportMetadata("mina", "dummy", false, false, typeof(IPEndPoint));
+
         private volatile IoHandler _handler = new IoHandlerAdapter();
         private readonly IoProcessor<DummySession> _processor;
         private readonly IoFilterChain _filterChain;
         private volatile EndPoint _remoteAddress = AnonymousEndPoint.Instance;
+        private volatile ITransportMetadata _transportMetadata = Metadata;
 
         /// <summary>
         /// </summary>
@@ -61,6 +65,19 @@ namespace Mina.Core.Session
             get { return _remoteAddress; }
         }
 
+        /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return _transportMetadata; }
+        }
+
+        /// <summary>
+        /// </summary>
+        public void SetTransportMetadata(ITransportMetadata metadata)
+        {
+            _transportMetadata = metadata;
+        }
+
         /// <summary>
         /// </summary>
         public void SetRemoteEndPoint(EndPoint ep)
@@ -80,6 +97,11 @@ namespace Mina.Core.Session
             public DummyService(IoSessionConfig sessionConfig)
                 : base(sessionConfig)
             { }
+
+            public override ITransportMetadata TransportMetadata
+            {
+                get { return Metadata; }
+            }
 
             protected override IEnumerable<EndPoint> BindInternal(IEnumerable<EndPoint> localEndPoints)
             {

@@ -38,6 +38,10 @@ namespace Mina.Core.Session
         IoFilterChain FilterChain { get; }
         IWriteRequestQueue WriteRequestQueue { get; }
         /// <summary>
+        /// Gets the <see cref="ITransportMetadata"/> that this session runs on.
+        /// </summary>
+        ITransportMetadata TransportMetadata { get; }
+        /// <summary>
         /// Returns <code>true</code> if this session is connected with remote peer.
         /// </summary>
         Boolean Connected { get; }

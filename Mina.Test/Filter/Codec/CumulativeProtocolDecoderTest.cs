@@ -10,6 +10,7 @@ using TestInitialize = NUnit.Framework.SetUpAttribute;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endif
 using Mina.Core.Buffer;
+using Mina.Core.Service;
 using Mina.Core.Session;
 
 namespace Mina.Filter.Codec
@@ -26,6 +27,7 @@ namespace Mina.Filter.Codec
         {
             buf = IoBuffer.Allocate(16);
             decoder = new IntegerDecoder();
+            session.SetTransportMetadata(new DefaultTransportMetadata("mina", "dummy", false, true, typeof(System.Net.IPEndPoint)));
         }
 
         [TestMethod]

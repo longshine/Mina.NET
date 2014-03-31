@@ -26,6 +26,13 @@ namespace Mina.Transport.Loopback
             _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
         }
 
+        /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return LoopbackSession.Metadata; }
+        }
+
+        /// <inheritdoc/>
         protected override IConnectFuture Connect0(EndPoint remoteEP, EndPoint localEP, Action<IoSession, IConnectFuture> sessionInitializer)
         {
             LoopbackPipe entry;
@@ -96,6 +103,7 @@ namespace Mina.Transport.Loopback
             return future;
         }
 
+        /// <inheritdoc/>
         protected override void Dispose(Boolean disposing)
         {
             base.Dispose(disposing);

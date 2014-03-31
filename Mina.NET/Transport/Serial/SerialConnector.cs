@@ -23,6 +23,12 @@ namespace Mina.Transport.Serial
         }
 
         /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return SerialSession.Metadata; }
+        }
+
+        /// <inheritdoc/>
         protected override IConnectFuture Connect0(EndPoint remoteEP, EndPoint localEP, Action<IoSession, IConnectFuture> sessionInitializer)
         {
             ISerialSessionConfig config = (ISerialSessionConfig)SessionConfig;

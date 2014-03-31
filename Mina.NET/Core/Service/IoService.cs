@@ -13,6 +13,10 @@ namespace Mina.Core.Service
     public interface IoService
     {
         /// <summary>
+        /// Gets the <see cref="ITransportMetadata"/> that this service runs on.
+        /// </summary>
+        ITransportMetadata TransportMetadata { get; }
+        /// <summary>
         /// Gets or sets the handler which will handle all connections managed by this service.
         /// </summary>
         IoHandler Handler { get; set; }

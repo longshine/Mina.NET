@@ -59,6 +59,9 @@ namespace Mina.Core.Service
         }
 
         /// <inheritdoc/>
+        public abstract ITransportMetadata TransportMetadata { get; }
+
+        /// <inheritdoc/>
         public IoHandler Handler
         {
             get { return _handler; }

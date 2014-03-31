@@ -17,6 +17,9 @@ namespace Mina.Transport.Socket
     /// </summary>
     public abstract class SocketSession : AbstractIoSession
     {
+        public static readonly ITransportMetadata Metadata
+            = new DefaultTransportMetadata("async", "socket", false, true, typeof(IPEndPoint));
+
         private static readonly Object dummy = IoBuffer.Wrap(new Byte[0]);
         private readonly System.Net.Sockets.Socket _socket;
         private readonly EndPoint _localEP;
@@ -63,6 +66,12 @@ namespace Mina.Transport.Socket
         public override EndPoint RemoteEndPoint
         {
             get { return _remoteEP; }
+        }
+
+        /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return Metadata; }
         }
 
         /// <summary>
