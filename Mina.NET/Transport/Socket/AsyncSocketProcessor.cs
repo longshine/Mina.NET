@@ -30,7 +30,10 @@ namespace Mina.Transport.Socket
 
         protected virtual void Dispose(Boolean disposing)
         {
-            _idleStatusChecker.Dispose();
+            if (disposing)
+            {
+                _idleStatusChecker.Dispose();
+            }
         }
 
         public void Add(SocketSession session)

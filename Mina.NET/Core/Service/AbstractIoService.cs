@@ -23,6 +23,7 @@ namespace Mina.Core.Service
         private readonly IoServiceStatistics _stats;
         private IoFilterChainBuilder _filterChainBuilder = new DefaultIoFilterChainBuilder();
         private IoSessionDataStructureFactory _sessionDataStructureFactory = new DefaultIoSessionDataStructureFactory();
+        private Boolean _disposed;
 
         private ConcurrentDictionary<Int64, IoSession> _managedSessions = new ConcurrentDictionary<Int64, IoSession>();
 
@@ -60,6 +61,9 @@ namespace Mina.Core.Service
 
         /// <inheritdoc/>
         public abstract ITransportMetadata TransportMetadata { get; }
+
+        /// <inheritdoc/>
+        public Boolean Disposed { get { return _disposed; } }
 
         /// <inheritdoc/>
         public IoHandler Handler
@@ -197,8 +201,8 @@ namespace Mina.Core.Service
         /// Disposes resources.
         /// </summary>
         protected virtual void Dispose(Boolean disposing)
-        { 
-
+        {
+            _disposed = true;
         }
 
         private void DisconnectSessions()

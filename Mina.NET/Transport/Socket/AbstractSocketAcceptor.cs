@@ -246,10 +246,10 @@ namespace Mina.Transport.Socket
                         _connectionPool = null;
                     }
                     _processor.Dispose();
-                    base.Dispose(disposing);
-                    _disposed = true;
                 }
+                _disposed = true;
             }
+            base.Dispose(disposing);
         }
 
         protected class ListenerContext

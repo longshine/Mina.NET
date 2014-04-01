@@ -102,6 +102,9 @@ namespace Mina.Core.Service
         /// <inheritdoc/>
         public void Bind(IEnumerable<EndPoint> localEndPoints)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().Name);
+
             if (localEndPoints == null)
                 throw new ArgumentNullException("localEndPoints");
 

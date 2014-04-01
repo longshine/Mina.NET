@@ -17,6 +17,11 @@ namespace Mina.Core.Service
         /// </summary>
         ITransportMetadata TransportMetadata { get; }
         /// <summary>
+        /// Returns <code>true</code> if and if only all resources of this service
+        /// have been disposed.
+        /// </summary>
+        Boolean Disposed { get; }
+        /// <summary>
         /// Gets or sets the handler which will handle all connections managed by this service.
         /// </summary>
         IoHandler Handler { get; set; }

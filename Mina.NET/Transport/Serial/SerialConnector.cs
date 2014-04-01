@@ -66,8 +66,11 @@ namespace Mina.Transport.Serial
 
         protected override void Dispose(Boolean disposing)
         {
+            if (disposing)
+            {
+                _idleStatusChecker.Dispose();
+            }
             base.Dispose(disposing);
-            _idleStatusChecker.Dispose();
         }
 
         #region IoProcessor

@@ -106,8 +106,11 @@ namespace Mina.Transport.Loopback
         /// <inheritdoc/>
         protected override void Dispose(Boolean disposing)
         {
+            if (disposing)
+            {
+                _idleStatusChecker.Dispose();
+            }
             base.Dispose(disposing);
-            _idleStatusChecker.Dispose();
         }
 
         private static LoopbackEndPoint NextLocalEP()

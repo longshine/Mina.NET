@@ -85,6 +85,9 @@ namespace Mina.Core.Service
         /// <inheritdoc/>
         public IConnectFuture Connect(EndPoint remoteEP, EndPoint localEP, Action<IoSession, IConnectFuture> sessionInitializer)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().Name);
+
             if (remoteEP == null)
                 throw new ArgumentNullException("remoteEP");
 

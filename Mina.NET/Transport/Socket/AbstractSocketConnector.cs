@@ -84,6 +84,16 @@ namespace Mina.Transport.Socket
             connector.Socket.Close();
         }
 
+        /// <inheritdoc/>
+        protected override void Dispose(Boolean disposing)
+        {
+            if (disposing)
+            {
+                _processor.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
         protected class ConnectorContext : IDisposable
         {
             private readonly System.Net.Sockets.Socket _socket;
