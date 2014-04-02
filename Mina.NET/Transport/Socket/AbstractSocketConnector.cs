@@ -21,7 +21,7 @@ namespace Mina.Transport.Socket
         /// <inheritdoc/>
         public override ITransportMetadata TransportMetadata
         {
-            get { return SocketSession.Metadata; }
+            get { return AsyncSocketSession.Metadata; }
         }
 
         /// <inheritdoc/>
@@ -94,7 +94,7 @@ namespace Mina.Transport.Socket
             base.Dispose(disposing);
         }
 
-        protected class ConnectorContext : IDisposable
+        public class ConnectorContext : IDisposable
         {
             private readonly System.Net.Sockets.Socket _socket;
             private readonly EndPoint _remoteEP;

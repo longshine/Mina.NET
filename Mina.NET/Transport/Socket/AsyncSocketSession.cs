@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using Mina.Core.Buffer;
+using Mina.Core.File;
 using Mina.Core.Service;
 using Mina.Core.Write;
 using Mina.Util;
@@ -10,11 +11,14 @@ namespace Mina.Transport.Socket
 {
     public class AsyncSocketSession : SocketSession
     {
+        public static readonly ITransportMetadata Metadata
+            = new DefaultTransportMetadata("async", "socket", false, true, typeof(IPEndPoint));
+
         private readonly SocketAsyncEventArgsBuffer _readBuffer;
         private readonly SocketAsyncEventArgsBuffer _writeBuffer;
         private readonly EventHandler<SocketAsyncEventArgs> _completeHandler;
 
-        public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor,System.Net.Sockets.Socket socket,
+        public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket,
             SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
             : base(service, processor, socket)
         {
@@ -42,23 +46,25 @@ namespace Mina.Transport.Socket
             get { return _writeBuffer; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to reuse the internal
-        /// <see cref="ReadBuffer"/> as the buffer sent to <see cref="SocketSession.FilterChain"/>
-        /// by <see cref="Core.Filterchain.IoFilterChain.FireMessageReceived(Object)"/>.
-        /// </summary>
-        /// <remarks>
-        /// If any thread model, i.e. an <see cref="Filter.Executor.ExecutorFilter"/>,
-        /// is added before filters that process the incoming <see cref="Core.Buffer.IoBuffer"/>
-        /// in <see cref="Core.Filterchain.IoFilter.MessageReceived(Core.Filterchain.INextFilter, Core.Session.IoSession, Object)"/>,
-        /// this must be set to <code>false</code> since the internal read buffer
-        /// will be reset every time a session begins to receive.
-        /// </remarks>
-        /// <seealso cref="AbstractSocketAcceptor.ReuseBuffer"/>
-        public Boolean ReuseBuffer { get; set; }
+        /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return Metadata; }
+        }
 
         /// <inheritdoc/>
-        protected override void BeginSend(IoBuffer buf)
+        protected override void BeginSend(IWriteRequest request, IoBuffer buf)
+        {
+            BeginSend(buf);
+        }
+
+        /// <inheritdoc/>
+        protected override void BeginSendFile(IWriteRequest request, IFileRegion file)
+        {
+            BeginSendFile(file);
+        }
+
+        private void BeginSend(IoBuffer buf)
         {
             _writeBuffer.Clear();
 
@@ -101,8 +107,7 @@ namespace Mina.Transport.Socket
             }
         }
 
-        /// <inheritdoc/>
-        protected override void BeginSendFile(Core.File.IFileRegion file)
+        private void BeginSendFile(Core.File.IFileRegion file)
         {
             SocketAsyncEventArgs saea = _writeBuffer.SocketAsyncEventArgs;
             saea.SendPacketsElements = new SendPacketsElement[] {

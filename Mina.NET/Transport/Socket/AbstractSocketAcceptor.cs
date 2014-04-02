@@ -41,7 +41,7 @@ namespace Mina.Transport.Socket
         /// <inheritdoc/>
         public override ITransportMetadata TransportMetadata
         {
-            get { return SocketSession.Metadata; }
+            get { return AsyncSocketSession.Metadata; }
         }
 
         public Boolean ReuseAddress { get; set; }

@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using Mina.Core.Buffer;
+using Mina.Core.File;
 using Mina.Core.Service;
+using Mina.Core.Write;
 using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
     public class AsyncSocketSession : SocketSession
     {
+        public static readonly ITransportMetadata Metadata
+            = new DefaultTransportMetadata("async", "socket", false, true, typeof(IPEndPoint));
+
         private readonly Byte[] _readBuffer;
 
         public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor,
@@ -18,25 +24,28 @@ namespace Mina.Transport.Socket
             ReuseBuffer = reuseBuffer;
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to reuse the internal
-        /// <see cref="ReadBuffer"/> as the buffer sent to <see cref="SocketSession.FilterChain"/>
-        /// by <see cref="Core.Filterchain.IoFilterChain.FireMessageReceived(Object)"/>.
-        /// </summary>
-        /// <remarks>
-        /// If any thread model, i.e. an <see cref="Filter.Executor.ExecutorFilter"/>,
-        /// is added before filters that process the incoming <see cref="Core.Buffer.IoBuffer"/>
-        /// in <see cref="Core.Filterchain.IoFilter.MessageReceived(Core.Filterchain.INextFilter, Core.Session.IoSession, Object)"/>,
-        /// this must be set to <code>false</code> since the internal read buffer
-        /// will be reset every time a session begins to receive.
-        /// </remarks>
-        /// <seealso cref="AbstractSocketAcceptor.ReuseBuffer"/>
-        public Boolean ReuseBuffer { get; set; }
+        /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return Metadata; }
+        }
 
         /// <inheritdoc/>
         protected override void BeginReceive()
         {
             Socket.BeginReceive(_readBuffer, 0, _readBuffer.Length, SocketFlags.None, ReceiveCallback, Socket);
+        }
+
+        /// <inheritdoc/>
+        protected override void BeginSend(IWriteRequest request, IoBuffer buf)
+        {
+            BeginSend(buf);
+        }
+
+        /// <inheritdoc/>
+        protected override void BeginSendFile(IWriteRequest request, IFileRegion file)
+        {
+            BeginSendFile(file);
         }
 
         private void ReceiveCallback(IAsyncResult ar)
@@ -72,8 +81,7 @@ namespace Mina.Transport.Socket
             Processor.Remove(this);
         }
 
-        /// <inheritdoc/>
-        protected override void BeginSend(IoBuffer buf)
+        private void BeginSend(IoBuffer buf)
         {
             ArraySegment<Byte> array = buf.GetRemaining();
             try
@@ -90,8 +98,7 @@ namespace Mina.Transport.Socket
             }
         }
 
-        /// <inheritdoc/>
-        protected override void BeginSendFile(Core.File.IFileRegion file)
+        private void BeginSendFile(Core.File.IFileRegion file)
         {
             try
             {

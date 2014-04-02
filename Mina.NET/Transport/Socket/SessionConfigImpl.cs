@@ -4,7 +4,7 @@ namespace Mina.Transport.Socket
 {
     class SessionConfigImpl : AbstractSocketSessionConfig
     {
-        private System.Net.Sockets.Socket _socket;
+        private readonly System.Net.Sockets.Socket _socket;
 
         public SessionConfigImpl(System.Net.Sockets.Socket socket)
         {

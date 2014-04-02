@@ -17,9 +17,6 @@ namespace Mina.Transport.Socket
     /// </summary>
     public abstract class SocketSession : AbstractIoSession
     {
-        public static readonly ITransportMetadata Metadata
-            = new DefaultTransportMetadata("async", "socket", false, true, typeof(IPEndPoint));
-
         private static readonly Object dummy = IoBuffer.Wrap(new Byte[0]);
         private readonly System.Net.Sockets.Socket _socket;
         private readonly EndPoint _localEP;
@@ -68,12 +65,6 @@ namespace Mina.Transport.Socket
             get { return _remoteEP; }
         }
 
-        /// <inheritdoc/>
-        public override ITransportMetadata TransportMetadata
-        {
-            get { return Metadata; }
-        }
-
         /// <summary>
         /// Gets the <see cref="System.Net.Sockets.Socket"/>
         /// associated with this session.
@@ -82,6 +73,21 @@ namespace Mina.Transport.Socket
         {
             get { return _socket; }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to reuse the internal
+        /// <see cref="ReadBuffer"/> as the buffer sent to <see cref="SocketSession.FilterChain"/>
+        /// by <see cref="Core.Filterchain.IoFilterChain.FireMessageReceived(Object)"/>.
+        /// </summary>
+        /// <remarks>
+        /// If any thread model, i.e. an <see cref="Filter.Executor.ExecutorFilter"/>,
+        /// is added before filters that process the incoming <see cref="Core.Buffer.IoBuffer"/>
+        /// in <see cref="Core.Filterchain.IoFilter.MessageReceived(Core.Filterchain.INextFilter, Core.Session.IoSession, Object)"/>,
+        /// this must be set to <code>false</code> since the internal read buffer
+        /// will be reset every time a session begins to receive.
+        /// </remarks>
+        /// <seealso cref="AbstractSocketAcceptor.ReuseBuffer"/>
+        public Boolean ReuseBuffer { get; set; }
 
         /// <summary>
         /// Starts this session.
@@ -137,14 +143,15 @@ namespace Mina.Transport.Socket
                     throw new InvalidOperationException("Don't know how to handle message of type '"
                             + req.Message.GetType().Name + "'.  Are you missing a protocol encoder?");
                 else
-                    BeginSendFile(file);
+                    BeginSendFile(req, file);
+            }
+            else if (buf.HasRemaining)
+            {
+                BeginSend(req, buf);
             }
             else
             {
-                if (buf.HasRemaining)
-                    BeginSend(buf);
-                else
-                    EndSend(0);
+                EndSend(0);
             }
         }
 
@@ -152,13 +159,13 @@ namespace Mina.Transport.Socket
         /// Begins send operation.
         /// </summary>
         /// <param name="buf">the buffer to send</param>
-        protected abstract void BeginSend(IoBuffer buf);
+        protected abstract void BeginSend(IWriteRequest request, IoBuffer buf);
 
         /// <summary>
         /// Begins to send a file.
         /// </summary>
         /// <param name="file">the file to send</param>
-        protected abstract void BeginSendFile(IFileRegion file);
+        protected abstract void BeginSendFile(IWriteRequest request, IFileRegion file);
 
         /// <summary>
         /// Ends send operation.
@@ -234,7 +241,7 @@ namespace Mina.Transport.Socket
             }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
+                this.FilterChain.FireExceptionCaught(ex);
             }
         }
     }
