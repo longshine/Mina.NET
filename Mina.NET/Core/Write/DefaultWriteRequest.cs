@@ -12,13 +12,20 @@ namespace Mina.Core.Write
         private readonly EndPoint _destination;
 
         public DefaultWriteRequest(Object message)
-            : this(message, null)
+            : this(message, null, null)
         { }
 
         public DefaultWriteRequest(Object message, IWriteFuture future)
+            : this(message, future, null)
+        { }
+
+        public DefaultWriteRequest(Object message, IWriteFuture future, EndPoint destination)
         {
+            if (message == null)
+                throw new ArgumentNullException("message");
             _message = message;
             _future = future ?? UnusedFuture.Instance;
+            _destination = destination;
         }
 
         /// <inheritdoc/>
