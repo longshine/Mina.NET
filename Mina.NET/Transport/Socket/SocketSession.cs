@@ -21,20 +21,21 @@ namespace Mina.Transport.Socket
         private readonly System.Net.Sockets.Socket _socket;
         private readonly EndPoint _localEP;
         private readonly EndPoint _remoteEP;
-        private readonly IoProcessor<SocketSession> _processor;
+        private readonly IoProcessor _processor;
         private readonly IoFilterChain _filterChain;
         private Int32 _writing;
         private Object _pendingReceivedMessage = dummy;
 
         /// <summary>
         /// </summary>
-        protected SocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
+        protected SocketSession(IoService service, IoProcessor processor, IoSessionConfig config,
+            System.Net.Sockets.Socket socket, EndPoint localEP, EndPoint remoteEP, Boolean reuseBuffer)
             : base(service)
         {
             _socket = socket;
-            _localEP = socket.LocalEndPoint;
-            _remoteEP = socket.RemoteEndPoint;
-            Config = new SessionConfigImpl(socket);
+            _localEP = localEP;
+            _remoteEP = remoteEP;
+            Config = config;
             if (service.SessionConfig != null)
                 Config.SetAll(service.SessionConfig);
             _processor = processor;

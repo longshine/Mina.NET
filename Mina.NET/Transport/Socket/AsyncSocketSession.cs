@@ -20,14 +20,13 @@ namespace Mina.Transport.Socket
 
         public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket,
             SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
-            : base(service, processor, socket)
+            : base(service, processor, new SessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint, reuseBuffer)
         {
             _readBuffer = readBuffer;
             _readBuffer.SocketAsyncEventArgs.UserToken = this;
             _writeBuffer = writeBuffer;
             _writeBuffer.SocketAsyncEventArgs.UserToken = this;
             _completeHandler = saea_Completed;
-            ReuseBuffer = reuseBuffer;
         }
 
         /// <summary>
