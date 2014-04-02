@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Mina.Core.Future;
 
 namespace Mina.Core.Write
@@ -29,6 +30,12 @@ namespace Mina.Core.Write
         public virtual Object Message
         {
             get { return _inner.Message; }
+        }
+
+        /// <inheritdoc/>
+        public EndPoint Destination
+        {
+            get { return _inner.Destination; }
         }
 
         /// <inheritdoc/>

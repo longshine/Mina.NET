@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Mina.Core.Future;
 using Mina.Core.Session;
 
@@ -8,6 +9,7 @@ namespace Mina.Core.Write
     {
         private readonly Object _message;
         private readonly IWriteFuture _future;
+        private readonly EndPoint _destination;
 
         public DefaultWriteRequest(Object message)
             : this(message, null)
@@ -29,6 +31,12 @@ namespace Mina.Core.Write
         public Object Message
         {
             get { return _message; }
+        }
+
+        /// <inheritdoc/>
+        public EndPoint Destination
+        {
+            get { return _destination; }
         }
 
         /// <inheritdoc/>
