@@ -1,9 +1,27 @@
 ﻿using System;
+using System.Net.Sockets;
+using Mina.Core.Service;
 
 namespace Mina.Transport.Socket
 {
+    /// <summary>
+    /// <see cref="IoConnector"/> for socket transport (TCP/IP).
+    /// </summary>
     public class AsyncSocketConnector : AbstractSocketConnector
     {
+        /// <inheritdoc/>
+        public override ITransportMetadata TransportMetadata
+        {
+            get { return AsyncSocketSession.Metadata; }
+        }
+
+        /// <inheritdoc/>
+        protected override System.Net.Sockets.Socket NewSocket(AddressFamily addressFamily)
+        {
+            return new System.Net.Sockets.Socket(addressFamily, SocketType.Stream, ProtocolType.Tcp);
+        }
+
+        /// <inheritdoc/>
         protected override void BeginConnect(ConnectorContext connector)
         {
             connector.Socket.BeginConnect(connector.RemoteEP, ConnectCallback, connector);

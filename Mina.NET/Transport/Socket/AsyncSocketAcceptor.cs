@@ -9,6 +9,9 @@ using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
+    /// <summary>
+    /// <see cref="IoAcceptor"/> for socket transport (TCP/IP).
+    /// </summary>
     public class AsyncSocketAcceptor : AbstractSocketAcceptor
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(AsyncSocketAcceptor));

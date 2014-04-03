@@ -19,12 +19,6 @@ namespace Mina.Transport.Socket
         }
 
         /// <inheritdoc/>
-        public override ITransportMetadata TransportMetadata
-        {
-            get { return AsyncSocketSession.Metadata; }
-        }
-
-        /// <inheritdoc/>
         public new ISocketSessionConfig SessionConfig
         {
             get { return (ISocketSessionConfig)base.SessionConfig; }
@@ -52,7 +46,7 @@ namespace Mina.Transport.Socket
         /// <inheritdoc/>
         protected override IConnectFuture Connect0(EndPoint remoteEP, EndPoint localEP, Action<IoSession, IConnectFuture> sessionInitializer)
         {
-            System.Net.Sockets.Socket socket = new System.Net.Sockets.Socket(remoteEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            System.Net.Sockets.Socket socket = NewSocket(remoteEP.AddressFamily);
             if (localEP != null)
                 socket.Bind(localEP);
             ConnectorContext ctx = new ConnectorContext(socket, remoteEP, sessionInitializer);
@@ -60,7 +54,8 @@ namespace Mina.Transport.Socket
             return ctx.Future;
         }
 
-        /// <inheritdoc/>
+        protected abstract System.Net.Sockets.Socket NewSocket(AddressFamily addressFamily);
+
         protected abstract void BeginConnect(ConnectorContext connector);
 
         protected void EndConnect(IoSession session, ConnectorContext connector)
@@ -94,7 +89,7 @@ namespace Mina.Transport.Socket
             base.Dispose(disposing);
         }
 
-        public class ConnectorContext : IDisposable
+        protected class ConnectorContext : IDisposable
         {
             private readonly System.Net.Sockets.Socket _socket;
             private readonly EndPoint _remoteEP;
