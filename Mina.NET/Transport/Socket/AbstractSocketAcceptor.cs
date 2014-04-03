@@ -52,7 +52,15 @@ namespace Mina.Transport.Socket
         public Int32 Backlog
         {
             get { return _backlog; }
-            set { _backlog = value; }
+            set
+            {
+                lock (_bindLock)
+                {
+                    if (Active)
+                        throw new InvalidOperationException("Backlog can't be set while the acceptor is bound.");
+                    _backlog = value;
+                }
+            }
         }
 
         /// <summary>
@@ -61,7 +69,15 @@ namespace Mina.Transport.Socket
         public Int32 MaxConnections
         {
             get { return _maxConnections; }
-            set { _maxConnections = value; }
+            set
+            {
+                lock (_bindLock)
+                {
+                    if (Active)
+                        throw new InvalidOperationException("MaxConnections can't be set while the acceptor is bound.");
+                    _maxConnections = value;
+                }
+            }
         }
 
         /// <summary>

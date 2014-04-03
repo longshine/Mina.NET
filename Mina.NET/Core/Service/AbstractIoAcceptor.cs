@@ -14,12 +14,15 @@ namespace Mina.Core.Service
         private readonly List<EndPoint> _defaultLocalEndPoints = new List<EndPoint>();
         private readonly List<EndPoint> _boundEndPoints = new List<EndPoint>();
         private Boolean _disconnectOnUnbind = true;
+        protected Object _bindLock;
 
         /// <summary>
         /// </summary>
         protected AbstractIoAcceptor(IoSessionConfig sessionConfig)
             : base(sessionConfig)
-        { }
+        { 
+            _bindLock = ((ICollection)_boundEndPoints).SyncRoot;
+        }
 
         /// <inheritdoc/>
         public Boolean CloseOnDeactivation
@@ -34,7 +37,7 @@ namespace Mina.Core.Service
             get { return _defaultLocalEndPoints; }
             set
             {
-                lock (((ICollection)_boundEndPoints).SyncRoot)
+                lock (_bindLock)
                 {
                     if (_boundEndPoints.Count > 0)
                         throw new InvalidOperationException("LocalEndPoints can't be set while the acceptor is bound.");
@@ -51,7 +54,7 @@ namespace Mina.Core.Service
             get { return _defaultLocalEndPoints.Count == 0 ? null : _defaultLocalEndPoints[0]; }
             set
             {
-                lock (((ICollection)_boundEndPoints).SyncRoot)
+                lock (_bindLock)
                 {
                     if (_boundEndPoints.Count > 0)
                         throw new InvalidOperationException("LocalEndPoint can't be set while the acceptor is bound.");
@@ -121,7 +124,7 @@ namespace Mina.Core.Service
                 throw new ArgumentException("localEndPoints is empty.", "localEndPoints");
 
             Boolean active = false;
-            lock (((ICollection)_boundEndPoints).SyncRoot)
+            lock (_bindLock)
             {
                 if (_boundEndPoints.Count == 0)
                     active = true;
@@ -161,7 +164,7 @@ namespace Mina.Core.Service
                 throw new ArgumentNullException("localEndPoints");
 
             Boolean deactivate = false;
-            lock (((ICollection)_boundEndPoints).SyncRoot)
+            lock (_bindLock)
             {
                 if (_boundEndPoints.Count == 0)
                     return;
