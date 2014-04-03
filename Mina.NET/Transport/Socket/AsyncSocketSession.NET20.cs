@@ -32,19 +32,49 @@ namespace Mina.Transport.Socket
         /// <inheritdoc/>
         protected override void BeginReceive()
         {
-            Socket.BeginReceive(_readBuffer, 0, _readBuffer.Length, SocketFlags.None, ReceiveCallback, Socket);
+            try
+            {
+                Socket.BeginReceive(_readBuffer, 0, _readBuffer.Length, SocketFlags.None, ReceiveCallback, Socket);
+            }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+            }
         }
 
         /// <inheritdoc/>
         protected override void BeginSend(IWriteRequest request, IoBuffer buf)
         {
-            BeginSend(buf);
+            ArraySegment<Byte> array = buf.GetRemaining();
+            try
+            {
+                Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, new SendingContext(Socket, buf));
+            }
+            catch (ObjectDisposedException)
+            {
+                // ignore
+            }
+            catch (Exception ex)
+            {
+                EndSend(ex);
+            }
         }
 
         /// <inheritdoc/>
         protected override void BeginSendFile(IWriteRequest request, IFileRegion file)
         {
-            BeginSendFile(file);
+            try
+            {
+                Socket.BeginSendFile(file.FullName, SendFileCallback, new SendingContext(Socket, file));
+            }
+            catch (ObjectDisposedException)
+            {
+                // ignore
+            }
+            catch (Exception ex)
+            {
+                EndSend(ex);
+            }
         }
 
         private void ReceiveCallback(IAsyncResult ar)
@@ -55,9 +85,15 @@ namespace Mina.Transport.Socket
             {
                 read = socket.EndReceive(ar);
             }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+                return;
+            }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
+                EndReceive(ex);
+                return;
             }
 
             if (read > 0)
@@ -80,39 +116,6 @@ namespace Mina.Transport.Socket
             Processor.Remove(this);
         }
 
-        private void BeginSend(IoBuffer buf)
-        {
-            ArraySegment<Byte> array = buf.GetRemaining();
-            try
-            {
-                Socket.BeginSend(array.Array, array.Offset, array.Count, SocketFlags.None, SendCallback, new SendingContext(Socket, buf));
-            }
-            catch (ObjectDisposedException)
-            {
-                // ignore
-            }
-            catch (Exception ex)
-            {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
-            }
-        }
-
-        private void BeginSendFile(Core.File.IFileRegion file)
-        {
-            try
-            {
-                Socket.BeginSendFile(file.FullName, SendFileCallback, new SendingContext(Socket, file));
-            }
-            catch (ObjectDisposedException)
-            {
-                // ignore
-            }
-            catch (Exception ex)
-            {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
-            }
-        }
-
         private void SendCallback(IAsyncResult ar)
         {
             SendingContext sc = (SendingContext)ar.AsyncState;
@@ -121,13 +124,14 @@ namespace Mina.Transport.Socket
             {
                 written = sc.socket.EndSend(ar);
             }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+                return;
+            }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
-
-                // closed
-                Processor.Remove(this);
-
+                EndSend(ex);
                 return;
             }
 
@@ -143,13 +147,14 @@ namespace Mina.Transport.Socket
             {
                 sc.socket.EndSendFile(ar);
             }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+                return;
+            }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
-
-                // closed
-                Processor.Remove(this);
-
+                EndSend(ex);
                 return;
             }
 

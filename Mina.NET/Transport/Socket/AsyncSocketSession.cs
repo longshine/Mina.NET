@@ -206,6 +206,11 @@ namespace Mina.Transport.Socket
 
                     return;
                 }
+                else
+                {
+                    // closed
+                    Processor.Remove(this);
+                }
             }
             else
             {
