@@ -209,6 +209,13 @@ namespace Mina.Transport.Socket
                 BeginSend();
         }
 
+        protected void EndSend(Exception ex)
+        {
+            this.FilterChain.FireExceptionCaught(ex);
+            if (Socket.Connected)
+                BeginSend();
+        }
+
         /// <summary>
         /// Begins receive operation.
         /// </summary>
@@ -231,6 +238,13 @@ namespace Mina.Transport.Socket
                 if (Socket.Connected)
                     BeginReceive();
             }
+        }
+
+        protected void EndReceive(Exception ex)
+        {
+            this.FilterChain.FireExceptionCaught(ex);
+            if (Socket.Connected && !ReadSuspended)
+                BeginSend();
         }
 
         private void FireMessageSent(IWriteRequest req)

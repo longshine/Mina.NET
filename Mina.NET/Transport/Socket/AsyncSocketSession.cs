@@ -54,17 +54,6 @@ namespace Mina.Transport.Socket
         /// <inheritdoc/>
         protected override void BeginSend(IWriteRequest request, IoBuffer buf)
         {
-            BeginSend(buf);
-        }
-
-        /// <inheritdoc/>
-        protected override void BeginSendFile(IWriteRequest request, IFileRegion file)
-        {
-            BeginSendFile(file);
-        }
-
-        private void BeginSend(IoBuffer buf)
-        {
             _writeBuffer.Clear();
 
             SocketAsyncEventArgs saea;
@@ -92,42 +81,57 @@ namespace Mina.Transport.Socket
                 saea.Completed += _completeHandler;
             }
 
+            Boolean willRaiseEvent;
             try
             {
-                Boolean willRaiseEvent = Socket.SendAsync(saea);
-                if (!willRaiseEvent)
-                {
-                    ProcessSend(saea);
-                }
+                willRaiseEvent = Socket.SendAsync(saea);
+            }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+                return;
             }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
+                EndSend(ex);
+                return;
+            }
+            if (!willRaiseEvent)
+            {
+                ProcessSend(saea);
             }
         }
 
-        private void BeginSendFile(Core.File.IFileRegion file)
+        /// <inheritdoc/>
+        protected override void BeginSendFile(IWriteRequest request, IFileRegion file)
         {
             SocketAsyncEventArgs saea = _writeBuffer.SocketAsyncEventArgs;
             saea.SendPacketsElements = new SendPacketsElement[] {
                 new SendPacketsElement(file.FullName)
             };
 
+            Boolean willRaiseEvent;
             try
             {
-                Boolean willRaiseEvent = Socket.SendPacketsAsync(saea);
-                if (!willRaiseEvent)
-                {
-                    ProcessSend(saea);
-                }
+                willRaiseEvent = Socket.SendPacketsAsync(saea);
+            }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+                return;
             }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
+                EndSend(ex);
+                return;
+            }
+            if (!willRaiseEvent)
+            {
+                ProcessSend(saea);
             }
         }
 
-        void saea_Completed(object sender, SocketAsyncEventArgs e)
+        void saea_Completed(Object sender, SocketAsyncEventArgs e)
         {
             e.Completed -= _completeHandler;
             ProcessSend(e);
@@ -142,14 +146,10 @@ namespace Mina.Transport.Socket
             if (e.SocketError == SocketError.Success)
             {
                 EndSend(e.BytesTransferred);
-                // TODO e.BytesTransferred == 0
             }
             else
             {
-                ExceptionMonitor.Instance.ExceptionCaught(new SocketException((Int32)e.SocketError));
-
-                // closed
-                Processor.Remove(this);
+                EndSend(new SocketException((Int32)e.SocketError));
             }
         }
 
@@ -157,17 +157,25 @@ namespace Mina.Transport.Socket
         protected override void BeginReceive()
         {
             _readBuffer.Clear();
+
+            Boolean willRaiseEvent;
             try
             {
-                Boolean willRaiseEvent = Socket.ReceiveAsync(_readBuffer.SocketAsyncEventArgs);
-                if (!willRaiseEvent)
-                {
-                    ProcessReceive(_readBuffer.SocketAsyncEventArgs);
-                }
+                willRaiseEvent = Socket.ReceiveAsync(_readBuffer.SocketAsyncEventArgs);
+            }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+                return;
             }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
+                EndReceive(ex);
+                return;
+            }
+            if (!willRaiseEvent)
+            {
+                ProcessReceive(_readBuffer.SocketAsyncEventArgs);
             }
         }
 
@@ -201,11 +209,8 @@ namespace Mina.Transport.Socket
             }
             else
             {
-                ExceptionMonitor.Instance.ExceptionCaught(new SocketException((Int32)e.SocketError));
+                EndReceive(new SocketException((Int32)e.SocketError));
             }
-
-            // closed
-            Processor.Remove(this);
         }
     }
 }
