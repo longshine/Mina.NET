@@ -162,7 +162,7 @@ namespace Mina.Transport.Socket
             EndSend((Int32)sc.file.Length);
         }
 
-        class SendingContext
+        internal class SendingContext
         {
             public readonly System.Net.Sockets.Socket socket;
             public readonly IoBuffer buffer;

@@ -82,10 +82,22 @@
     <Compile Include="Transport\Loopback\LoopbackEventOrderTest.cs" />
     <Compile Include="Transport\Loopback\LoopbackBindTest.cs" />
     <Compile Include="Transport\Loopback\LoopbackConnectorTest.cs" />
+    <Compile Include="Transport\Socket\DatagramBindTest.cs" />
+    <Compile Include="Transport\Socket\DatagramConfigTest.cs" />
+    <Compile Include="Transport\Socket\DatagramConnectorTest.cs" />
+    <Compile Include="Transport\Socket\DatagramRecyclerTest.cs" />
+    <Compile Include="Transport\Socket\DatagramSessionIdleTest.cs" />
+    <Compile Include="Transport\Socket\DatagramTrafficControlTest.cs" />
     <Compile Include="Transport\Socket\SocketBindTest.cs" />
     <Compile Include="Transport\Socket\SocketConnectorTest.cs" />
-    <Compile Include="Transport\Socket\SocketTrafficControlTest.cs" />
     <Compile Include="Transport\Socket\SocketFileTest.cs" />
+    <Compile Include="Transport\Socket\SocketTrafficControlTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mina.NET\Mina.NET20.csproj">
+      <Project>{28ABBF94-0584-4254-A8B4-4843E6F4E867}</Project>
+      <Name>Mina.NET20</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="测试引用\" />
@@ -96,12 +108,6 @@
       <Link>TempCert.cer</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Mina.NET\Mina.NET20.csproj">
-      <Project>{28ABBF94-0584-4254-A8B4-4843E6F4E867}</Project>
-      <Name>Mina.NET20</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

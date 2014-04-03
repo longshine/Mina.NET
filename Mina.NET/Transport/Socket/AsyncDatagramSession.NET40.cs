@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Sockets;
 using Mina.Core.Buffer;
 using Mina.Core.Service;
-using Mina.Util;
 
 namespace Mina.Transport.Socket
 {

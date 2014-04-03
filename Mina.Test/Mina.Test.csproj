@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mina.NET\Mina.NET.csproj">
-      <Project>{AA9ECC7C-2018-419D-BD83-49BE39D92D6E}</Project>
+      <Project>{28ABBF94-0584-4254-A8B4-4843E6F4E867}</Project>
       <Name>Mina.NET</Name>
     </ProjectReference>
   </ItemGroup>
