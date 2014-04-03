@@ -57,7 +57,7 @@ namespace Mina.Transport
         }
 
         [TestMethod]
-        public void TestConnectFutureFailureTiming()
+        public virtual void TestConnectFutureFailureTiming()
         {
             Int32 port = 12345;
             StringBuilder buf = new StringBuilder();
@@ -84,7 +84,7 @@ namespace Mina.Transport
                 }
                 Assert.AreEqual("1", buf.ToString());
             }
-            catch (Exception)
+            finally
             {
                 IDisposable disposable = connector as IDisposable;
                 if (disposable != null)

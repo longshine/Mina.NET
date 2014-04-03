@@ -82,11 +82,17 @@
     <Compile Include="Transport\Loopback\LoopbackEventOrderTest.cs" />
     <Compile Include="Transport\Loopback\LoopbackBindTest.cs" />
     <Compile Include="Transport\Loopback\LoopbackConnectorTest.cs" />
+    <Compile Include="Transport\Socket\DatagramBindTest.cs" />
+    <Compile Include="Transport\Socket\DatagramConfigTest.cs" />
+    <Compile Include="Transport\Socket\DatagramConnectorTest.cs" />
+    <Compile Include="Transport\Socket\DatagramRecyclerTest.cs" />
+    <Compile Include="Transport\Socket\DatagramSessionIdleTest.cs" />
+    <Compile Include="Transport\Socket\DatagramTrafficControlTest.cs" />
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBufferTest.cs" />
     <Compile Include="Transport\Socket\SocketBindTest.cs" />
     <Compile Include="Transport\Socket\SocketConnectorTest.cs" />
-    <Compile Include="Transport\Socket\SocketTrafficControlTest.cs" />
     <Compile Include="Transport\Socket\SocketFileTest.cs" />
+    <Compile Include="Transport\Socket\SocketTrafficControlTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mina.NET\Mina.NET.csproj">

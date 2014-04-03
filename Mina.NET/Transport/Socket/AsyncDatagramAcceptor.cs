@@ -19,12 +19,15 @@ namespace Mina.Transport.Socket
     {
         private static readonly IoSessionRecycler DefaultRecycler = new ExpiringSessionRecycler();
 
+        private readonly IdleStatusChecker _idleStatusChecker;
+        private Boolean _disposed;
         private IoSessionRecycler _sessionRecycler = DefaultRecycler;
         private readonly Dictionary<EndPoint, SocketContext> _listenSockets = new Dictionary<EndPoint, SocketContext>();
 
         public AsyncDatagramAcceptor()
             : base(new DefaultDatagramSessionConfig())
         {
+            _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
             ReuseBuffer = true;
         }
 
@@ -52,7 +55,35 @@ namespace Mina.Transport.Socket
         public IoSessionRecycler SessionRecycler
         {
             get { return _sessionRecycler; }
-            set { _sessionRecycler = value; }
+            set
+            {
+                lock (_bindLock)
+                {
+                    if (Active)
+                        throw new InvalidOperationException("SessionRecycler can't be set while the acceptor is bound.");
+
+                    _sessionRecycler = value == null ? DefaultRecycler : value;
+                }
+            }
+        }
+
+        public IoSession NewSession(EndPoint remoteEP, EndPoint localEP)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException("AsyncDatagramAcceptor");
+            if (remoteEP == null)
+                throw new ArgumentNullException("remoteEP");
+
+            SocketContext ctx;
+            if (!_listenSockets.TryGetValue(localEP, out ctx))
+                throw new ArgumentException("Unknown local endpoint: " + localEP, "localEP");
+
+            lock (_bindLock)
+            {
+                if (!Active)
+                    throw new InvalidOperationException("Can't create a session from a unbound service.");
+                return NewSessionWithoutLock(remoteEP, ctx);
+            }
         }
 
         /// <inheritdoc/>
@@ -97,6 +128,8 @@ namespace Mina.Transport.Socket
                 BeginReceive(ctx);
             }
 
+            _idleStatusChecker.Start();
+
             return newListeners.Keys;
         }
 
@@ -111,6 +144,33 @@ namespace Mina.Transport.Socket
                 _listenSockets.Remove(ep);
                 ctx.Close();
             }
+
+            if (_listenSockets.Count == 0)
+            {
+                _idleStatusChecker.Stop();
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(Boolean disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if (_listenSockets.Count > 0)
+                    {
+                        foreach (SocketContext ctx in _listenSockets.Values)
+                        {
+                            ctx.Close();
+                            ((IDisposable)ctx.Socket).Dispose();
+                        }
+                    }
+                    _idleStatusChecker.Dispose();
+                }
+                _disposed = true;
+            }
+            base.Dispose(disposing);
         }
 
         private void EndReceive(SocketContext ctx, IoBuffer buf, EndPoint remoteEP)
@@ -158,7 +218,6 @@ namespace Mina.Transport.Socket
             public readonly System.Net.Sockets.Socket _socket;
             private readonly ConcurrentQueue<AsyncDatagramSession> _flushingSessions = new ConcurrentQueue<AsyncDatagramSession>();
             private Int32 _writing;
-            private AsyncDatagramSession _currentWriteSession;
 
             public System.Net.Sockets.Socket Socket { get { return _socket; } }
 
@@ -185,40 +244,37 @@ namespace Mina.Transport.Socket
             {
                 if (Interlocked.CompareExchange(ref _writing, 1, 0) > 0)
                     return;
-                BeginSend();
+                BeginSend(null);
             }
 
-            private void BeginSend()
+            private void BeginSend(AsyncDatagramSession session)
             {
-                AsyncDatagramSession session = _currentWriteSession;
-                if (session == null)
+                IWriteRequest req;
+
+                while (true)
                 {
-                    if (!_flushingSessions.TryDequeue(out session))
+                    if (session == null && !_flushingSessions.TryDequeue(out session))
                     {
                         Interlocked.Exchange(ref _writing, 0);
                         return;
                     }
 
-                    _currentWriteSession = session;
-                }
-
-                BeginSend(session);
-            }
-
-            private void BeginSend(AsyncDatagramSession session)
-            {
-                IWriteRequest req = session.CurrentWriteRequest;
-                if (req == null)
-                {
-                    req = session.WriteRequestQueue.Poll(session);
-
+                    req = session.CurrentWriteRequest;
                     if (req == null)
                     {
-                        // TODO what?
-                        return;
+                        req = session.WriteRequestQueue.Poll(session);
+
+                        if (req == null)
+                        {
+                            session.UnscheduledForFlush();
+                            session = null;
+                            continue;
+                        }
+
+                        session.CurrentWriteRequest = req;
                     }
 
-                    session.CurrentWriteRequest = req;
+                    break;
                 }
 
                 IoBuffer buf = req.Message as IoBuffer;
@@ -272,7 +328,7 @@ namespace Mina.Transport.Socket
                     }
                 }
 
-                BeginSend();
+                BeginSend(session);
             }
 
             private void EndSend(AsyncDatagramSession session, Exception ex)
@@ -281,7 +337,7 @@ namespace Mina.Transport.Socket
                 if (req != null)
                     req.Future.Exception = ex;
                 session.FilterChain.FireExceptionCaught(ex);
-                BeginSend();
+                BeginSend(session);
             }
         }
 

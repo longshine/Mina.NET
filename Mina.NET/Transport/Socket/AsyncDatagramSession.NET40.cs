@@ -159,7 +159,8 @@ namespace Mina.Transport.Socket
                     return;
                 }
             }
-            else
+            else if (e.SocketError != SocketError.OperationAborted
+                && e.SocketError != SocketError.Interrupted)
             {
                 EndReceive(new SocketException((Int32)e.SocketError));
             }
