@@ -141,8 +141,8 @@ namespace Mina.Transport.Socket
             {
                 IFileRegion file = req.Message as IFileRegion;
                 if (file == null)
-                    throw new InvalidOperationException("Don't know how to handle message of type '"
-                            + req.Message.GetType().Name + "'.  Are you missing a protocol encoder?");
+                    EndSend(new InvalidOperationException("Don't know how to handle message of type '"
+                            + req.Message.GetType().Name + "'.  Are you missing a protocol encoder?"));
                 else
                     BeginSendFile(req, file);
             }
@@ -211,6 +211,9 @@ namespace Mina.Transport.Socket
 
         protected void EndSend(Exception ex)
         {
+            IWriteRequest req = CurrentWriteRequest;
+            if (req != null)
+                req.Future.Exception = ex;
             this.FilterChain.FireExceptionCaught(ex);
             if (Socket.Connected)
                 BeginSend();
