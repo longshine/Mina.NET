@@ -52,7 +52,7 @@ namespace Mina.Transport.Serial
                 }
                 catch (Exception ex)
                 {
-                    ExceptionMonitor.Instance.ExceptionCaught(ex);
+                    this.FilterChain.FireExceptionCaught(ex);
                 }
             }
         }
@@ -168,7 +168,7 @@ namespace Mina.Transport.Serial
             }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
+                this.FilterChain.FireExceptionCaught(ex);
             }
         }
 
@@ -181,7 +181,7 @@ namespace Mina.Transport.Serial
             }
             catch (Exception ex)
             {
-                ExceptionMonitor.Instance.ExceptionCaught(ex);
+                this.FilterChain.FireExceptionCaught(ex);
 
                 // closed
                 Processor.Remove(this);
@@ -216,7 +216,7 @@ namespace Mina.Transport.Serial
                     }
                     catch (Exception ex)
                     {
-                        ExceptionMonitor.Instance.ExceptionCaught(ex);
+                        this.FilterChain.FireExceptionCaught(ex);
                     }
 
                     // And set it back to its position
