@@ -9,5 +9,11 @@ namespace Mina.Transport.Socket
         public override Int32? ReceiveBufferSize { get; set; }
 
         public override Int32? SendBufferSize { get; set; }
+
+        public override Boolean? ExclusiveAddressUse { get; set; }
+
+        public override Boolean? ReuseAddress { get; set; }
+
+        public override Int32? TrafficClass { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 
 namespace Mina.Transport.Socket
 {
@@ -23,6 +24,68 @@ namespace Mina.Transport.Socket
             set { if (value.HasValue) _socket.SendBufferSize = value.Value; }
         }
 
+        public override Boolean? ExclusiveAddressUse
+        {
+            get { return _socket.ExclusiveAddressUse; }
+            set { if (value.HasValue) _socket.ExclusiveAddressUse = value.Value; }
+        }
+
+        public override Boolean? ReuseAddress
+        {
+            get
+            {
+                return Convert.ToBoolean(_socket.GetSocketOption(
+                    SocketOptionLevel.Socket, SocketOptionName.ReuseAddress));
+            }
+            set
+            {
+                if (value.HasValue)
+                    _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, value.Value);
+            }
+        }
+
+        public override Int32? TrafficClass
+        {
+            get
+            {
+                return Convert.ToInt32(_socket.GetSocketOption(
+                    SocketOptionLevel.Socket, SocketOptionName.TypeOfService));
+            }
+            set
+            {
+                if (value.HasValue)
+                    _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.TypeOfService, value.Value);
+            }
+        }
+
+        public override Boolean? KeepAlive
+        {
+            get
+            {
+                return Convert.ToBoolean(_socket.GetSocketOption(
+                    SocketOptionLevel.Socket, SocketOptionName.KeepAlive));
+            }
+            set
+            {
+                if (value.HasValue)
+                    _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, value.Value);
+            }
+        }
+
+        public override Boolean? OobInline
+        {
+            get
+            {
+                return Convert.ToBoolean(_socket.GetSocketOption(
+                    SocketOptionLevel.Socket, SocketOptionName.OutOfBandInline));
+            }
+            set
+            {
+                if (value.HasValue)
+                    _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.OutOfBandInline, value.Value);
+            }
+        }
+
         public override Boolean? NoDelay
         {
             get { return _socket.NoDelay; }
@@ -37,15 +100,9 @@ namespace Mina.Transport.Socket
                 if (value.HasValue)
                 {
                     if (value < 0)
-                    {
-                        _socket.LingerState.Enabled = false;
-                        _socket.LingerState.LingerTime = 0;
-                    }
+                        _socket.LingerState = new LingerOption(false, 0);
                     else
-                    {
-                        _socket.LingerState.Enabled = true;
-                        _socket.LingerState.LingerTime = value.Value;
-                    }
+                        _socket.LingerState = new LingerOption(true, value.Value);
                 }
             }
         }

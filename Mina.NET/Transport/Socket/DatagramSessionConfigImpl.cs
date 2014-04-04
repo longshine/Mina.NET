@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 
 namespace Mina.Transport.Socket
 {
@@ -27,6 +28,40 @@ namespace Mina.Transport.Socket
         {
             get { return _socket.SendBufferSize; }
             set { if (value.HasValue) _socket.SendBufferSize = value.Value; }
+        }
+
+        public override Boolean? ExclusiveAddressUse
+        {
+            get { return _socket.ExclusiveAddressUse; }
+            set { if (value.HasValue) _socket.ExclusiveAddressUse = value.Value; }
+        }
+
+        public override Boolean? ReuseAddress
+        {
+            get
+            {
+                return Convert.ToBoolean(_socket.GetSocketOption(
+                    SocketOptionLevel.Socket, SocketOptionName.ReuseAddress));
+            }
+            set
+            {
+                if (value.HasValue)
+                    _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, value.Value);
+            }
+        }
+
+        public override Int32? TrafficClass
+        {
+            get
+            {
+                return Convert.ToInt32(_socket.GetSocketOption(
+                    SocketOptionLevel.Socket, SocketOptionName.TypeOfService));
+            }
+            set
+            {
+                if (value.HasValue)
+                    _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.TypeOfService, value.Value);
+            }
         }
     }
 }

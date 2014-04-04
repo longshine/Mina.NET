@@ -17,6 +17,12 @@ namespace Mina.Transport.Socket
                 ReceiveBufferSize = cfg.ReceiveBufferSize;
             if (cfg.SendBufferSize.HasValue)
                 SendBufferSize = cfg.SendBufferSize;
+            if (cfg.ReuseAddress.HasValue)
+                ReuseAddress = cfg.ReuseAddress;
+            if (cfg.TrafficClass.HasValue)
+                TrafficClass = cfg.TrafficClass;
+            if (cfg.ExclusiveAddressUse.HasValue)
+                ExclusiveAddressUse = cfg.ExclusiveAddressUse;
         }
 
         public abstract Boolean? EnableBroadcast { get; set; }
@@ -24,5 +30,11 @@ namespace Mina.Transport.Socket
         public abstract Int32? ReceiveBufferSize { get; set; }
 
         public abstract Int32? SendBufferSize { get; set; }
+
+        public abstract Boolean? ReuseAddress { get; set; }
+
+        public abstract Int32? TrafficClass { get; set; }
+
+        public abstract Boolean? ExclusiveAddressUse { get; set; }
     }
 }
