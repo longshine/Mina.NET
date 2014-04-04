@@ -4,7 +4,7 @@ namespace Mina.Core.Session
 {
     /// <summary>
     ///  A connectionless transport can recycle existing sessions by assigning an
-    ///  <see cref="IoSessionRecycler"/> to an <see cref="IoService"/>.
+    ///  <see cref="IoSessionRecycler"/> to an <see cref="Core.Service.IoService"/>.
     /// </summary>
     public interface IoSessionRecycler
     {

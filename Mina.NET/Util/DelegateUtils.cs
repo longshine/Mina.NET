@@ -2,7 +2,7 @@
 
 namespace Mina.Util
 {
-    static class DelegateUtils
+    public static class DelegateUtils
     {
         public static void SaveInvoke(EventHandler handler, Object sender)
         {

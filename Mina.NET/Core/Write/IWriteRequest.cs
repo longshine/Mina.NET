@@ -5,13 +5,13 @@ using Mina.Core.Future;
 namespace Mina.Core.Write
 {
     /// <summary>
-    /// Represents write request fired by <see cref="IoSession.Write(Object)"/>.
+    /// Represents write request fired by <see cref="Core.Session.IoSession.Write(Object)"/>.
     /// </summary>
     public interface IWriteRequest
     {
         /// <summary>
         /// Gets the <see cref="IWriteRequest"/> which was requested originally,
-        /// which is not transformed by any <see cref="IoFilter"/>.
+        /// which is not transformed by any <see cref="Core.Filterchain.IoFilter"/>.
         /// </summary>
         IWriteRequest OriginalRequest { get; }
         /// <summary>

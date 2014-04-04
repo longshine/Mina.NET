@@ -77,7 +77,7 @@ namespace Mina.Transport.Socket
 
         /// <summary>
         /// Gets or sets a value indicating whether to reuse the internal
-        /// <see cref="ReadBuffer"/> as the buffer sent to <see cref="SocketSession.FilterChain"/>
+        /// read buffer as the buffer sent to <see cref="SocketSession.FilterChain"/>
         /// by <see cref="Core.Filterchain.IoFilterChain.FireMessageReceived(Object)"/>.
         /// </summary>
         /// <remarks>
@@ -159,12 +159,14 @@ namespace Mina.Transport.Socket
         /// <summary>
         /// Begins send operation.
         /// </summary>
+        /// <param name="request">the current write request</param>
         /// <param name="buf">the buffer to send</param>
         protected abstract void BeginSend(IWriteRequest request, IoBuffer buf);
 
         /// <summary>
         /// Begins to send a file.
         /// </summary>
+        /// <param name="request">the current write request</param>
         /// <param name="file">the file to send</param>
         protected abstract void BeginSendFile(IWriteRequest request, IFileRegion file);
 
