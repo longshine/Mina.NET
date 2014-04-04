@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Mina.Example.SumUp.Server</StartupObject>
+    <StartupObject>Mina.Example.SumUp.Client</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

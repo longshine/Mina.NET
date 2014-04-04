@@ -2,6 +2,7 @@
 
 namespace Mina.Example.SumUp.Message
 {
+    [Serializable]
     class AddMessage : AbstractMessage
     {
         public Int32 Value { get; set; }

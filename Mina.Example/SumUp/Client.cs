@@ -6,6 +6,7 @@ using Mina.Core.Session;
 using Mina.Example.SumUp.Codec;
 using Mina.Example.SumUp.Message;
 using Mina.Filter.Codec;
+using Mina.Filter.Codec.Serialization;
 using Mina.Filter.Logging;
 using Mina.Transport.Socket;
 
@@ -15,6 +16,9 @@ namespace Mina.Example.SumUp
     {
         private static readonly int PORT = 8080;
         private static readonly long CONNECT_TIMEOUT = 30 * 1000L; // 30 seconds
+
+        // Set this to false to use object serialization instead of custom codec.
+        private static readonly Boolean USE_CUSTOM_CODEC = false;
 
         static void Main(string[] args)
         {
@@ -36,8 +40,16 @@ namespace Mina.Example.SumUp
             // Configure the service.
             connector.ConnectTimeoutInMillis = CONNECT_TIMEOUT;
 
-            connector.FilterChain.AddLast("codec", new ProtocolCodecFilter(
-                                    new SumUpProtocolCodecFactory(false)));
+            if (USE_CUSTOM_CODEC)
+            {
+                connector.FilterChain.AddLast("codec",
+                    new ProtocolCodecFilter(new SumUpProtocolCodecFactory(false)));
+            }
+            else
+            {
+                connector.FilterChain.AddLast("codec",
+                    new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
+            }
 
             connector.FilterChain.AddLast("logger", new LoggingFilter());
 
@@ -55,7 +67,7 @@ namespace Mina.Example.SumUp
 
             connector.ExceptionCaught += (s, e) =>
             {
-                Console.WriteLine(e);
+                Console.WriteLine(e.Exception);
                 e.Session.Close(true);
             };
 

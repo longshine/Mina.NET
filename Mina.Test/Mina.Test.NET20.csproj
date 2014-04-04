@@ -62,6 +62,7 @@
     <Compile Include="Core\IoFilterChainTest.cs" />
     <Compile Include="Filter\Buffer\BufferedWriteFilterTest.cs" />
     <Compile Include="Filter\Codec\CumulativeProtocolDecoderTest.cs" />
+    <Compile Include="Filter\Codec\Serialization\ObjectSerializationTest.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineDecoderTest.cs" />
     <Compile Include="Filter\Codec\TextLine\TextLineEncoderTest.cs" />
     <Compile Include="Filter\Executor\ExecutorFilterRegressionTest.cs" />

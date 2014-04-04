@@ -4,6 +4,7 @@ using Mina.Core.Session;
 using Mina.Example.SumUp.Codec;
 using Mina.Example.SumUp.Message;
 using Mina.Filter.Codec;
+using Mina.Filter.Codec.Serialization;
 using Mina.Filter.Logging;
 using Mina.Transport.Socket;
 
@@ -14,12 +15,23 @@ namespace Mina.Example.SumUp
         private static readonly int SERVER_PORT = 8080;
         private static readonly String SUM_KEY = "sum";
 
+        // Set this to false to use object serialization instead of custom codec.
+        private static readonly Boolean USE_CUSTOM_CODEC = false;
+
         static void Main(string[] args)
         {
             AsyncSocketAcceptor acceptor = new AsyncSocketAcceptor();
 
-            acceptor.FilterChain.AddLast("codec", new ProtocolCodecFilter(
-                                    new SumUpProtocolCodecFactory(true)));
+            if (USE_CUSTOM_CODEC)
+            {
+                acceptor.FilterChain.AddLast("codec",
+                    new ProtocolCodecFilter(new SumUpProtocolCodecFactory(true)));
+            }
+            else
+            {
+                acceptor.FilterChain.AddLast("codec",
+                    new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
+            }
 
             acceptor.FilterChain.AddLast("logger", new LoggingFilter());
 

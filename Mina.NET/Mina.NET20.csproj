@@ -131,6 +131,9 @@
     <Compile Include="Filter\Codec\ProtocolDecoderAdapter.cs" />
     <Compile Include="Filter\Codec\ProtocolEncoderAdapter.cs" />
     <Compile Include="Filter\Codec\RecoverableProtocolDecoderException.cs" />
+    <Compile Include="Filter\Codec\Serialization\ObjectSerializationCodecFactory.cs" />
+    <Compile Include="Filter\Codec\Serialization\ObjectSerializationDecoder.cs" />
+    <Compile Include="Filter\Codec\Serialization\ObjectSerializationEncoder.cs" />
     <Compile Include="Filter\Codec\StateMachine\ConsumeToCrLfDecodingState.cs" />
     <Compile Include="Filter\Codec\StateMachine\ConsumeToDynamicTerminatorDecodingState.cs" />
     <Compile Include="Filter\Codec\StateMachine\ConsumeToEndOfSessionDecodingState.cs" />
