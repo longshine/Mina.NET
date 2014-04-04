@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Mina.Example.Udp.MemMonClient</StartupObject>
+    <StartupObject>Mina.Example.Udp.MemoryMonitor</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

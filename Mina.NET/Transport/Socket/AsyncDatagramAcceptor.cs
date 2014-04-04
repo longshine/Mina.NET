@@ -31,6 +31,11 @@ namespace Mina.Transport.Socket
             ReuseBuffer = true;
         }
 
+        public new IDatagramSessionConfig SessionConfig
+        {
+            get { return (IDatagramSessionConfig)base.SessionConfig; }
+        }
+
         /// <inheritdoc/>
         public override ITransportMetadata TransportMetadata
         {

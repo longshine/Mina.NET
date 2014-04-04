@@ -19,6 +19,7 @@ namespace Mina.Example.Udp
             AsyncDatagramAcceptor acceptor = new AsyncDatagramAcceptor();
 
             acceptor.FilterChain.AddLast("logger", new LoggingFilter());
+            acceptor.SessionConfig.ReuseAddress = true;
 
             acceptor.ExceptionCaught += (s, e) =>
             {

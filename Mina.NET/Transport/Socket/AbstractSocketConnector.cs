@@ -12,8 +12,8 @@ namespace Mina.Transport.Socket
     {
         private readonly AsyncSocketProcessor _processor;
 
-        protected AbstractSocketConnector()
-            : base(new DefaultSocketSessionConfig())
+        protected AbstractSocketConnector(IoSessionConfig sessionConfig)
+            : base(sessionConfig)
         {
             _processor = new AsyncSocketProcessor(() => ManagedSessions.Values);
         }

@@ -22,6 +22,11 @@ namespace Mina.Transport.Serial
             _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
         }
 
+        public new ISerialSessionConfig SessionConfig
+        {
+            get { return (ISerialSessionConfig)base.SessionConfig; }
+        }
+
         /// <inheritdoc/>
         public override ITransportMetadata TransportMetadata
         {

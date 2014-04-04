@@ -9,6 +9,15 @@ namespace Mina.Transport.Socket
     /// </summary>
     public class AsyncSocketConnector : AbstractSocketConnector
     {
+        public AsyncSocketConnector()
+            : base(new DefaultSocketSessionConfig())
+        { }
+
+        public new ISocketSessionConfig SessionConfig
+        {
+            get { return (ISocketSessionConfig)base.SessionConfig; }
+        }
+
         /// <inheritdoc/>
         public override ITransportMetadata TransportMetadata
         {
