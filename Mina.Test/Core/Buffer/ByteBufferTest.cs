@@ -96,7 +96,11 @@ namespace Mina.Core.Buffer
             // Test reading an object.
             buf.Clear();
             Object o2 = buf.GetObject();
+#if !NETFX_CORE
+            Assert.IsInstanceOf(o.GetType(), o2);
+#else
             Assert.IsInstanceOfType(o2, o.GetType());
+#endif
             List<Object> l2 = (List<Object>)o2;
             Assert.AreEqual(o.Count, l2.Count);
             for (Int32 i = 0; i < o.Count; i++)
