@@ -17,12 +17,13 @@ Features
 Mina.NET is a simple yet full-featured network application framework which provides:
 
 * Unified API for various transport types:
-  - TCP/IP async socket
-  - Serial communication (Working in progrss)
+  - TCP/IP & UDP/IP via .NET asynchronous socket
+  - Serial communication (RS232)
+  - Loopback (in-application pipe) communication
   - You can implement your own!
 * Filter interface as an extension point;
 * Low-level and high-level API:
-  - Low-level: uses ByteBuffers
+  - Low-level: uses IoBuffers
   - High-level: uses user-defined message objects and codecs
 * Highly customizable thread model:
   - Single thread
@@ -64,7 +65,7 @@ Quick Start
   acceptor.Bind(new IPEndPoint(IPAddress.Any, 8080));
 ```
 
-See http://mina.apache.org/mina-project/userguide/user-guide-toc.html for more.
+See https://mina.codeplex.com/documentation for more.
 
 License
 -------
