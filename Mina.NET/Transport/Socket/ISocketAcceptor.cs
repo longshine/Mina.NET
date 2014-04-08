@@ -8,6 +8,7 @@ namespace Mina.Transport.Socket
     /// </summary>
     public interface ISocketAcceptor : IoAcceptor
     {
+        new ISocketSessionConfig SessionConfig { get; }
         Boolean ReuseAddress { get; set; }
         /// <summary>
         /// Gets or sets the size of the backlog. This can only be set when this class is not bound.

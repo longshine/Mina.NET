@@ -7,7 +7,7 @@ namespace Mina.Transport.Socket
     /// <summary>
     /// <see cref="IoConnector"/> for socket transport (TCP/IP).
     /// </summary>
-    public class AsyncSocketConnector : AbstractSocketConnector
+    public class AsyncSocketConnector : AbstractSocketConnector, ISocketConnector
     {
         public AsyncSocketConnector()
             : base(new DefaultSocketSessionConfig())

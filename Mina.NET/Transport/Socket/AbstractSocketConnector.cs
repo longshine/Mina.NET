@@ -8,7 +8,7 @@ using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
-    public abstract class AbstractSocketConnector : AbstractIoConnector, ISocketConnector
+    public abstract class AbstractSocketConnector : AbstractIoConnector
     {
         private readonly AsyncSocketProcessor _processor;
 
@@ -16,12 +16,6 @@ namespace Mina.Transport.Socket
             : base(sessionConfig)
         {
             _processor = new AsyncSocketProcessor(() => ManagedSessions.Values);
-        }
-
-        /// <inheritdoc/>
-        public new ISocketSessionConfig SessionConfig
-        {
-            get { return (ISocketSessionConfig)base.SessionConfig; }
         }
 
         /// <summary>
