@@ -40,8 +40,8 @@ namespace Mina.Transport.Loopback
             future.Await();
             future.Session.CloseFuture.Await();
             acceptor.Unbind();
-            ((IDisposable)acceptor).Dispose();
-            ((IDisposable)connector).Dispose();
+            acceptor.Dispose();
+            connector.Dispose();
 
             // sessionClosed() might not be invoked yet
             // even if the connection is closed.
@@ -75,8 +75,8 @@ namespace Mina.Transport.Loopback
             future.Await();
             future.Session.CloseFuture.Await();
             acceptor.Unbind();
-            ((IDisposable)acceptor).Dispose();
-            ((IDisposable)connector).Dispose();
+            acceptor.Dispose();
+            connector.Dispose();
 
             // sessionClosed() might not be invoked yet
             // even if the connection is closed.

@@ -38,7 +38,7 @@ namespace Mina.Filter.Codec.Serialization
         /// <summary>
         /// Gets or sets the allowed maximum size of the object to be decoded.
         /// If the size of the object to be decoded exceeds this value, this encoder
-        /// will throw a <see cref="BufferDataException"/>.  The default value
+        /// will throw a <see cref="Core.Buffer.BufferDataException"/>.  The default value
         /// is <code>1048576</code> (1MB).
         /// </summary>
         public Int32 DecoderMaxObjectSize

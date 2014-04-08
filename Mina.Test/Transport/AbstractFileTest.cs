@@ -112,15 +112,11 @@ namespace Mina.Transport
             {
                 try
                 {
-                    IDisposable disposable = connector as IDisposable;
-                    if (disposable != null)
-                        disposable.Dispose();
+                    connector.Dispose();
                 }
                 finally
                 {
-                    IDisposable disposable = acceptor as IDisposable;
-                    if (disposable != null)
-                        disposable.Dispose();
+                    acceptor.Dispose();
                 }
             }
         }

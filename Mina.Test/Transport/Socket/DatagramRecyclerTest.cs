@@ -37,10 +37,8 @@ namespace Mina.Transport.Socket
         [TestCleanup]
         public void TearDown()
         {
-            IDisposable disp = (IDisposable)acceptor;
-            disp.Dispose();
-            disp = (IDisposable)connector;
-            disp.Dispose();
+            acceptor.Dispose();
+            connector.Dispose();
         }
 
         [TestMethod]

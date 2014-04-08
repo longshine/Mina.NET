@@ -50,9 +50,7 @@ namespace Mina.Transport
             finally
             {
                 acceptor.Unbind();
-                IDisposable disposable = acceptor as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
+                acceptor.Dispose();
             }
         }
 
@@ -86,9 +84,7 @@ namespace Mina.Transport
             }
             finally
             {
-                IDisposable disposable = connector as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
+                connector.Dispose();
             }
         }
 
@@ -135,15 +131,11 @@ namespace Mina.Transport
             {
                 try
                 {
-                    IDisposable disposable = connector as IDisposable;
-                    if (disposable != null)
-                        disposable.Dispose();
+                    connector.Dispose();
                 }
                 finally
                 {
-                    IDisposable disposable = acceptor as IDisposable;
-                    if (disposable != null)
-                        disposable.Dispose();
+                    acceptor.Dispose();
                 }
             }
         }

@@ -36,9 +36,7 @@ namespace Mina.Transport
         public void TearDown()
         {
             acceptor.Unbind();
-            IDisposable disposable = acceptor as IDisposable;
-            if (disposable != null)
-                disposable.Dispose();
+            acceptor.Dispose();
             acceptor.DefaultLocalEndPoint = null;
         }
 

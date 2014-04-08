@@ -10,7 +10,7 @@ namespace Mina.Core.Service
     /// Base interface for all <see cref="IoAcceptor"/>s and <see cref="IoConnector"/>s
     /// that provide I/O service and manage <see cref="IoSession"/>s.
     /// </summary>
-    public interface IoService
+    public interface IoService : IDisposable
     {
         /// <summary>
         /// Gets the <see cref="ITransportMetadata"/> that this service runs on.
