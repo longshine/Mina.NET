@@ -42,7 +42,7 @@ namespace Mina.Core.Service
         /// </summary>
         IoSessionConfig SessionConfig { get; }
         /// <summary>
-        /// Sets the <see cref="IoFilterChainBuilder"/> which will build the
+        /// Gets or sets the <see cref="IoFilterChainBuilder"/> which will build the
         /// <see cref="IoFilterChain"/> of all <see cref="IoSession"/>s which is created by this service.
         /// </summary>
         IoFilterChainBuilder FilterChainBuilder { get; set; }
