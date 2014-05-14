@@ -147,9 +147,16 @@ namespace Mina.Transport.Socket
             {
                 EndSend(e.BytesTransferred);
             }
-            else
+            else if (e.SocketError != SocketError.OperationAborted
+                && e.SocketError != SocketError.Interrupted
+                && e.SocketError != SocketError.ConnectionReset)
             {
                 EndSend(new SocketException((Int32)e.SocketError));
+            }
+            else
+            {
+                // closed
+                Processor.Remove(this);
             }
         }
 
@@ -213,9 +220,15 @@ namespace Mina.Transport.Socket
                 }
             }
             else if (e.SocketError != SocketError.OperationAborted
-                && e.SocketError != SocketError.Interrupted)
+                && e.SocketError != SocketError.Interrupted
+                && e.SocketError != SocketError.ConnectionReset)
             {
                 EndReceive(new SocketException((Int32)e.SocketError));
+            }
+            else
+            {
+                // closed
+                Processor.Remove(this);
             }
         }
     }
