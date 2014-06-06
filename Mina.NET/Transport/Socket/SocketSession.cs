@@ -249,7 +249,7 @@ namespace Mina.Transport.Socket
         {
             this.FilterChain.FireExceptionCaught(ex);
             if (Socket.Connected && !ReadSuspended)
-                BeginSend();
+                BeginReceive();
         }
 
         private void FireMessageSent(IWriteRequest req)
