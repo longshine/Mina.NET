@@ -98,7 +98,7 @@ namespace Mina.Transport.Socket
             Int32 written;
             try
             {
-                written = sc.socket.EndSend(ar);
+                written = sc.socket.EndSendTo(ar);
             }
             catch (ObjectDisposedException)
             {
