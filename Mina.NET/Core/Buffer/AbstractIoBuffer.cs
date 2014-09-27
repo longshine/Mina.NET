@@ -457,6 +457,55 @@ namespace Mina.Core.Buffer
         }
 
         /// <inheritdoc/>
+        public override IoBuffer GetSlice(Int32 index, Int32 length)
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException("length");
+
+            Int32 pos = Position;
+            Int32 limit = Limit;
+
+            if (index > limit)
+                throw new ArgumentOutOfRangeException("index");
+
+            Int32 endIndex = index + length;
+
+            if (endIndex > limit)
+                throw new IndexOutOfRangeException("index + length (" + endIndex + ") is greater "
+                    + "than limit (" + limit + ").");
+
+            Clear();
+            Limit = endIndex;
+            Position = index;
+
+            IoBuffer slice = Slice();
+            Limit = limit;
+            Position = pos;
+
+            return slice;
+        }
+
+        /// <inheritdoc/>
+        public override IoBuffer GetSlice(Int32 length)
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException("length");
+
+            Int32 pos = Position;
+            Int32 limit = Limit;
+            Int32 nextPos = pos + length;
+            if (limit < nextPos)
+                throw new IndexOutOfRangeException("position + length (" + nextPos + ") is greater "
+                    + "than limit (" + limit + ").");
+
+            Limit = pos + length;
+            IoBuffer slice = Slice();
+            Position = nextPos;
+            Limit = limit;
+            return slice;
+        }
+
+        /// <inheritdoc/>
         public override IoBuffer Duplicate()
         {
             _recapacityAllowed = false;

@@ -261,6 +261,18 @@ namespace Mina.Core.Buffer
         }
 
         /// <inheritdoc/>
+        public override IoBuffer GetSlice(Int32 index, Int32 length)
+        {
+            return _buf.GetSlice(index, length);
+        }
+
+        /// <inheritdoc/>
+        public override IoBuffer GetSlice(Int32 length)
+        {
+            return _buf.GetSlice(length);
+        }
+
+        /// <inheritdoc/>
         public override IoBuffer Duplicate()
         {
             return _buf.Duplicate();
