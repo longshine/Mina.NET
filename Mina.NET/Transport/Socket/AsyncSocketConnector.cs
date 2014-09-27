@@ -13,6 +13,7 @@ namespace Mina.Transport.Socket
             : base(new DefaultSocketSessionConfig())
         { }
 
+        /// <inheritdoc/>
         public new ISocketSessionConfig SessionConfig
         {
             get { return (ISocketSessionConfig)base.SessionConfig; }

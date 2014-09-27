@@ -38,9 +38,23 @@ namespace Mina.Transport.Socket
             ReuseBuffer = true;
         }
 
+        /// <inheritdoc/>
         public new ISocketSessionConfig SessionConfig
         {
             get { return (ISocketSessionConfig)base.SessionConfig; }
+        }
+
+        /// <inheritdoc/>
+        public new IPEndPoint LocalEndPoint
+        {
+            get { return (IPEndPoint)base.LocalEndPoint; }
+        }
+
+        /// <inheritdoc/>
+        public new IPEndPoint DefaultLocalEndPoint
+        {
+            get { return (IPEndPoint)base.DefaultLocalEndPoint; }
+            set { base.DefaultLocalEndPoint = value; }
         }
 
         /// <inheritdoc/>
@@ -49,11 +63,10 @@ namespace Mina.Transport.Socket
             get { return AsyncSocketSession.Metadata; }
         }
 
+        /// <inheritdoc/>
         public Boolean ReuseAddress { get; set; }
 
-        /// <summary>
-        /// Gets or sets the backlog.
-        /// </summary>
+        /// <inheritdoc/>
         public Int32 Backlog
         {
             get { return _backlog; }

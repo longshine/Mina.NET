@@ -31,9 +31,23 @@ namespace Mina.Transport.Socket
             ReuseBuffer = true;
         }
 
+        /// <inheritdoc/>
         public new IDatagramSessionConfig SessionConfig
         {
             get { return (IDatagramSessionConfig)base.SessionConfig; }
+        }
+
+        /// <inheritdoc/>
+        public new IPEndPoint LocalEndPoint
+        {
+            get { return (IPEndPoint)base.LocalEndPoint; }
+        }
+
+        /// <inheritdoc/>
+        public new IPEndPoint DefaultLocalEndPoint
+        {
+            get { return (IPEndPoint)base.DefaultLocalEndPoint; }
+            set { base.DefaultLocalEndPoint = value; }
         }
 
         /// <inheritdoc/>

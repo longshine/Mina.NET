@@ -204,6 +204,8 @@ namespace Mina.Transport.Socket
 
                     // And set it back to its position
                     buf.Position = pos;
+
+                    buf.Free();
                 }
             }
 

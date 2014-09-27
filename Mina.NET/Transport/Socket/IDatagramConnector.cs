@@ -1,4 +1,5 @@
-﻿using Mina.Core.Service;
+﻿using System.Net;
+using Mina.Core.Service;
 
 namespace Mina.Transport.Socket
 {
@@ -7,5 +8,9 @@ namespace Mina.Transport.Socket
     /// </summary>
     public interface IDatagramConnector : IoConnector
     {
+        /// <inheritdoc/>
+        new IDatagramSessionConfig SessionConfig { get; }
+        /// <inheritdoc/>
+        new IPEndPoint DefaultRemoteEndPoint { get; set; }
     }
 }

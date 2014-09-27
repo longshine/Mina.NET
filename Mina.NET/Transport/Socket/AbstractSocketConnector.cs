@@ -18,6 +18,13 @@ namespace Mina.Transport.Socket
             _processor = new AsyncSocketProcessor(() => ManagedSessions.Values);
         }
 
+        /// <inheritdoc/>
+        public new IPEndPoint DefaultRemoteEndPoint
+        {
+            get { return (IPEndPoint)base.DefaultRemoteEndPoint; }
+            set { base.DefaultRemoteEndPoint = value; }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether to reuse the read buffer
         /// sent to <see cref="SocketSession.FilterChain"/> by
