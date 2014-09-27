@@ -113,6 +113,12 @@ namespace Mina.Core.Filterchain
         }
 
         /// <inheritdoc/>
+        public void FireInputClosed()
+        {
+            CallNextInputClosed(Head, _session);
+        }
+
+        /// <inheritdoc/>
         public void FireFilterWrite(IWriteRequest writeRequest)
         {
             CallPreviousFilterWrite(Tail, _session, writeRequest);
@@ -184,7 +190,7 @@ namespace Mina.Core.Filterchain
             IConnectFuture future = session.RemoveAttribute(SessionCreatedFuture) as IConnectFuture;
             if (future == null)
             {
-                CallNext(entry, (filter, next) => filter.ExceptionCaught(next, _session, cause),
+                CallNext(entry, (filter, next) => filter.ExceptionCaught(next, session, cause),
                     e => log.Warn("Unexpected exception from exceptionCaught handler.", e));
             }
             else
@@ -194,6 +200,11 @@ namespace Mina.Core.Filterchain
                 session.Close(true);
                 future.Exception = cause;
             }
+        }
+
+        private void CallNextInputClosed(IEntry<IoFilter, INextFilter> entry, IoSession session)
+        {
+            CallNext(entry, (filter, next) => filter.InputClosed(next, session));
         }
 
         private void CallNextMessageReceived(IEntry<IoFilter, INextFilter> entry, IoSession session, Object message)
@@ -213,7 +224,7 @@ namespace Mina.Core.Filterchain
 
         private void CallPreviousFilterWrite(IEntry<IoFilter, INextFilter> entry, IoSession session, IWriteRequest writeRequest)
         {
-            CallPrevious(entry, (filter, next) => filter.FilterWrite(next, _session, writeRequest),
+            CallPrevious(entry, (filter, next) => filter.FilterWrite(next, session, writeRequest),
                 e =>
                 {
                     writeRequest.Future.Exception = e;
@@ -422,6 +433,11 @@ namespace Mina.Core.Filterchain
                 // TODO IsUseReadOperation
             }
 
+            public override void InputClosed(INextFilter nextFilter, IoSession session)
+            {
+                session.Handler.InputClosed(session);
+            }
+
             public override void MessageReceived(INextFilter nextFilter, IoSession session, Object message)
             {
                 AbstractIoSession s = session as AbstractIoSession;
@@ -442,6 +458,16 @@ namespace Mina.Core.Filterchain
 
             public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
             {
+                AbstractIoSession s = session as AbstractIoSession;
+                if (s != null)
+                {
+                    s.IncreaseWrittenMessages(writeRequest, DateTime.Now);
+                }
+
+                // Update the statistics
+                session.Service.Statistics.UpdateThroughput(DateTime.Now);
+
+                // Propagate the message
                 session.Handler.MessageSent(session, writeRequest.Message);
             }
         }
@@ -480,6 +506,11 @@ namespace Mina.Core.Filterchain
             public void ExceptionCaught(IoSession session, Exception cause)
             {
                 _chain.CallNextExceptionCaught(_entry.NextEntry, session, cause);
+            }
+
+            public void InputClosed(IoSession session)
+            {
+                _chain.CallNextInputClosed(_entry.NextEntry, session);
             }
 
             public void MessageReceived(IoSession session, Object message)

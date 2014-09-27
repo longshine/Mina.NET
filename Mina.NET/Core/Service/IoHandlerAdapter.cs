@@ -57,5 +57,11 @@ namespace Mina.Core.Service
         {
             // Empty handler
         }
+
+        /// <inheritdoc/>
+        public void InputClosed(IoSession session)
+        {
+            session.Close(true);
+        }
     }
 }

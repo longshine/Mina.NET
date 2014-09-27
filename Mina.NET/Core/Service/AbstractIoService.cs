@@ -46,6 +46,8 @@ namespace Mina.Core.Service
         /// <inheritdoc/>
         public event EventHandler<IoSessionExceptionEventArgs> ExceptionCaught;
         /// <inheritdoc/>
+        public event EventHandler<IoSessionEventArgs> InputClosed;
+        /// <inheritdoc/>
         public event EventHandler<IoSessionMessageEventArgs> MessageReceived;
         /// <inheritdoc/>
         public event EventHandler<IoSessionMessageEventArgs> MessageSent;
@@ -337,6 +339,13 @@ namespace Mina.Core.Service
                 EventHandler<IoSessionMessageEventArgs> act = _service.MessageSent;
                 if (act != null)
                     act(_service, new IoSessionMessageEventArgs(session, message));
+            }
+
+            void IoHandler.InputClosed(IoSession session)
+            {
+                EventHandler<IoSessionEventArgs> act = _service.InputClosed;
+                if (act != null)
+                    act(_service, new IoSessionEventArgs(session));
             }
         }
     }

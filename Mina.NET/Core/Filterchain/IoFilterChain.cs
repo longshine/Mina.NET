@@ -44,6 +44,12 @@ namespace Mina.Core.Filterchain
         /// </summary>
         void FireExceptionCaught(Exception ex);
         /// <summary>
+        /// Fires a <see cref="Core.Service.IoHandler.InputClosed(IoSession)"/> event. Most users don't
+        /// need to call this method at all. Please use this method only when you
+        /// implement a new transport or fire a virtual event.
+        /// </summary>
+        void FireInputClosed();
+        /// <summary>
         /// Fires a <see cref="IoSession.Write(Object)"/> event.
         /// </summary>
         void FireFilterWrite(IWriteRequest writeRequest);
