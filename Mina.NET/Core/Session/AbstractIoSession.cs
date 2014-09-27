@@ -94,6 +94,12 @@ namespace Mina.Core.Session
         }
 
         /// <inheritdoc/>
+        public virtual Boolean Secured
+        {
+            get { return false; }
+        }
+
+        /// <inheritdoc/>
         public ICloseFuture CloseFuture
         {
             get { return _closeFuture; }
@@ -636,6 +642,10 @@ namespace Mina.Core.Session
             DecreaseScheduledWriteMessages();
         }
 
+        /// <summary>
+        /// Increase the number of scheduled write bytes for the session.
+        /// </summary>
+        /// <param name="increment">the number of newly added bytes to write</param>
         public void IncreaseScheduledWriteBytes(Int32 increment)
         {
             Interlocked.Add(ref _scheduledWriteBytes, increment);
@@ -660,13 +670,8 @@ namespace Mina.Core.Session
             Int64 interval = (Int64)(currentTime - _lastThroughputCalculationTime).TotalMilliseconds;
 
             Int64 minInterval = Config.ThroughputCalculationIntervalInMillis;
-            if ((minInterval == 0) || (interval < minInterval))
-            {
-                if (!force)
-                {
-                    return;
-                }
-            }
+            if ((minInterval == 0 || interval < minInterval) && !force)
+                return;
 
             _readBytesThroughput = (_readBytes - _lastReadBytes) * 1000.0 / interval;
             _writtenBytesThroughput = (_writtenBytes - _lastWrittenBytes) * 1000.0 / interval;

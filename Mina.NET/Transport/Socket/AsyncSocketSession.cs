@@ -3,12 +3,17 @@ using System.Net;
 using System.Net.Sockets;
 using Mina.Core.Buffer;
 using Mina.Core.File;
+using Mina.Core.Filterchain;
 using Mina.Core.Service;
 using Mina.Core.Write;
+using Mina.Filter.Ssl;
 using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
+    /// <summary>
+    /// An <see cref="IoSession"/> for socket transport (TCP/IP).
+    /// </summary>
     public class AsyncSocketSession : SocketSession
     {
         public static readonly ITransportMetadata Metadata
@@ -49,6 +54,17 @@ namespace Mina.Transport.Socket
         public override ITransportMetadata TransportMetadata
         {
             get { return Metadata; }
+        }
+
+        /// <inheritdoc/>
+        public override Boolean Secured
+        {
+            get
+            {
+                IoFilterChain chain = this.FilterChain;
+                SslFilter sslFilter = (SslFilter)chain.Get(typeof(SslFilter));
+                return sslFilter != null && sslFilter.IsSslStarted(this);
+            }
         }
 
         /// <inheritdoc/>

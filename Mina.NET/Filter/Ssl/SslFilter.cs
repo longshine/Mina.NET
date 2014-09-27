@@ -44,6 +44,16 @@ namespace Mina.Filter.Ssl
             get { return _serverCertificate; }
         }
 
+        /// <summary>
+        /// Returns <code>true</code> if and only if the specified session is
+        /// encrypted/decrypted over SSL/TLS currently.
+        /// </summary>
+        public Boolean IsSslStarted(IoSession session)
+        {
+            SslHandler handler = session.GetAttribute<SslHandler>(SSL_HANDLER);
+            return handler != null && handler.Authenticated;
+        }
+
         /// <inheritdoc/>
         public override void OnPreAdd(IoFilterChain parent, String name, INextFilter nextFilter)
         {

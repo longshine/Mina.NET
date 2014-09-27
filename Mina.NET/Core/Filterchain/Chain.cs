@@ -45,6 +45,12 @@ namespace Mina.Core.Filterchain
         /// <returns>the <typeparamref name="TFilter"/>, or null if not found</returns>
         TFilter Get(String name);
         /// <summary>
+        /// Gets the <typeparamref name="TFilter"/> with the specified <paramref name="filterType"/> in this chain.
+        /// </summary>
+        /// <param name="filterType">the type of filter we are looking for</param>
+        /// <returns>the <typeparamref name="TFilter"/>, or null if not found</returns>
+        TFilter Get(Type filterType);
+        /// <summary>
         /// Gets the <typeparamref name="TNextFilter"/> of the <typeparamref name="TFilter"/>
         /// with the specified <paramref name="name"/> in this chain.
         /// </summary>
@@ -214,18 +220,25 @@ namespace Mina.Core.Filterchain
         }
 
         /// <inheritdoc/>
+        public TFilter Get(String name)
+        {
+            IEntry<TFilter, TNextFilter> e = GetEntry(name);
+            return e == null ? default(TFilter) : e.Filter;
+        }
+
+        /// <inheritdoc/>
+        public TFilter Get(Type filterType)
+        {
+            IEntry<TFilter, TNextFilter> e = GetEntry(filterType);
+            return e == null ? default(TFilter) : e.Filter;
+        }
+
+        /// <inheritdoc/>
         public IEntry<TFilter, TNextFilter> GetEntry(String name)
         {
             Entry e;
             _name2entry.TryGetValue(name, out e);
             return e;
-        }
-
-        /// <inheritdoc/>
-        public TFilter Get(String name)
-        {
-            IEntry<TFilter, TNextFilter> e = GetEntry(name);
-            return e == null ? default(TFilter) : e.Filter;
         }
 
         /// <inheritdoc/>

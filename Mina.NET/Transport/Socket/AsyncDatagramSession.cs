@@ -8,6 +8,9 @@ using Mina.Core.Write;
 
 namespace Mina.Transport.Socket
 {
+    /// <summary>
+    /// An <see cref="IoSession"/> for datagram transport (UDP/IP).
+    /// </summary>
     public partial class AsyncDatagramSession : SocketSession
     {
         public static readonly ITransportMetadata Metadata
