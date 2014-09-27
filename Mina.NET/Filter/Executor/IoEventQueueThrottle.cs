@@ -112,7 +112,7 @@ namespace Mina.Filter.Executor
             {
                 if (_waiters > 0)
                 {
-                    Monitor.Pulse(_syncRoot);
+                    Monitor.PulseAll(_syncRoot);
                 }
             }
         }
