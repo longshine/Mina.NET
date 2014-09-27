@@ -235,11 +235,8 @@
     <Compile Include="Transport\Socket\IDatagramAcceptor.cs" />
     <Compile Include="Transport\Socket\IDatagramConnector.cs" />
     <Compile Include="Transport\Socket\IDatagramSessionConfig.cs" />
-    <Compile Include="Util\BufferManager.cs" />
     <Compile Include="Core\Service\IoAcceptor.cs" />
     <Compile Include="Core\Service\IoService.cs" />
-    <Compile Include="Util\ExpiringMap.cs" />
-    <Compile Include="Util\Pool.cs" />
     <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
     <Compile Include="Transport\Socket\AbstractSocketConnector.cs" />
     <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />
@@ -255,9 +252,12 @@
     <Compile Include="Transport\Socket\SocketAsyncEventArgsBufferAllocator.cs" />
     <Compile Include="Transport\Socket\AsyncSocketSession.cs" />
     <Compile Include="Transport\Socket\SocketSession.cs" />
+    <Compile Include="Util\BufferManager.cs" />
     <Compile Include="Util\DelegateUtils.cs" />
     <Compile Include="Util\ExceptionMonitor.cs" />
+    <Compile Include="Util\ExpiringMap.cs" />
     <Compile Include="Util\IQueue.cs" />
+    <Compile Include="Util\Pool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mina.snk" />

@@ -21,23 +21,71 @@ namespace Mina.Filter.KeepAlive
         private volatile Int32 _requestTimeout;
         private volatile Boolean _forwardEvent;
 
+        /// <summary>
+        /// Creates a new instance with the default properties.
+        /// <ul>
+        ///   <li>interestedIdleStatus - <see cref="IdleStatus.ReaderIdle"/></li>
+        ///   <li>strategy - <see cref="KeepAliveRequestTimeoutHandler.Close"/></li>
+        ///   <li>keepAliveRequestInterval - 60 (seconds)</li>
+        ///   <li>keepAliveRequestTimeout - 30 (seconds)</li>
+        /// </ul>
+        /// </summary>
+        /// <param name="messageFactory">the factory to generate keep-alive messages</param>
         public KeepAliveFilter(IKeepAliveMessageFactory messageFactory)
             : this(messageFactory, IdleStatus.ReaderIdle, KeepAliveRequestTimeoutHandler.Close)
         { }
 
+        /// <summary>
+        /// Creates a new instance with the default properties.
+        /// <ul>
+        ///   <li>strategy - <see cref="KeepAliveRequestTimeoutHandler.Close"/></li>
+        ///   <li>keepAliveRequestInterval - 60 (seconds)</li>
+        ///   <li>keepAliveRequestTimeout - 30 (seconds)</li>
+        /// </ul>
+        /// </summary>
+        /// <param name="messageFactory">the factory to generate keep-alive messages</param>
+        /// <param name="interestedIdleStatus"></param>
         public KeepAliveFilter(IKeepAliveMessageFactory messageFactory, IdleStatus interestedIdleStatus)
             : this(messageFactory, interestedIdleStatus, KeepAliveRequestTimeoutHandler.Close)
         { }
 
+        /// <summary>
+        /// Creates a new instance with the default properties.
+        /// <ul>
+        ///   <li>interestedIdleStatus - <see cref="IdleStatus.ReaderIdle"/></li>
+        ///   <li>keepAliveRequestInterval - 60 (seconds)</li>
+        ///   <li>keepAliveRequestTimeout - 30 (seconds)</li>
+        /// </ul>
+        /// </summary>
+        /// <param name="messageFactory">the factory to generate keep-alive messages</param>
+        /// <param name="strategy"></param>
         public KeepAliveFilter(IKeepAliveMessageFactory messageFactory, IKeepAliveRequestTimeoutHandler strategy)
             : this(messageFactory, IdleStatus.ReaderIdle, strategy)
         { }
 
+        /// <summary>
+        /// Creates a new instance with the default properties.
+        /// <ul>
+        ///   <li>keepAliveRequestInterval - 60 (seconds)</li>
+        ///   <li>keepAliveRequestTimeout - 30 (seconds)</li>
+        /// </ul>
+        /// </summary>
+        /// <param name="messageFactory">the factory to generate keep-alive messages</param>
+        /// <param name="interestedIdleStatus"></param>
+        /// <param name="strategy"></param>
         public KeepAliveFilter(IKeepAliveMessageFactory messageFactory, IdleStatus interestedIdleStatus,
             IKeepAliveRequestTimeoutHandler strategy)
             : this(messageFactory, interestedIdleStatus, strategy, 60, 30)
         { }
 
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="messageFactory">the factory to generate keep-alive messages</param>
+        /// <param name="interestedIdleStatus"></param>
+        /// <param name="strategy"></param>
+        /// <param name="keepAliveRequestInterval">the interval to send a keep-alive request</param>
+        /// <param name="keepAliveRequestTimeout">the time to wait for a keep-alive response before timed out</param>
         public KeepAliveFilter(IKeepAliveMessageFactory messageFactory, IdleStatus interestedIdleStatus,
             IKeepAliveRequestTimeoutHandler strategy, Int32 keepAliveRequestInterval, Int32 keepAliveRequestTimeout)
         {
@@ -55,6 +103,9 @@ namespace Mina.Filter.KeepAlive
             RequestTimeout = keepAliveRequestTimeout;
         }
 
+        /// <summary>
+        /// Gets or sets the interval to send a keep-alive request.
+        /// </summary>
         public Int32 RequestInterval
         {
             get { return _requestInterval; }
@@ -66,6 +117,9 @@ namespace Mina.Filter.KeepAlive
             }
         }
 
+        /// <summary>
+        /// Gets or sets the time to wait for a keep-alive response before timed out.
+        /// </summary>
         public Int32 RequestTimeout
         {
             get { return _requestTimeout; }
@@ -77,6 +131,11 @@ namespace Mina.Filter.KeepAlive
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this filter forwards
+        /// an <see cref="IoEventType.SessionIdle"/> event to the next filter.
+        /// The default value is <code>false</code>.
+        /// </summary>
         public Boolean ForwardEvent
         {
             get { return _forwardEvent; }

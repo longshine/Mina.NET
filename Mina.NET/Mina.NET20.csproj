@@ -239,7 +239,6 @@
     <Compile Include="Transport\Socket\IDatagramSessionConfig.cs" />
     <Compile Include="Core\Service\IoAcceptor.cs" />
     <Compile Include="Core\Service\IoService.cs" />
-    <Compile Include="Util\ExpiringMap.cs" />
     <Compile Include="Transport\Socket\AbstractSocketAcceptor.cs" />
     <Compile Include="Transport\Socket\AbstractSocketConnector.cs" />
     <Compile Include="Transport\Socket\AbstractSocketSessionConfig.cs" />
@@ -256,6 +255,7 @@
     <Compile Include="Util\Delegates.cs" />
     <Compile Include="Util\DelegateUtils.cs" />
     <Compile Include="Util\ExceptionMonitor.cs" />
+    <Compile Include="Util\ExpiringMap.cs" />
     <Compile Include="Util\IQueue.cs" />
     <Compile Include="Util\System\Lazy.cs" />
     <Compile Include="Util\System.Collections.Concurrent\ConcurrentDictionary.cs" />

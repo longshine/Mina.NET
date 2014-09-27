@@ -68,6 +68,7 @@
     <Compile Include="Filter\Executor\ExecutorFilterRegressionTest.cs" />
     <Compile Include="Filter\Firewall\ConnectionThrottleFilterTest.cs" />
     <Compile Include="Filter\Firewall\SubnetTest.cs" />
+    <Compile Include="Filter\KeepAlive\KeepAliveFilterTest.cs" />
     <Compile Include="Filter\Ssl\SslTest.cs" />
     <Compile Include="Filter\Stream\AbstractStreamWriteFilterTest.cs" />
     <Compile Include="Filter\Stream\FileRegionWriteFilterTest.cs" />
