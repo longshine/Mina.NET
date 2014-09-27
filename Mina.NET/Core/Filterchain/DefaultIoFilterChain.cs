@@ -290,6 +290,34 @@ namespace Mina.Core.Filterchain
             }
         }
 
+        /// <inheritdoc/>
+        protected override void OnPreReplace(Entry entry, IoFilter newFilter)
+        {
+            // Call the preAdd method of the new filter
+            try
+            {
+                newFilter.OnPreAdd(this, entry.Name, entry.NextFilter);
+            }
+            catch (Exception e)
+            {
+                throw new IoFilterLifeCycleException("OnPreAdd(): " + entry.Name + ':' + newFilter + " in " + Session, e);
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnPostReplace(Entry entry, IoFilter newFilter)
+        {
+            // Call the postAdd method of the new filter
+            try
+            {
+                newFilter.OnPostAdd(this, entry.Name, entry.NextFilter);
+            }
+            catch (Exception e)
+            {
+                throw new IoFilterLifeCycleException("OnPostAdd(): " + entry.Name + ':' + newFilter + " in " + Session, e);
+            }
+        }
+
         class HeadFilter : IoFilterAdapter
         {
             public override void FilterWrite(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
@@ -322,7 +350,7 @@ namespace Mina.Core.Filterchain
                 {
                     writeRequestQueue.Offer(session, writeRequest);
                 }
-                else if (writeRequestQueue.Size == 0)
+                else if (writeRequestQueue.IsEmpty(session))
                 {
                     // We can write directly the message
                     session.Processor.Write(session, writeRequest);
@@ -404,6 +432,10 @@ namespace Mina.Core.Filterchain
                         s.IncreaseReadMessages(DateTime.Now);
                 }
 
+                // Update the statistics
+                session.Service.Statistics.UpdateThroughput(DateTime.Now);
+
+                // Propagate the message
                 session.Handler.MessageReceived(session, message);
                 // TODO IsUseReadOperation
             }

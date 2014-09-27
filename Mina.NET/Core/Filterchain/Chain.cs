@@ -383,22 +383,46 @@ namespace Mina.Core.Filterchain
         {
             Entry entry = CheckOldName(name);
             TFilter oldFilter = entry.Filter;
+
+            OnPreReplace(entry, newFilter);
+            // Now, register the new Filter replacing the old one.
             entry.Filter = newFilter;
+            try
+            {
+                OnPostReplace(entry, newFilter);
+            }
+            catch
+            {
+                entry.Filter = oldFilter;
+                throw;
+            }
+
             return oldFilter;
         }
 
         /// <inheritdoc/>
         public void Replace(TFilter oldFilter, TFilter newFilter)
         {
-            Entry e = _head._nextEntry;
-            while (e != _tail)
+            Entry entry = _head._nextEntry;
+            while (entry != _tail)
             {
-                if (_equalsFunc(e.Filter, oldFilter))
+                if (_equalsFunc(entry.Filter, oldFilter))
                 {
-                    e.Filter = newFilter;
+                    OnPreReplace(entry, newFilter);
+                    // Now, register the new Filter replacing the old one.
+                    entry.Filter = newFilter;
+                    try
+                    {
+                        OnPostReplace(entry, newFilter);
+                    }
+                    catch
+                    {
+                        entry.Filter = oldFilter;
+                        throw;
+                    }
                     return;
                 }
-                e = e._nextEntry;
+                entry = entry._nextEntry;
             }
             throw new ArgumentException("Filter not found: " + oldFilter.GetType().Name);
         }
@@ -499,6 +523,16 @@ namespace Mina.Core.Filterchain
         /// Fires after the entry is removed to this chain.
         /// </summary>
         protected virtual void OnPostRemove(Entry entry) { }
+
+        /// <summary>
+        /// Fires after the entry is replaced to this chain.
+        /// </summary>
+        protected virtual void OnPreReplace(Entry entry, TFilter newFilter) { }
+
+        /// <summary>
+        /// Fires after the entry is removed to this chain.
+        /// </summary>
+        protected virtual void OnPostReplace(Entry entry, TFilter newFilter) { }
 
         /// <summary>
         /// Represents an entry of filter in the chain.
