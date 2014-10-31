@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Mina</id>
+        <version>2.0.7.1</version>
+        <title>Mina.NET</title>
+        <authors>Longshine</authors>
+        <owners>Longshine</owners>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://github.com/longshine/Mina.NET</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Mina.NET is the .NET implementation of Apache MINA, a network application framework which helps users develop high performance and high scalability network applications easily. It provides an abstract event-driven asynchronous API over various transports such as TCP/IP via async socket.</description>
+        <summary>.NET implementation of Apache MINA</summary>
+        <releaseNotes>* 2.0.7.1 - Added test for KeepAliveFilter
+*           Fixed incorrect IoEventType
+*           Fixed incorrect method calls in socket transport
+* 2.0.7   - First release based on Apache MINA 2.0.7
+*           Unified yet simple API for various transport types:
+*            - TCP/IP &amp; UDP/IP via .NET asynchronous socket
+*            - serial communication
+*            - loopback (in-application pipe)
+*           Extensible filters
+*           Low-level and high-level API:
+*            - low-level: uses IoBuffers
+*            - high-level: uses user-defined message objects and codecs
+*           Highly customizable thread model
+*           Out-of-the-box SSL · TLS
+*           Overload shielding &amp; traffic throttling
+*           Stream-based I/O support via StreamIoHandler
+*           Tested</releaseNotes>
+        <tags>async socket MINA Netty NIO SocketAsyncEventArgs</tags>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System"/>
+        </frameworkAssemblies>
+    </metadata>
+    <files>
+        <file src="Mina.NET\bin\Release\NET20\Mina.NET.dll" target="lib\net20\Mina.NET.dll" />
+        <file src="Mina.NET\bin\Release\NET20\Mina.NET.pdb" target="lib\net20\Mina.NET.pdb" />
+        <file src="Mina.NET\bin\Release\NET20\Mina.NET.xml" target="lib\net20\Mina.NET.xml" />
+        <file src="Mina.NET\bin\Release\Mina.NET.dll" target="lib\net40\Mina.NET.dll" />
+        <file src="Mina.NET\bin\Release\Mina.NET.pdb" target="lib\net40\Mina.NET.pdb" />
+        <file src="Mina.NET\bin\Release\Mina.NET.xml" target="lib\net40\Mina.NET.xml" />
+        <file src="LICENSE" target="LICENSE" />
+    </files>
+</package>
