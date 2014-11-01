@@ -46,6 +46,16 @@ namespace Mina.Core.Session
         /// </summary>
         Boolean Connected { get; }
         /// <summary>
+        /// Returns <code>true</code> if and only if this session is being closed.
+        /// </summary>
+        Boolean Closing { get; }
+        /// <summary>
+        /// Returns <code>true</code> if the session has started with SSL,
+        /// <code>false</code> if the session is not yet secured (the handshake is not completed)
+        /// or if SSL is not set for this session, or if SSL is not even an option.
+        /// </summary>
+        Boolean Secured { get; }
+        /// <summary>
         /// Gets the local endpoint.
         /// </summary>
         EndPoint LocalEndPoint { get; }

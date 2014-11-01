@@ -18,20 +18,24 @@ namespace Mina.Core.Session
         /// <param name="name">the Attribute name</param>
         public AttributeKey(Type source, String name)
         {
+            // TODO use base.GetHashCode() instead
             _name = source.Name + "." + name + "@" + GetHashCode().ToString("X");
         }
 
+        /// <inheritdoc/>
         public override String ToString()
         {
             return _name;
         }
 
+        /// <inheritdoc/>
         public override Int32 GetHashCode()
         {
             int h = 17 * 37 + ((_name == null) ? 0 : _name.GetHashCode());
             return h;
         }
 
+        /// <inheritdoc/>
         public override Boolean Equals(Object obj)
         {
             if (Object.ReferenceEquals(this, obj))

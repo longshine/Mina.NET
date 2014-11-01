@@ -4,6 +4,9 @@ using Mina.Core.Buffer;
 
 namespace Mina.Core.File
 {
+    /// <summary>
+    /// <see cref="IFileRegion"/> based on a <see cref="FileInfo"/>.
+    /// </summary>
     public class FileInfoFileRegion : IFileRegion
     {
         private readonly FileInfo _file;
@@ -11,10 +14,20 @@ namespace Mina.Core.File
         private Int64 _position;
         private Int64 _remainingBytes;
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="fileInfo">the file info</param>
         public FileInfoFileRegion(FileInfo fileInfo)
             : this(fileInfo, 0, fileInfo.Length)
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="fileInfo">the file info</param>
+        /// <param name="position">the start position</param>
+        /// <param name="remainingBytes">the count of remaining bytes</param>
         public FileInfoFileRegion(FileInfo fileInfo, Int64 position, Int64 remainingBytes)
         {
             if (fileInfo == null)

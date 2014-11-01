@@ -10,7 +10,7 @@ namespace Mina.Filter.Codec
     /// </summary>
     public abstract class AbstractProtocolDecoderOutput : IProtocolDecoderOutput
     {
-        private readonly IQueue<Object> _queue = new ConcurrentQueue<Object>();
+        private readonly IQueue<Object> _queue = new Queue<Object>();
 
         public IQueue<Object> MessageQueue
         {

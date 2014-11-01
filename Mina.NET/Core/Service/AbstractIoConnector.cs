@@ -12,6 +12,7 @@ namespace Mina.Core.Service
     {
         private Int64 _connectTimeoutInMillis = 60000L;
         private EndPoint _defaultRemoteEP;
+        private EndPoint _defaultLocalEP;
 
         /// <summary>
         /// </summary>
@@ -35,6 +36,13 @@ namespace Mina.Core.Service
         }
 
         /// <inheritdoc/>
+        public EndPoint DefaultLocalEndPoint
+        {
+            get { return _defaultLocalEP; }
+            set { _defaultLocalEP = value; }
+        }
+
+        /// <inheritdoc/>
         public Int32 ConnectTimeout
         {
             get { return (Int32)(_connectTimeoutInMillis / 1000L); }
@@ -53,7 +61,7 @@ namespace Mina.Core.Service
         {
             if (_defaultRemoteEP == null)
                 throw new InvalidOperationException("DefaultRemoteEndPoint is not set.");
-            return Connect(_defaultRemoteEP, null, null);
+            return Connect(_defaultRemoteEP, _defaultLocalEP, null);
         }
 
         /// <inheritdoc/>
@@ -61,19 +69,19 @@ namespace Mina.Core.Service
         {
             if (_defaultRemoteEP == null)
                 throw new InvalidOperationException("DefaultRemoteEndPoint is not set.");
-            return Connect(_defaultRemoteEP, null, sessionInitializer);
+            return Connect(_defaultRemoteEP, _defaultLocalEP, sessionInitializer);
         }
 
         /// <inheritdoc/>
         public IConnectFuture Connect(EndPoint remoteEP)
         {
-            return Connect(remoteEP, null, null);
+            return Connect(remoteEP, _defaultLocalEP, null);
         }
 
         /// <inheritdoc/>
         public IConnectFuture Connect(EndPoint remoteEP, Action<IoSession, IConnectFuture> sessionInitializer)
         {
-            return Connect(remoteEP, null, sessionInitializer);
+            return Connect(remoteEP, _defaultLocalEP, sessionInitializer);
         }
 
         /// <inheritdoc/>

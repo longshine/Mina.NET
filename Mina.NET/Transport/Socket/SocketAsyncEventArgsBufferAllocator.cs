@@ -13,6 +13,12 @@ namespace Mina.Transport.Socket
         /// </summary>
         public static readonly SocketAsyncEventArgsBufferAllocator Instance = new SocketAsyncEventArgsBufferAllocator();
 
+        /// <summary>
+        /// Returns the buffer which is capable of the specified size.
+        /// </summary>
+        /// <param name="capacity">the capacity of the buffer</param>
+        /// <returns>the allocated buffer</returns>
+        /// <exception cref="ArgumentException">If the <paramref name="capacity"/> is a negative integer</exception>
         public SocketAsyncEventArgsBuffer Allocate(Int32 capacity)
         {
             if (capacity < 0)
@@ -20,11 +26,17 @@ namespace Mina.Transport.Socket
             return new SocketAsyncEventArgsBuffer(this, capacity, capacity);
         }
 
+        /// <summary>
+        /// Wraps the specified byte array into a <see cref="SocketAsyncEventArgsBuffer"/>.
+        /// </summary>
         public SocketAsyncEventArgsBuffer Wrap(Byte[] array)
         {
             return Wrap(array, 0, array.Length);
         }
 
+        /// <summary>
+        /// Wraps the specified byte array into a <see cref="SocketAsyncEventArgsBuffer"/>.
+        /// </summary>
         public SocketAsyncEventArgsBuffer Wrap(Byte[] array, Int32 offset, Int32 length)
         {
             try

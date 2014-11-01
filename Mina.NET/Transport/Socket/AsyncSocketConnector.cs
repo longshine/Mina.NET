@@ -9,10 +9,14 @@ namespace Mina.Transport.Socket
     /// </summary>
     public class AsyncSocketConnector : AbstractSocketConnector, ISocketConnector
     {
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
         public AsyncSocketConnector()
             : base(new DefaultSocketSessionConfig())
         { }
 
+        /// <inheritdoc/>
         public new ISocketSessionConfig SessionConfig
         {
             get { return (ISocketSessionConfig)base.SessionConfig; }

@@ -257,7 +257,7 @@ namespace Mina.Core.Buffer
             }
 
             // Expand the buffer.
-            buf.Capacity =32;
+            buf.Capacity = 32;
             buf.Clear();
             Assert.AreEqual(32, buf.Capacity);
 
@@ -773,6 +773,39 @@ namespace Mina.Core.Buffer
                 Assert.AreEqual(2, buf.IndexOf((byte)0x3));
                 Assert.AreEqual(3, buf.IndexOf((byte)0x4));
             }
+        }
+
+        [TestMethod]
+        public void TestGetSlice()
+        {
+            IoBuffer buf = IoBuffer.Allocate(36);
+
+            for (Byte i = 0; i < 36; i++)
+            {
+                buf.Put(i);
+            }
+
+            IoBuffer res = buf.GetSlice(1, 3);
+
+            // The limit should be 3, the pos should be 0 and the bytes read
+            // should be 0x01, 0x02 and 0x03
+            Assert.AreEqual(0, res.Position);
+            Assert.AreEqual(3, res.Limit);
+            Assert.AreEqual(0x01, res.Get());
+            Assert.AreEqual(0x02, res.Get());
+            Assert.AreEqual(0x03, res.Get());
+
+            // Now test after a flip
+            buf.Flip();
+
+            res = buf.GetSlice(1, 3);
+            // The limit should be 3, the pos should be 0 and the bytes read
+            // should be 0x01, 0x02 and 0x03
+            Assert.AreEqual(0, res.Position);
+            Assert.AreEqual(3, res.Limit);
+            Assert.AreEqual(0x01, res.Get());
+            Assert.AreEqual(0x02, res.Get());
+            Assert.AreEqual(0x03, res.Get());
         }
     }
 }

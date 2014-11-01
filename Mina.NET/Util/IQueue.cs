@@ -12,7 +12,7 @@ namespace Mina.Util
         /// <summary>
         /// Checks if this queue is empty.
         /// </summary>
-        Boolean Empty { get; }
+        Boolean IsEmpty { get; }
         /// <summary>
         /// Enqueue an item.
         /// </summary>
@@ -27,13 +27,21 @@ namespace Mina.Util
         Int32 Count { get; }
     }
 
-    class ConcurrentQueue<T> : System.Collections.Concurrent.ConcurrentQueue<T>, IQueue<T>
+    class Queue<T> : System.Collections.Generic.Queue<T>, IQueue<T>
     {
-        public Boolean Empty
+        public Boolean IsEmpty
         {
-            get { return Count == 0; }
+            get { return base.Count == 0; }
         }
 
+        T IQueue<T>.Dequeue()
+        {
+            return IsEmpty ? default(T) : base.Dequeue();
+        }
+    }
+
+    class ConcurrentQueue<T> : System.Collections.Concurrent.ConcurrentQueue<T>, IQueue<T>
+    {
         public T Dequeue()
         {
             T e = default(T);

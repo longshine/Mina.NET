@@ -44,5 +44,9 @@ namespace Mina.Core.Service
         /// is sent out.
         /// </summary>
         void MessageSent(IoSession session, Object message);
+        ///
+        /// Handle the closure of an half-duplex channel.
+        ///
+        void InputClosed(IoSession session);
     }
 }

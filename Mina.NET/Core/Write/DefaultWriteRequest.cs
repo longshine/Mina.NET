@@ -7,6 +7,11 @@ namespace Mina.Core.Write
 {
     public class DefaultWriteRequest : IWriteRequest
     {
+        /// <summary>
+        /// An empty message.
+        /// </summary>
+        public static readonly Byte[] EmptyMessage = new Byte[0];
+
         private readonly Object _message;
         private readonly IWriteFuture _future;
         private readonly EndPoint _destination;

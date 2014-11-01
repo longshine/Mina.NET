@@ -397,6 +397,10 @@ namespace Mina.Core.Buffer
         /// <returns>the new buffer</returns>
         public abstract IoBuffer Slice();
 
+        public abstract IoBuffer GetSlice(Int32 index, Int32 length);
+
+        public abstract IoBuffer GetSlice(Int32 length);
+
         /// <summary>
         /// Creates a new byte buffer that shares this buffer's content. 
         /// </summary>

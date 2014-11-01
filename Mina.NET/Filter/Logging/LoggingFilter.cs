@@ -107,7 +107,7 @@ namespace Mina.Filter.Logging
         /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
-            Log(MessageSentLevel, "SENT: {0}", writeRequest.Message);
+            Log(MessageSentLevel, "SENT: {0}", writeRequest.OriginalRequest.Message);
             base.MessageSent(nextFilter, session, writeRequest);
         }
 

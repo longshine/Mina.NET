@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Common.Logging;
 using Mina.Core.Buffer;
 using Mina.Core.File;
@@ -15,13 +16,15 @@ namespace Mina.Filter.Codec
     /// message objects and vice versa using <see cref="IProtocolCodecFactory"/>,
     /// <see cref="IProtocolEncoder"/>, or <see cref="IProtocolDecoder"/>.
     /// </summary>
-    public class ProtocolCodecFilter : IoFilterAdapter
+    public class ProtocolCodecFilter : IoFilterAdapter, IDisposable
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ProtocolCodecFilter));
         private static readonly IoBuffer EMPTY_BUFFER = IoBuffer.Wrap(new Byte[0]);
         private readonly AttributeKey DECODER_OUT = new AttributeKey(typeof(ProtocolCodecFilter), "decoderOut");
         private readonly AttributeKey ENCODER_OUT = new AttributeKey(typeof(ProtocolCodecFilter), "encoderOut");
         private readonly IProtocolCodecFactory _factory;
+
+        private Semaphore _semaphore = new Semaphore(1, 1);
 
         public ProtocolCodecFilter(IProtocolCodecFactory factory)
         {
@@ -32,14 +35,8 @@ namespace Mina.Filter.Codec
         }
 
         public ProtocolCodecFilter(IProtocolEncoder encoder, IProtocolDecoder decoder)
-        {
-            if (encoder == null)
-                throw new ArgumentNullException("encoder");
-            if (decoder == null)
-                throw new ArgumentNullException("decoder");
-
-            _factory = new ProtocolCodecFactory(encoder, decoder);
-        }
+            : this(new ProtocolCodecFactory(encoder, decoder))
+        { }
 
         /// <inheritdoc/>
         public override void OnPreAdd(IoFilterChain parent, String name, INextFilter nextFilter)
@@ -80,6 +77,8 @@ namespace Mina.Filter.Codec
                 Int32 oldPos = input.Position;
                 try
                 {
+                    _semaphore.WaitOne();
+
                     // Call the decoder with the read bytes
                     decoder.Decode(session, input, decoderOutput);
 
@@ -109,6 +108,10 @@ namespace Mina.Filter.Codec
                     // infinite loop.
                     if (!(ex is RecoverableProtocolDecoderException) || input.Position == oldPos)
                         break;
+                }
+                finally
+                {
+                    _semaphore.Release();
                 }
             }
         }
@@ -161,7 +164,7 @@ namespace Mina.Filter.Codec
                     // Send it directly
                     IQueue<Object> bufferQueue = ape.MessageQueue;
                     // Write all the encoded messages now
-                    while (!bufferQueue.Empty)
+                    while (!bufferQueue.IsEmpty)
                     {
                         Object encodedMessage = bufferQueue.Dequeue();
 
@@ -172,7 +175,7 @@ namespace Mina.Filter.Codec
                         IoBuffer buf = encodedMessage as IoBuffer;
                         if (buf == null || buf.HasRemaining)
                         {
-                            IWriteRequest encodedWriteRequest = new EncodedWriteRequest(encodedMessage, null);
+                            IWriteRequest encodedWriteRequest = new EncodedWriteRequest(encodedMessage, null, writeRequest.Destination);
                             nextFilter.FilterWrite(session, encodedWriteRequest);
                         }
                     }
@@ -217,6 +220,21 @@ namespace Mina.Filter.Codec
 
             // Call the next filter
             nextFilter.SessionClosed(session);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+            if (disposing)
+            {
+                ((IDisposable)_semaphore).Dispose();
+            }
         }
 
         private IProtocolDecoderOutput GetDecoderOut(IoSession session, INextFilter nextFilter)
@@ -269,7 +287,7 @@ namespace Mina.Filter.Codec
             {
                 IQueue<Object> messageQueue = MessageQueue;
 
-                while (!messageQueue.Empty)
+                while (!messageQueue.IsEmpty)
                 {
                     nextFilter.MessageReceived(session, messageQueue.Dequeue());
                 }
@@ -280,11 +298,13 @@ namespace Mina.Filter.Codec
         {
             private readonly IoSession _session;
             private readonly INextFilter _nextFilter;
+            private readonly System.Net.EndPoint _destination;
 
             public ProtocolEncoderOutputImpl(IoSession session, INextFilter nextFilter, IWriteRequest writeRequest)
             {
                 _session = session;
                 _nextFilter = nextFilter;
+                _destination = writeRequest.Destination;
             }
 
             public override IWriteFuture Flush()
@@ -292,7 +312,7 @@ namespace Mina.Filter.Codec
                 IQueue<Object> bufferQueue = MessageQueue;
                 IWriteFuture future = null;
 
-                while (!bufferQueue.Empty)
+                while (!bufferQueue.IsEmpty)
                 {
                     Object encodedMessage = bufferQueue.Dequeue();
 
@@ -304,14 +324,14 @@ namespace Mina.Filter.Codec
                     if (buf == null || buf.HasRemaining)
                     {
                         future = new DefaultWriteFuture(_session);
-                        _nextFilter.FilterWrite(_session, new EncodedWriteRequest(encodedMessage, future));
+                        _nextFilter.FilterWrite(_session, new EncodedWriteRequest(encodedMessage, future, _destination));
                     }
                 }
 
                 if (future == null)
                 {
                     // Creates an empty writeRequest containing the destination
-                    IWriteRequest writeRequest = new DefaultWriteRequest(null, null);
+                    IWriteRequest writeRequest = new DefaultWriteRequest(DefaultWriteRequest.EmptyMessage, null, _destination);
                     future = DefaultWriteFuture.NewNotWrittenFuture(_session, new NothingWrittenException(writeRequest));
                 }
 
@@ -321,8 +341,8 @@ namespace Mina.Filter.Codec
 
         class EncodedWriteRequest : DefaultWriteRequest
         {
-            public EncodedWriteRequest(Object encodedMessage, IWriteFuture future)
-                : base(encodedMessage, future)
+            public EncodedWriteRequest(Object encodedMessage, IWriteFuture future, System.Net.EndPoint destination)
+                : base(encodedMessage, future, destination)
             { }
 
             public override Boolean Encoded
@@ -350,6 +370,10 @@ namespace Mina.Filter.Codec
 
             public ProtocolCodecFactory(IProtocolEncoder encoder, IProtocolDecoder decoder)
             {
+                if (encoder == null)
+                    throw new ArgumentNullException("encoder");
+                if (decoder == null)
+                    throw new ArgumentNullException("decoder");
                 _encoder = encoder;
                 _decoder = decoder;
             }

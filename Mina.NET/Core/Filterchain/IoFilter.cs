@@ -93,6 +93,8 @@ namespace Mina.Core.Filterchain
         /// Filters <see cref="Core.Service.IoHandler.ExceptionCaught(IoSession, Exception)"/> event.
         /// </summary>
         void ExceptionCaught(INextFilter nextFilter, IoSession session, Exception cause);
+
+        void InputClosed(INextFilter nextFilter, IoSession session);
         /// <summary>
         /// Filters <see cref="Core.Service.IoHandler.MessageReceived(IoSession, Object)"/> event.
         /// </summary>

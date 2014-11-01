@@ -10,6 +10,9 @@ using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
+    /// <summary>
+    /// Base class of socket acceptor.
+    /// </summary>
     public abstract class AbstractSocketAcceptor : AbstractIoAcceptor, ISocketAcceptor
     {
         private readonly AsyncSocketProcessor _processor;
@@ -24,10 +27,17 @@ namespace Mina.Transport.Socket
         private Boolean _disposed;
         private readonly Dictionary<EndPoint, System.Net.Sockets.Socket> _listenSockets = new Dictionary<EndPoint, System.Net.Sockets.Socket>();
 
+        /// <summary>
+        /// Instantiates with default max connections of 1024.
+        /// </summary>
         protected AbstractSocketAcceptor()
             : this(1024)
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="maxConnections">the max connections allowed</param>
         protected AbstractSocketAcceptor(Int32 maxConnections)
             : base(new DefaultSocketSessionConfig())
         {
@@ -38,9 +48,23 @@ namespace Mina.Transport.Socket
             ReuseBuffer = true;
         }
 
+        /// <inheritdoc/>
         public new ISocketSessionConfig SessionConfig
         {
             get { return (ISocketSessionConfig)base.SessionConfig; }
+        }
+
+        /// <inheritdoc/>
+        public new IPEndPoint LocalEndPoint
+        {
+            get { return (IPEndPoint)base.LocalEndPoint; }
+        }
+
+        /// <inheritdoc/>
+        public new IPEndPoint DefaultLocalEndPoint
+        {
+            get { return (IPEndPoint)base.DefaultLocalEndPoint; }
+            set { base.DefaultLocalEndPoint = value; }
         }
 
         /// <inheritdoc/>
@@ -49,11 +73,10 @@ namespace Mina.Transport.Socket
             get { return AsyncSocketSession.Metadata; }
         }
 
+        /// <inheritdoc/>
         public Boolean ReuseAddress { get; set; }
 
-        /// <summary>
-        /// Gets or sets the backlog.
-        /// </summary>
+        /// <inheritdoc/>
         public Int32 Backlog
         {
             get { return _backlog; }
@@ -273,20 +296,33 @@ namespace Mina.Transport.Socket
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Provides context info for a socket acceptor.
+        /// </summary>
         protected class ListenerContext
         {
             private readonly System.Net.Sockets.Socket _socket;
 
+            /// <summary>
+            /// Instantiates.
+            /// </summary>
+            /// <param name="socket">the associated socket</param>
             public ListenerContext(System.Net.Sockets.Socket socket)
             {
                 _socket = socket;
             }
 
+            /// <summary>
+            /// Gets the associated socket.
+            /// </summary>
             public System.Net.Sockets.Socket Socket
             {
                 get { return _socket; }
             }
 
+            /// <summary>
+            /// Gets or sets a tag.
+            /// </summary>
             public Object Tag { get; set; }
         }
     }

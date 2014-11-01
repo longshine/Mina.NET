@@ -64,6 +64,12 @@ namespace Mina.Core.Filterchain
         {
             nextFilter.ExceptionCaught(session, cause);
         }
+        
+        /// <inheritdoc/>
+        public virtual void InputClosed(INextFilter nextFilter, IoSession session)
+        {
+            nextFilter.InputClosed(session);
+        }
 
         /// <inheritdoc/>
         public virtual void MessageReceived(INextFilter nextFilter, IoSession session, Object message)

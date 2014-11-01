@@ -45,6 +45,12 @@ namespace Mina.Core.Filterchain
         /// <returns>the <typeparamref name="TFilter"/>, or null if not found</returns>
         TFilter Get(String name);
         /// <summary>
+        /// Gets the <typeparamref name="TFilter"/> with the specified <paramref name="filterType"/> in this chain.
+        /// </summary>
+        /// <param name="filterType">the type of filter we are looking for</param>
+        /// <returns>the <typeparamref name="TFilter"/>, or null if not found</returns>
+        TFilter Get(Type filterType);
+        /// <summary>
         /// Gets the <typeparamref name="TNextFilter"/> of the <typeparamref name="TFilter"/>
         /// with the specified <paramref name="name"/> in this chain.
         /// </summary>
@@ -176,16 +182,35 @@ namespace Mina.Core.Filterchain
         private readonly Func<TFilter, TFilter, Boolean> _equalsFunc;
         private readonly Func<TChain, Entry, Entry, String, TFilter, Entry> _entryFactory;
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="nextFilterFactory">the factory to create <typeparamref name="TNextFilter"/>s by (entry)</param>
+        /// <param name="headFilterFactory">the factory to create the head <typeparamref name="TFilter"/></param>
+        /// <param name="tailFilterFactory">the factory to create the tail <typeparamref name="TFilter"/></param>
         protected Chain(Func<Entry, TNextFilter> nextFilterFactory, Func<TFilter> headFilterFactory, Func<TFilter> tailFilterFactory)
             : this((chain, prev, next, name, filter) => new Entry(chain, prev, next, name, filter, nextFilterFactory),
             headFilterFactory, tailFilterFactory)
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="entryFactory">the factory to create entries by (chain, prev, next, name, filter)</param>
+        /// <param name="headFilterFactory">the factory to create the head <typeparamref name="TFilter"/></param>
+        /// <param name="tailFilterFactory">the factory to create the tail <typeparamref name="TFilter"/></param>
         protected Chain(Func<TChain, Entry, Entry, String, TFilter, Entry> entryFactory,
             Func<TFilter> headFilterFactory, Func<TFilter> tailFilterFactory)
             : this(entryFactory, headFilterFactory, tailFilterFactory, (t1, t2) => Object.ReferenceEquals(t1, t2))
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="entryFactory">the factory to create entries by (chain, prev, next, name, filter)</param>
+        /// <param name="headFilterFactory">the factory to create the head <typeparamref name="TFilter"/></param>
+        /// <param name="tailFilterFactory">the factory to create the tail <typeparamref name="TFilter"/></param>
+        /// <param name="equalsFunc">the function to check equality between two <typeparamref name="TFilter"/>s</param>
         protected Chain(Func<TChain, Entry, Entry, String, TFilter, Entry> entryFactory, 
             Func<TFilter> headFilterFactory, Func<TFilter> tailFilterFactory,
             Func<TFilter, TFilter, Boolean> equalsFunc)
@@ -214,18 +239,25 @@ namespace Mina.Core.Filterchain
         }
 
         /// <inheritdoc/>
+        public TFilter Get(String name)
+        {
+            IEntry<TFilter, TNextFilter> e = GetEntry(name);
+            return e == null ? default(TFilter) : e.Filter;
+        }
+
+        /// <inheritdoc/>
+        public TFilter Get(Type filterType)
+        {
+            IEntry<TFilter, TNextFilter> e = GetEntry(filterType);
+            return e == null ? default(TFilter) : e.Filter;
+        }
+
+        /// <inheritdoc/>
         public IEntry<TFilter, TNextFilter> GetEntry(String name)
         {
             Entry e;
             _name2entry.TryGetValue(name, out e);
             return e;
-        }
-
-        /// <inheritdoc/>
-        public TFilter Get(String name)
-        {
-            IEntry<TFilter, TNextFilter> e = GetEntry(name);
-            return e == null ? default(TFilter) : e.Filter;
         }
 
         /// <inheritdoc/>
@@ -383,22 +415,46 @@ namespace Mina.Core.Filterchain
         {
             Entry entry = CheckOldName(name);
             TFilter oldFilter = entry.Filter;
+
+            OnPreReplace(entry, newFilter);
+            // Now, register the new Filter replacing the old one.
             entry.Filter = newFilter;
+            try
+            {
+                OnPostReplace(entry, newFilter);
+            }
+            catch
+            {
+                entry.Filter = oldFilter;
+                throw;
+            }
+
             return oldFilter;
         }
 
         /// <inheritdoc/>
         public void Replace(TFilter oldFilter, TFilter newFilter)
         {
-            Entry e = _head._nextEntry;
-            while (e != _tail)
+            Entry entry = _head._nextEntry;
+            while (entry != _tail)
             {
-                if (_equalsFunc(e.Filter, oldFilter))
+                if (_equalsFunc(entry.Filter, oldFilter))
                 {
-                    e.Filter = newFilter;
+                    OnPreReplace(entry, newFilter);
+                    // Now, register the new Filter replacing the old one.
+                    entry.Filter = newFilter;
+                    try
+                    {
+                        OnPostReplace(entry, newFilter);
+                    }
+                    catch
+                    {
+                        entry.Filter = oldFilter;
+                        throw;
+                    }
                     return;
                 }
-                e = e._nextEntry;
+                entry = entry._nextEntry;
             }
             throw new ArgumentException("Filter not found: " + oldFilter.GetType().Name);
         }
@@ -501,6 +557,16 @@ namespace Mina.Core.Filterchain
         protected virtual void OnPostRemove(Entry entry) { }
 
         /// <summary>
+        /// Fires after the entry is replaced to this chain.
+        /// </summary>
+        protected virtual void OnPreReplace(Entry entry, TFilter newFilter) { }
+
+        /// <summary>
+        /// Fires after the entry is removed to this chain.
+        /// </summary>
+        protected virtual void OnPostReplace(Entry entry, TFilter newFilter) { }
+
+        /// <summary>
         /// Represents an entry of filter in the chain.
         /// </summary>
         public class Entry : IEntry<TFilter, TNextFilter>
@@ -512,6 +578,15 @@ namespace Mina.Core.Filterchain
             private TFilter _filter;
             private readonly TNextFilter _nextFilter;
 
+            /// <summary>
+            /// Instantiates.
+            /// </summary>
+            /// <param name="chain">the chain this entry belongs to</param>
+            /// <param name="prevEntry">the previous one</param>
+            /// <param name="nextEntry">the next one</param>
+            /// <param name="name">the name of this entry</param>
+            /// <param name="filter">the associated <typeparamref name="TFilter"/></param>
+            /// <param name="nextFilterFactory">the factory to create <typeparamref name="TNextFilter"/> by (entry)</param>
             public Entry(TChain chain, Entry prevEntry, Entry nextEntry,
                 String name, TFilter filter, Func<Entry, TNextFilter> nextFilterFactory)
             {

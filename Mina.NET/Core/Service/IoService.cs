@@ -115,6 +115,10 @@ namespace Mina.Core.Service
         /// </remarks>
         event EventHandler<IoSessionExceptionEventArgs> ExceptionCaught;
         /// <summary>
+        /// Occurs when the closure of an half-duplex channel.
+        /// </summary>
+        event EventHandler<IoSessionEventArgs> InputClosed;
+        /// <summary>
         /// Fires when a message is received. Only available when
         /// no <see cref="IoHandler"/> is set to <see cref="Handler"/>.
         /// </summary>

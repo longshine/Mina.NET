@@ -94,6 +94,12 @@ namespace Mina.Core.Session
         }
 
         /// <inheritdoc/>
+        public virtual Boolean Secured
+        {
+            get { return false; }
+        }
+
+        /// <inheritdoc/>
         public ICloseFuture CloseFuture
         {
             get { return _closeFuture; }
@@ -565,6 +571,11 @@ namespace Mina.Core.Session
             get { return GetLastIdleTime(IdleStatus.WriterIdle); }
         }
 
+        /// <summary>
+        /// Increases idle count.
+        /// </summary>
+        /// <param name="status">the <see cref="IdleStatus"/></param>
+        /// <param name="currentTime">the time</param>
         public void IncreaseIdleCount(IdleStatus status, DateTime currentTime)
         {
             switch (status)
@@ -586,6 +597,11 @@ namespace Mina.Core.Session
             }
         }
 
+        /// <summary>
+        /// Increases read bytes.
+        /// </summary>
+        /// <param name="increment">the amount to increase</param>
+        /// <param name="currentTime">the time</param>
         public void IncreaseReadBytes(Int64 increment, DateTime currentTime)
         {
             if (increment <= 0)
@@ -599,6 +615,10 @@ namespace Mina.Core.Session
             this.Service.Statistics.IncreaseReadBytes(increment, currentTime);
         }
 
+        /// <summary>
+        /// Increases read messages.
+        /// </summary>
+        /// <param name="currentTime">the time</param>
         public void IncreaseReadMessages(DateTime currentTime)
         {
             _readMessages++;
@@ -609,6 +629,11 @@ namespace Mina.Core.Session
             this.Service.Statistics.IncreaseReadMessages(currentTime);
         }
 
+        /// <summary>
+        /// Increases written bytes.
+        /// </summary>
+        /// <param name="increment">the amount to increase</param>
+        /// <param name="currentTime">the time</param>
         public void IncreaseWrittenBytes(Int32 increment, DateTime currentTime)
         {
             if (increment <= 0)
@@ -623,6 +648,11 @@ namespace Mina.Core.Session
             IncreaseScheduledWriteBytes(-increment);
         }
 
+        /// <summary>
+        /// Increases written messages.
+        /// </summary>
+        /// <param name="request">the request written</param>
+        /// <param name="currentTime">the time</param>
         public void IncreaseWrittenMessages(IWriteRequest request, DateTime currentTime)
         {
             IoBuffer buf = request.Message as IoBuffer;
@@ -636,6 +666,10 @@ namespace Mina.Core.Session
             DecreaseScheduledWriteMessages();
         }
 
+        /// <summary>
+        /// Increase the number of scheduled write bytes for the session.
+        /// </summary>
+        /// <param name="increment">the number of newly added bytes to write</param>
         public void IncreaseScheduledWriteBytes(Int32 increment)
         {
             Interlocked.Add(ref _scheduledWriteBytes, increment);
@@ -660,13 +694,8 @@ namespace Mina.Core.Session
             Int64 interval = (Int64)(currentTime - _lastThroughputCalculationTime).TotalMilliseconds;
 
             Int64 minInterval = Config.ThroughputCalculationIntervalInMillis;
-            if ((minInterval == 0) || (interval < minInterval))
-            {
-                if (!force)
-                {
-                    return;
-                }
-            }
+            if ((minInterval == 0 || interval < minInterval) && !force)
+                return;
 
             _readBytesThroughput = (_readBytes - _lastReadBytes) * 1000.0 / interval;
             _writtenBytesThroughput = (_writtenBytes - _lastWrittenBytes) * 1000.0 / interval;

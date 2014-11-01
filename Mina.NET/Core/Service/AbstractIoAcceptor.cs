@@ -15,6 +15,9 @@ namespace Mina.Core.Service
         private readonly List<EndPoint> _boundEndPoints = new List<EndPoint>();
         private Boolean _disconnectOnUnbind = true;
 
+        /// <summary>
+        /// The lock for binding.
+        /// </summary>
         [CLSCompliant(false)]
         protected Object _bindLock;
 
