@@ -120,6 +120,11 @@ namespace Mina.Filter.Executor
             {
                 // Do nothing
             }
+
+            public void InputClosed(IoSession session)
+            {
+                // Do nothing
+            }
         }
     }
 }
