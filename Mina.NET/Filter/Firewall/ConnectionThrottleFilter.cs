@@ -18,6 +18,7 @@ namespace Mina.Filter.Firewall
 
         private Int64 _allowedInterval;
         private readonly ConcurrentDictionary<String, DateTime> _clients = new ConcurrentDictionary<String, DateTime>();
+        // TODO expire overtime clients
 
         /// <summary>
         /// Default constructor.  Sets the wait time to 1 second
@@ -36,7 +37,7 @@ namespace Mina.Filter.Firewall
         }
 
         /// <summary>
-        /// Gets or sets the interval (ms) between connections from a client.
+        /// Gets or sets the minimal interval (ms) between connections from a client.
         /// </summary>
         public Int64 AllowedInterval
         {
@@ -68,28 +69,28 @@ namespace Mina.Filter.Firewall
             {
                 String addr = ep.Address.ToString();
                 DateTime now = DateTime.Now;
+                DateTime? lastConnTime = null;
 
-                if (_clients.ContainsKey(addr))
+                _clients.AddOrUpdate(addr, now, (k, v) =>
                 {
                     if (log.IsDebugEnabled)
                         log.Debug("This is not a new client");
+                    lastConnTime = v;
+                    return now;
+                });
 
-                    DateTime lastConnTime = _clients[addr];
-                    _clients[addr] = now;
-
+                if (lastConnTime.HasValue)
+                {
                     // if the interval between now and the last connection is
                     // less than the allowed interval, return false
-                    if ((now - lastConnTime).TotalMilliseconds < _allowedInterval)
+                    if ((now - lastConnTime.Value).TotalMilliseconds < _allowedInterval)
                     {
                         if (log.IsWarnEnabled)
                             log.Warn("Session connection interval too short");
                         return false;
                     }
-
-                    return true;
                 }
 
-                _clients[addr] = now;
                 return true;
             }
 
