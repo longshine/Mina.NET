@@ -142,7 +142,8 @@ namespace Mina.Transport.Socket
                 IFileRegion file = req.Message as IFileRegion;
                 if (file == null)
                     EndSend(new InvalidOperationException("Don't know how to handle message of type '"
-                            + req.Message.GetType().Name + "'.  Are you missing a protocol encoder?"));
+                            + req.Message.GetType().Name + "'.  Are you missing a protocol encoder?"),
+                            true);
                 else
                     BeginSendFile(req, file);
             }
@@ -213,11 +214,34 @@ namespace Mina.Transport.Socket
                 BeginSend();
         }
 
+        /// <summary>
+        /// Ends send operation.
+        /// </summary>
+        /// <param name="ex">the exception caught</param>
         protected void EndSend(Exception ex)
+        {
+            EndSend(ex, false);
+        }
+
+        /// <summary>
+        /// Ends send operation.
+        /// </summary>
+        /// <param name="ex">the exception caught</param>
+        /// <param name="discardWriteRequest">discard the current write quest or not</param>
+        protected void EndSend(Exception ex, Boolean discardWriteRequest)
         {
             IWriteRequest req = CurrentWriteRequest;
             if (req != null)
+            {
                 req.Future.Exception = ex;
+                if (discardWriteRequest)
+                {
+                    CurrentWriteRequest = null;
+                    IoBuffer buf = req.Message as IoBuffer;
+                    if (buf != null)
+                        buf.Free();
+                }
+            }
             this.FilterChain.FireExceptionCaught(ex);
             if (Socket.Connected)
                 BeginSend();
