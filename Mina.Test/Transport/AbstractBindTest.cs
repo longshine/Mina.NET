@@ -187,7 +187,7 @@ namespace Mina.Transport
             SetReuseAddress(reuseAddress);
 
             Boolean socketBound = false;
-            for (port = 1; port <= 65535; port++)
+            for (port = 1024; port <= 65535; port++)
             {
                 socketBound = false;
                 try
