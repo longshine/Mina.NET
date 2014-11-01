@@ -31,7 +31,7 @@ namespace Mina.Transport.Serial
         /// <param name="baudRate">the baud rate</param>
         /// <param name="parity">the <see cref="Parity"/></param>
         /// <param name="dataBits">the data bits</param>
-        /// <param name="parity">the <see cref="StopBits"/></param>
+        /// <param name="stopBits">the <see cref="StopBits"/></param>
         public SerialEndPoint(String portName, Int32 baudRate,
             Parity parity, Int32 dataBits, StopBits stopBits)
         {
