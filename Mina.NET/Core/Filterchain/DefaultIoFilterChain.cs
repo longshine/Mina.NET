@@ -89,8 +89,6 @@ namespace Mina.Core.Filterchain
         /// <inheritdoc/>
         public void FireMessageSent(IWriteRequest request)
         {
-            _session.IncreaseWrittenMessages(request, DateTime.Now);
-
             try
             {
                 request.Future.Written = true;
