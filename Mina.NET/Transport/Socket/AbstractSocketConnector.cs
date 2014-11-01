@@ -8,10 +8,16 @@ using Mina.Util;
 
 namespace Mina.Transport.Socket
 {
+    /// <summary>
+    /// Base class of socket connector.
+    /// </summary>
     public abstract class AbstractSocketConnector : AbstractIoConnector
     {
         private readonly AsyncSocketProcessor _processor;
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
         protected AbstractSocketConnector(IoSessionConfig sessionConfig)
             : base(sessionConfig)
         {
@@ -39,6 +45,9 @@ namespace Mina.Transport.Socket
         /// </remarks>
         public Boolean ReuseBuffer { get; set; }
 
+        /// <summary>
+        /// Gets the <see cref="IoProcessor"/>.
+        /// </summary>
         protected IoProcessor<SocketSession> Processor
         {
             get { return _processor; }
@@ -55,10 +64,24 @@ namespace Mina.Transport.Socket
             return ctx.Future;
         }
 
+        /// <summary>
+        /// Creates a socket according to the address family.
+        /// </summary>
+        /// <param name="addressFamily">the <see cref="AddressFamily"/></param>
+        /// <returns>the socket created</returns>
         protected abstract System.Net.Sockets.Socket NewSocket(AddressFamily addressFamily);
 
+        /// <summary>
+        /// Begins connecting.
+        /// </summary>
+        /// <param name="connector">the context of current connector</param>
         protected abstract void BeginConnect(ConnectorContext connector);
 
+        /// <summary>
+        /// Ends connecting.
+        /// </summary>
+        /// <param name="session">the connected session</param>
+        /// <param name="connector">the context of current connector</param>
         protected void EndConnect(IoSession session, ConnectorContext connector)
         {
             try
@@ -74,6 +97,11 @@ namespace Mina.Transport.Socket
             _processor.IdleStatusChecker.Start();
         }
 
+        /// <summary>
+        /// Ends connecting.
+        /// </summary>
+        /// <param name="cause">the exception occurred</param>
+        /// <param name="connector">the context of current connector</param>
         protected void EndConnect(Exception cause, ConnectorContext connector)
         {
             connector.Future.Exception = cause;
@@ -90,6 +118,9 @@ namespace Mina.Transport.Socket
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Provides context info for a socket connector.
+        /// </summary>
         protected class ConnectorContext : IDisposable
         {
             private readonly System.Net.Sockets.Socket _socket;
@@ -97,6 +128,12 @@ namespace Mina.Transport.Socket
             private readonly Action<IoSession, IConnectFuture> _sessionInitializer;
             private readonly DefaultConnectFuture _future = new DefaultConnectFuture();
 
+            /// <summary>
+            /// Instantiates.
+            /// </summary>
+            /// <param name="socket">the associated socket</param>
+            /// <param name="remoteEP">the remote endpoint</param>
+            /// <param name="sessionInitializer">the funciton to initialize session</param>
             public ConnectorContext(System.Net.Sockets.Socket socket, EndPoint remoteEP, Action<IoSession, IConnectFuture> sessionInitializer)
             {
                 _socket = socket;
@@ -104,32 +141,48 @@ namespace Mina.Transport.Socket
                 _sessionInitializer = sessionInitializer;
             }
 
+            /// <summary>
+            /// Gets the associated socket.
+            /// </summary>
             public System.Net.Sockets.Socket Socket
             {
                 get { return _socket; }
             }
 
+            /// <summary>
+            /// Gets the remote endpoint.
+            /// </summary>
             public EndPoint RemoteEP
             {
                 get { return _remoteEP; }
             }
 
+            /// <summary>
+            /// Gets the <see cref="IConnectFuture"/>.
+            /// </summary>
             public IConnectFuture Future
             {
                 get { return _future; }
             }
 
+            /// <summary>
+            /// Gets the funciton to initialize session.
+            /// </summary>
             public Action<IoSession, IConnectFuture> SessionInitializer
             {
                 get { return _sessionInitializer; }
             }
 
+            /// <inheritdoc/>
             public void Dispose()
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
             }
 
+            /// <summary>
+            /// Disposes.
+            /// </summary>
             protected virtual void Dispose(Boolean disposing)
             {
                 if (disposing)

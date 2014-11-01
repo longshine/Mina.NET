@@ -16,11 +16,11 @@ namespace Mina.Core.Buffer
         /// <exception cref="ArgumentException">If the <paramref name="capacity"/> is a negative integer</exception>
         IoBuffer Allocate(Int32 capacity);
         /// <summary>
-        /// Wraps the specified byte array into MINA buffer.
+        /// Wraps the specified byte array into Mina.NET buffer.
         /// </summary>
         IoBuffer Wrap(Byte[] array);
         /// <summary>
-        /// Wraps the specified byte array into MINA buffer.
+        /// Wraps the specified byte array into Mina.NET buffer.
         /// </summary>
         /// <exception cref="IndexOutOfRangeException">
         /// If the preconditions on the <paramref name="offset"/> and <paramref name="length"/>

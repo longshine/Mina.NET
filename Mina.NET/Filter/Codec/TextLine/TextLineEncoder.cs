@@ -15,26 +15,52 @@ namespace Mina.Filter.Codec.TextLine
         private readonly LineDelimiter _delimiter;
         private Int32 _maxLineLength = Int32.MaxValue;
 
+        /// <summary>
+        /// Instantiates with default <see cref="Encoding.Default"/> and <see cref="LineDelimiter.Unix"/>.
+        /// </summary>
         public TextLineEncoder()
             : this(LineDelimiter.Unix)
         { }
 
+        /// <summary>
+        /// Instantiates with default <see cref="Encoding.Default"/> and given delimiter.
+        /// </summary>
+        /// <param name="delimiter">the delimiter string</param>
         public TextLineEncoder(String delimiter)
             : this(new LineDelimiter(delimiter))
         { }
 
+        /// <summary>
+        /// Instantiates with default <see cref="Encoding.Default"/> and given delimiter.
+        /// </summary>
+        /// <param name="delimiter">the <see cref="LineDelimiter"/></param>
         public TextLineEncoder(LineDelimiter delimiter)
             : this(Encoding.Default, delimiter)
         { }
 
+        /// <summary>
+        /// Instantiates with given encoding,
+        /// and default <see cref="LineDelimiter.Unix"/>.
+        /// </summary>
+        /// <param name="encoding">the <see cref="Encoding"/></param>
         public TextLineEncoder(Encoding encoding)
             : this(encoding, LineDelimiter.Unix)
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="encoding">the <see cref="Encoding"/></param>
+        /// <param name="delimiter">the delimiter string</param>
         public TextLineEncoder(Encoding encoding, String delimiter)
             : this(encoding, new LineDelimiter(delimiter))
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="encoding">the <see cref="Encoding"/></param>
+        /// <param name="delimiter">the <see cref="LineDelimiter"/></param>
         public TextLineEncoder(Encoding encoding, LineDelimiter delimiter)
         {
             if (encoding == null)
@@ -62,6 +88,7 @@ namespace Mina.Filter.Codec.TextLine
             }
         }
 
+        /// <inheritdoc/>
         public void Encode(IoSession session, Object message, IProtocolEncoderOutput output)
         {
             String value = message == null ? String.Empty : message.ToString();
@@ -75,6 +102,7 @@ namespace Mina.Filter.Codec.TextLine
             output.Write(buf);
         }
 
+        /// <inheritdoc/>
         public void Dispose(IoSession session)
         {
             // Do nothing

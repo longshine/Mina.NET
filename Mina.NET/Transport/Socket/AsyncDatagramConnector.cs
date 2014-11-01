@@ -9,6 +9,9 @@ namespace Mina.Transport.Socket
     /// </summary>
     public class AsyncDatagramConnector : AbstractSocketConnector, IDatagramConnector
     {
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
         public AsyncDatagramConnector()
             : base(new DefaultDatagramSessionConfig())
         { }

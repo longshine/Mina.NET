@@ -18,26 +18,52 @@ namespace Mina.Filter.Codec.TextLine
         private Int32 _bufferLength = 128;
         private Byte[] _delimBuf;
 
+        /// <summary>
+        /// Instantiates with default <see cref="Encoding.Default"/> and <see cref="LineDelimiter.Auto"/>.
+        /// </summary>
         public TextLineDecoder()
             : this(LineDelimiter.Auto)
         { }
 
+        /// <summary>
+        /// Instantiates with default <see cref="Encoding.Default"/> and given delimiter.
+        /// </summary>
+        /// <param name="delimiter">the delimiter string</param>
         public TextLineDecoder(String delimiter)
             : this(new LineDelimiter(delimiter))
         { }
 
+        /// <summary>
+        /// Instantiates with default <see cref="Encoding.Default"/> and given delimiter.
+        /// </summary>
+        /// <param name="delimiter">the <see cref="LineDelimiter"/></param>
         public TextLineDecoder(LineDelimiter delimiter)
             : this(Encoding.Default, delimiter)
         { }
 
+        /// <summary>
+        /// Instantiates with given encoding,
+        /// and default <see cref="LineDelimiter.Auto"/>.
+        /// </summary>
+        /// <param name="encoding">the <see cref="Encoding"/></param>
         public TextLineDecoder(Encoding encoding)
             : this(encoding, LineDelimiter.Auto)
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="encoding">the <see cref="Encoding"/></param>
+        /// <param name="delimiter">the delimiter string</param>
         public TextLineDecoder(Encoding encoding, String delimiter)
             : this(encoding, new LineDelimiter(delimiter))
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="encoding">the <see cref="Encoding"/></param>
+        /// <param name="delimiter">the <see cref="LineDelimiter"/></param>
         public TextLineDecoder(Encoding encoding, LineDelimiter delimiter)
         {
             if (encoding == null)
@@ -52,6 +78,9 @@ namespace Mina.Filter.Codec.TextLine
             _delimBuf = encoding.GetBytes(delimiter.Value);
         }
 
+        /// <summary>
+        /// Gets or sets the max length allowed for a line.
+        /// </summary>
         public Int32 MaxLineLength
         {
             get { return _maxLineLength; }
@@ -63,6 +92,9 @@ namespace Mina.Filter.Codec.TextLine
             }
         }
 
+        /// <summary>
+        /// Gets or sets the lenght of inner buffer.
+        /// </summary>
         public Int32 BufferLength
         {
             get { return _bufferLength; }
@@ -74,6 +106,7 @@ namespace Mina.Filter.Codec.TextLine
             }
         }
 
+        /// <inheritdoc/>
         public void Decode(IoSession session, IoBuffer input, IProtocolDecoderOutput output)
         {
             Context ctx = GetContext(session);
@@ -84,11 +117,13 @@ namespace Mina.Filter.Codec.TextLine
                 DecodeNormal(ctx, session, input, output);
         }
 
+        /// <inheritdoc/>
         public void FinishDecode(IoSession session, IProtocolDecoderOutput output)
         {
             // Do nothing
         }
 
+        /// <inheritdoc/>
         public void Dispose(IoSession session)
         {
             session.RemoveAttribute(CONTEXT);

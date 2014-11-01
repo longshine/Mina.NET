@@ -12,10 +12,13 @@ using Mina.Util;
 namespace Mina.Transport.Socket
 {
     /// <summary>
-    /// An <see cref="IoSession"/> for socket transport (TCP/IP).
+    /// An <see cref="Core.Session.IoSession"/> for socket transport (TCP/IP).
     /// </summary>
     public class AsyncSocketSession : SocketSession
     {
+        /// <summary>
+        /// Transport metadata for async socket session.
+        /// </summary>
         public static readonly ITransportMetadata Metadata
             = new DefaultTransportMetadata("async", "socket", false, true, typeof(IPEndPoint));
 
@@ -23,6 +26,15 @@ namespace Mina.Transport.Socket
         private readonly SocketAsyncEventArgsBuffer _writeBuffer;
         private readonly EventHandler<SocketAsyncEventArgs> _completeHandler;
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="service">the service this session belongs to</param>
+        /// <param name="processor">the processor to process this session</param>
+        /// <param name="socket">the associated socket</param>
+        /// <param name="readBuffer">the <see cref="SocketAsyncEventArgsBuffer"/> as reading buffer</param>
+        /// <param name="writeBuffer">the <see cref="SocketAsyncEventArgsBuffer"/> as writing buffer</param>
+        /// <param name="reuseBuffer">whether or not reuse internal buffer, see <seealso cref="SocketSession.ReuseBuffer"/> for more</param>
         public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket,
             SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
             : base(service, processor, new SessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint, reuseBuffer)

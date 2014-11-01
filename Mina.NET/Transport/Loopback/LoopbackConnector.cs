@@ -20,6 +20,9 @@ namespace Mina.Transport.Loopback
         static Int32 nextLocalPort = -1;
         private IdleStatusChecker _idleStatusChecker;
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
         public LoopbackConnector()
             : base(new DefaultLoopbackSessionConfig())
         {

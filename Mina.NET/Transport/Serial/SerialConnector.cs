@@ -16,12 +16,16 @@ namespace Mina.Transport.Serial
     {
         private readonly IdleStatusChecker _idleStatusChecker;
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
         public SerialConnector()
             : base(new DefaultSerialSessionConfig())
         {
             _idleStatusChecker = new IdleStatusChecker(() => ManagedSessions.Values);
         }
 
+        /// <inheritdoc/>
         public new ISerialSessionConfig SessionConfig
         {
             get { return (ISerialSessionConfig)base.SessionConfig; }
@@ -69,6 +73,10 @@ namespace Mina.Transport.Serial
             return future;
         }
 
+        /// <summary>
+        /// Disposes.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(Boolean disposing)
         {
             if (disposing)

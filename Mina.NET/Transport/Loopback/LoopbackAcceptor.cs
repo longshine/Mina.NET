@@ -18,6 +18,9 @@ namespace Mina.Transport.Loopback
             = new Dictionary<EndPoint, LoopbackPipe>();
         private IdleStatusChecker _idleStatusChecker;
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
         public LoopbackAcceptor()
             : base(new DefaultLoopbackSessionConfig())
         {

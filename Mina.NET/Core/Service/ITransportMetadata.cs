@@ -21,11 +21,14 @@ namespace Mina.Core.Service
         /// </summary>
         Boolean Connectionless { get; }
         /// <summary>
-        /// Returns {@code true} if the messages exchanged by the service can be
+        /// Returns <code>true</code> if the messages exchanged by the service can be
         /// <a href="http://en.wikipedia.org/wiki/IPv4#Fragmentation_and_reassembly">fragmented
         /// or reassembled</a> by its underlying transport.
         /// </summary>
         Boolean HasFragmentation { get; }
+        /// <summary>
+        /// Gets the type of the endpoint in this transport.
+        /// </summary>
         Type EndPointType { get; }
     }
 }

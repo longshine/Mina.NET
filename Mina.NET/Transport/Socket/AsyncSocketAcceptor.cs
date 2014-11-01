@@ -20,10 +20,17 @@ namespace Mina.Transport.Socket
         private BufferManager _bufferManager;
         private Pool<SocketAsyncEventArgsBuffer> _readWritePool;
 
+        /// <summary>
+        /// Instantiates with default max connections of 1024.
+        /// </summary>
         public AsyncSocketAcceptor()
             : this(1024)
         { }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="maxConnections">the max connections allowed</param>
         public AsyncSocketAcceptor(Int32 maxConnections)
             : base(maxConnections)
         {

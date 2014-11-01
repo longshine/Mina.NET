@@ -271,6 +271,10 @@ namespace Mina.Transport.Socket
             }
         }
 
+        /// <summary>
+        /// Ends receive operation.
+        /// </summary>
+        /// <param name="ex">the exception caught</param>
         protected void EndReceive(Exception ex)
         {
             this.FilterChain.FireExceptionCaught(ex);
