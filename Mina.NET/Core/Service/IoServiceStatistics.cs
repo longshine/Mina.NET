@@ -342,13 +342,13 @@ namespace Mina.Core.Service
 
         private void ResetThroughput()
         {
-            // TODO check ManagedSessionCount
-            //{
-            //    _readBytesThroughput = 0;
-            //    _writtenBytesThroughput = 0;
-            //    _readMessagesThroughput = 0;
-            //    _writtenMessagesThroughput = 0;
-            //}
+            if (_service.ManagedSessions.Count == 0)
+            {
+                _readBytesThroughput = 0;
+                _writtenBytesThroughput = 0;
+                _readMessagesThroughput = 0;
+                _writtenMessagesThroughput = 0;
+            }
         }
     }
 }
