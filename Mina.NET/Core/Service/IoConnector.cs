@@ -12,6 +12,7 @@ namespace Mina.Core.Service
     {
         /// <summary>
         /// Gets or sets connect timeout in seconds. The default value is 1 minute.
+        /// <seealso cref="ConnectTimeoutInMillis"/>
         /// </summary>
         Int32 ConnectTimeout { get; set; }
         /// <summary>
@@ -23,6 +24,10 @@ namespace Mina.Core.Service
         /// is specified in <see cref="Connect()"/> method.
         /// </summary>
         EndPoint DefaultRemoteEndPoint { get; set; }
+        /// <summary>
+        /// Gets or sets the default local endpoint.
+        /// </summary>
+        EndPoint DefaultLocalEndPoint { get; set; }
         /// <summary>
         /// Connects to the <see cref="DefaultRemoteEndPoint"/>.
         /// </summary>
