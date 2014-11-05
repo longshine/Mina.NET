@@ -12,7 +12,7 @@ using Mina.Util;
 namespace Mina.Filter.Codec
 {
     /// <summary>
-    /// An {@link IoFilter} which translates binary or protocol specific data into
+    /// An <see cref="IoFilter"/> which translates binary or protocol specific data into
     /// message objects and vice versa using <see cref="IProtocolCodecFactory"/>,
     /// <see cref="IProtocolEncoder"/>, or <see cref="IProtocolDecoder"/>.
     /// </summary>
@@ -26,6 +26,10 @@ namespace Mina.Filter.Codec
 
         private Semaphore _semaphore = new Semaphore(1, 1);
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="factory">the factory for creating <see cref="IProtocolEncoder"/> and <see cref="IProtocolDecoder"/></param>
         public ProtocolCodecFilter(IProtocolCodecFactory factory)
         {
             if (factory == null)
@@ -34,6 +38,11 @@ namespace Mina.Filter.Codec
             _factory = factory;
         }
 
+        /// <summary>
+        /// Instantiates.
+        /// </summary>
+        /// <param name="encoder">the <see cref="IProtocolEncoder"/> for encoding message objects into binary or protocol specific data</param>
+        /// <param name="decoder">the <see cref="IProtocolDecoder"/> for decoding binary or protocol specific data into message objects</param>
         public ProtocolCodecFilter(IProtocolEncoder encoder, IProtocolDecoder decoder)
             : this(new ProtocolCodecFactory(encoder, decoder))
         { }
@@ -229,6 +238,9 @@ namespace Mina.Filter.Codec
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Disposes.
+        /// </summary>
         protected virtual void Dispose(Boolean disposing)
         {
             if (disposing)
