@@ -145,8 +145,17 @@ namespace Mina.Core.Session
         /// <inheritdoc/>
         public IWriteFuture Write(Object message)
         {
+            return Write(message, null);
+        }
+
+        /// <inheritdoc/>
+        public IWriteFuture Write(Object message, EndPoint remoteEP)
+        {
             if (message == null)
                 return null;
+
+            if (!TransportMetadata.Connectionless && remoteEP != null)
+                throw new InvalidOperationException();
 
             // If the session has been closed or is closing, we can't either
             // send a message to the remote side. We generate a future
@@ -154,7 +163,7 @@ namespace Mina.Core.Session
             if (Closing || !Connected)
             {
                 IWriteFuture future = new DefaultWriteFuture(this);
-                IWriteRequest request = new DefaultWriteRequest(message, future);
+                IWriteRequest request = new DefaultWriteRequest(message, future, remoteEP);
                 future.Exception = new WriteToClosedSessionException(request);
                 return future;
             }
@@ -174,7 +183,7 @@ namespace Mina.Core.Session
 
             // Now, we can write the message. First, create a future
             IWriteFuture writeFuture = new DefaultWriteFuture(this);
-            IWriteRequest writeRequest = new DefaultWriteRequest(message, writeFuture);
+            IWriteRequest writeRequest = new DefaultWriteRequest(message, writeFuture, remoteEP);
 
             // Then, get the chain and inject the WriteRequest into it
             IoFilterChain filterChain = this.FilterChain;

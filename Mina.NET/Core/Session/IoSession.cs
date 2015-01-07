@@ -74,6 +74,11 @@ namespace Mina.Core.Session
         /// </summary>
         IWriteFuture Write(Object message);
         /// <summary>
+        /// Writes the specified <code>message</code> to the specified destination.
+        /// This operation is asynchronous.
+        /// </summary>
+        IWriteFuture Write(Object message, EndPoint remoteEP);
+        /// <summary>
         /// Closes this session immediately or after all queued write requests
         /// are flushed. This operation is asynchronous.
         /// </summary>
