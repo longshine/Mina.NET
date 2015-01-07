@@ -28,7 +28,7 @@ namespace Mina.Transport.Socket
         /// </summary>
         internal AsyncDatagramSession(IoService service, IoProcessor<AsyncDatagramSession> processor,
             AsyncDatagramAcceptor.SocketContext ctx, EndPoint remoteEP, Boolean reuseBuffer)
-            : base(service, processor, new DatagramSessionConfigImpl(ctx.Socket), ctx.Socket, ctx.Socket.LocalEndPoint, remoteEP, reuseBuffer)
+            : base(service, processor, new DefaultDatagramSessionConfig(), ctx.Socket, ctx.Socket.LocalEndPoint, remoteEP, reuseBuffer)
         {
             _socketContext = ctx;
         }
