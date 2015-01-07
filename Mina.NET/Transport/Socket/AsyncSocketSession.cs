@@ -39,8 +39,6 @@ namespace Mina.Transport.Socket
             SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
             : base(service, processor, new SessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint, reuseBuffer)
         {
-            if (service.SessionConfig != null)
-                Config.SetAll(service.SessionConfig);
             _readBuffer = readBuffer;
             _readBuffer.SocketAsyncEventArgs.UserToken = this;
             _writeBuffer = writeBuffer;

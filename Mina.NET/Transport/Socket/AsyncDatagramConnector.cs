@@ -65,12 +65,9 @@ namespace Mina.Transport.Socket
             writeBuffer.SetBuffer(new Byte[SessionConfig.ReadBufferSize], 0, SessionConfig.ReadBufferSize);
             writeBuffer.Completed += new EventHandler<SocketAsyncEventArgs>(SocketAsyncEventArgs_Completed);
 
-            AsyncDatagramSession session = new AsyncDatagramSession(this, Processor,
-                connector.Socket, connector.RemoteEP,
+            EndConnect(new AsyncDatagramSession(this, Processor, connector.Socket, connector.RemoteEP,
                 new SocketAsyncEventArgsBuffer(readBuffer), new SocketAsyncEventArgsBuffer(writeBuffer),
-                ReuseBuffer);
-            session.Config.SetAll(SessionConfig);
-            EndConnect(session, connector);
+                ReuseBuffer), connector);
         }
 
         void SocketAsyncEventArgs_Completed(object sender, SocketAsyncEventArgs e)
