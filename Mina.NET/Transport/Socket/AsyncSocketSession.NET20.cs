@@ -20,6 +20,8 @@ namespace Mina.Transport.Socket
             System.Net.Sockets.Socket socket, Boolean reuseBuffer)
             : base(service, processor, new SessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint, reuseBuffer)
         {
+            if (service.SessionConfig != null)
+                Config.SetAll(service.SessionConfig);
             _readBuffer = new Byte[service.SessionConfig.ReadBufferSize];
         }
 

@@ -49,8 +49,10 @@ namespace Mina.Transport.Socket
                 return;
             }
 
-            EndConnect(new AsyncDatagramSession(this, Processor, connector.Socket, connector.RemoteEP,
-                ReuseBuffer), connector);
+            AsyncDatagramSession session = new AsyncDatagramSession(this,
+                Processor, connector.Socket, connector.RemoteEP, ReuseBuffer);
+            session.Config.SetAll(SessionConfig);
+            EndConnect(session, connector);
         }
     }
 }

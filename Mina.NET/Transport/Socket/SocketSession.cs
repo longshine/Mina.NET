@@ -36,8 +36,6 @@ namespace Mina.Transport.Socket
             _localEP = localEP;
             _remoteEP = remoteEP;
             Config = config;
-            if (service.SessionConfig != null)
-                Config.SetAll(service.SessionConfig);
             _processor = processor;
             _filterChain = new DefaultIoFilterChain(this);
         }
