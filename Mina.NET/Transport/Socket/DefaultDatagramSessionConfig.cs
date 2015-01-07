@@ -15,5 +15,7 @@ namespace Mina.Transport.Socket
         public override Boolean? ReuseAddress { get; set; }
 
         public override Int32? TrafficClass { get; set; }
+
+        public override System.Net.Sockets.MulticastOption MulticastOption { get; set; }
     }
 }

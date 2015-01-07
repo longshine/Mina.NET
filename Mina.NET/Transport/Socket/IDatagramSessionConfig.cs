@@ -32,5 +32,9 @@ namespace Mina.Transport.Socket
         /// Gets or sets traffic class or <see cref="System.Net.Sockets.SocketOptionName.TypeOfService"/> in the IP datagram header.
         /// </summary>
         Int32? TrafficClass { get; set; }
+        /// <summary>
+        /// Gets or sets <see cref="System.Net.Sockets.MulticastOption"/>.
+        /// </summary>
+        System.Net.Sockets.MulticastOption MulticastOption { get; set; }
     }
 }

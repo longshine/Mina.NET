@@ -23,6 +23,7 @@ namespace Mina.Transport.Socket
                 TrafficClass = cfg.TrafficClass;
             if (cfg.ExclusiveAddressUse.HasValue)
                 ExclusiveAddressUse = cfg.ExclusiveAddressUse;
+            MulticastOption = cfg.MulticastOption;
         }
 
         public abstract Boolean? EnableBroadcast { get; set; }
@@ -36,5 +37,7 @@ namespace Mina.Transport.Socket
         public abstract Int32? TrafficClass { get; set; }
 
         public abstract Boolean? ExclusiveAddressUse { get; set; }
+
+        public abstract System.Net.Sockets.MulticastOption MulticastOption { get; set; }
     }
 }
