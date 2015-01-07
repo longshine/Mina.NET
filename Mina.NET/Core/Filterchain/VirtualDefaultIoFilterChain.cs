@@ -14,7 +14,6 @@ namespace Mina.Core.Filterchain
     /// </summary>
     public class VirtualDefaultIoFilterChain : Chain<VirtualDefaultIoFilterChain, IoFilter, INextFilter>, IoFilterChain
     {
-        public readonly static AttributeKey SessionCreatedFuture = new AttributeKey(typeof(DefaultIoFilterChain), "connectFuture");
         private readonly static ILog log = LogManager.GetLogger(typeof(DefaultIoFilterChain));
 
         private readonly AbstractIoSession _session;
@@ -187,7 +186,7 @@ namespace Mina.Core.Filterchain
         private void CallNextExceptionCaught(IEntry<IoFilter, INextFilter> entry, IoSession session, Exception cause)
         {
             // Notify the related future.
-            IConnectFuture future = session.RemoveAttribute(SessionCreatedFuture) as IConnectFuture;
+            IConnectFuture future = session.RemoveAttribute(DefaultIoFilterChain.SessionCreatedFuture) as IConnectFuture;
             if (future == null)
             {
                 CallNext(entry, (filter, next) => filter.ExceptionCaught(next, session, cause),
@@ -389,7 +388,7 @@ namespace Mina.Core.Filterchain
                 }
                 finally
                 {
-                    IConnectFuture future = session.RemoveAttribute(SessionCreatedFuture) as IConnectFuture;
+                    IConnectFuture future = session.RemoveAttribute(DefaultIoFilterChain.SessionCreatedFuture) as IConnectFuture;
                     if (future != null)
                         future.SetSession(session);
                 }
