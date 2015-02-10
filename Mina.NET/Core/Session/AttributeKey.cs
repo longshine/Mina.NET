@@ -18,8 +18,7 @@ namespace Mina.Core.Session
         /// <param name="name">the Attribute name</param>
         public AttributeKey(Type source, String name)
         {
-            // TODO use base.GetHashCode() instead
-            _name = source.Name + "." + name + "@" + GetHashCode().ToString("X");
+            _name = source.Name + "." + name + "@" + base.GetHashCode().ToString("X");
         }
 
         /// <inheritdoc/>

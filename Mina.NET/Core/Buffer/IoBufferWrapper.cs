@@ -114,6 +114,13 @@ namespace Mina.Core.Buffer
         }
 
         /// <inheritdoc/>
+        public override IoBuffer Shrink()
+        {
+            _buf.Shrink();
+            return this;
+        }
+
+        /// <inheritdoc/>
         public override IoBuffer Sweep()
         {
             _buf.Sweep();

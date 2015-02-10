@@ -270,6 +270,14 @@ namespace Mina.Core.Service
             session.FilterChain.FireSessionClosed();
 
             DelegateUtils.SaveInvoke(SessionDestroyed, this, new IoSessionEventArgs(session));
+
+            // Fire a virtual service deactivation event for the last session of the connector.
+            if (session.Service is IoConnector)
+            {
+                Boolean lastSession = _managedSessions.IsEmpty;
+                if (lastSession)
+                    ((IoServiceSupport)this).FireServiceDeactivated();
+            }
         }
 
         void IoServiceSupport.FireServiceDeactivated()
@@ -346,6 +354,8 @@ namespace Mina.Core.Service
                 EventHandler<IoSessionEventArgs> act = _service.InputClosed;
                 if (act != null)
                     act(_service, new IoSessionEventArgs(session));
+                else
+                    session.Close(true);
             }
         }
     }

@@ -47,8 +47,8 @@ namespace Mina.Example.EchoServer
 
             while (true)
             {
-                Console.WriteLine("R: " + acceptor.Statistics.ReadBytes +
-                    ", W: " + acceptor.Statistics.WrittenBytes);
+                Console.WriteLine("R: " + acceptor.Statistics.ReadBytesThroughput +
+                    ", W: " + acceptor.Statistics.WrittenBytesThroughput);
                 Thread.Sleep(3000);
             }
         }

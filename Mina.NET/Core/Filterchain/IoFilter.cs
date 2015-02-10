@@ -93,7 +93,14 @@ namespace Mina.Core.Filterchain
         /// Filters <see cref="Core.Service.IoHandler.ExceptionCaught(IoSession, Exception)"/> event.
         /// </summary>
         void ExceptionCaught(INextFilter nextFilter, IoSession session, Exception cause);
-
+        /// <summary>
+        /// Filters <see cref="Core.Service.IoHandler.InputClosed(IoSession)"/> event.
+        /// </summary>
+        /// <param name="nextFilter">
+        /// The <see cref="INextFilter"/> for this filter.
+        /// You can reuse this object until this filter is removed from the chain.
+        /// </param>
+        /// <param name="session">The <see cref="IoSession"/> which has received this event.</param>
         void InputClosed(INextFilter nextFilter, IoSession session);
         /// <summary>
         /// Filters <see cref="Core.Service.IoHandler.MessageReceived(IoSession, Object)"/> event.

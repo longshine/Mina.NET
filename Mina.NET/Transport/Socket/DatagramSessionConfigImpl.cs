@@ -63,5 +63,18 @@ namespace Mina.Transport.Socket
                     _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.TypeOfService, value.Value);
             }
         }
+
+        public override MulticastOption MulticastOption
+        {
+            get
+            {
+                return (MulticastOption)_socket.GetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership);
+            }
+            set
+            {
+                if (value != null)
+                    _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, value);
+            }
+        }
     }
 }

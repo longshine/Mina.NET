@@ -20,16 +20,7 @@ namespace Mina.Filter.Firewall
 
             Assert.IsTrue(addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6);
 
-            try
-            {
-                new Subnet(addr, 24);
-                Assert.Fail("IPv6 not supported");
-            }
-            catch (ArgumentException)
-            {
-                // signifies a successful test execution
-                Assert.IsTrue(true);
-            }
+            new Subnet(addr, 24);
         }
 
         [TestMethod]

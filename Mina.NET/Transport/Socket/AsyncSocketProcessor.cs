@@ -53,7 +53,17 @@ namespace Mina.Transport.Socket
         public void Remove(SocketSession session)
         {
             ClearWriteRequestQueue(session);
+
+            if (session.Socket.Connected)
+            {
+                try
+                {
+                    session.Socket.Shutdown(System.Net.Sockets.SocketShutdown.Send);
+                }
+                catch { /* the session has already closed */ }
+            }
             session.Socket.Close();
+
             IoServiceSupport support = session.Service as IoServiceSupport;
             if (support != null)
                 support.FireSessionDestroyed(session);

@@ -95,6 +95,12 @@ namespace Mina.Transport.Socket
         }
 
         /// <inheritdoc/>
+        public override IoBuffer Shrink()
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
         protected override Int32 Offset(Int32 pos)
         {
             return _socketAsyncEventArgs.Offset + pos;

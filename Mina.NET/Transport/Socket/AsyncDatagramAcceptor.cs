@@ -121,6 +121,7 @@ namespace Mina.Transport.Socket
                     if (ep == null)
                         ep = new IPEndPoint(IPAddress.Any, 0);
                     System.Net.Sockets.Socket listenSocket = new System.Net.Sockets.Socket(ep.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+                    new DatagramSessionConfigImpl(listenSocket).SetAll(SessionConfig);
                     listenSocket.Bind(ep);
                     newListeners[listenSocket.LocalEndPoint] = listenSocket;
                 }
