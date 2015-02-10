@@ -807,5 +807,36 @@ namespace Mina.Core.Buffer
             Assert.AreEqual(0x02, res.Get());
             Assert.AreEqual(0x03, res.Get());
         }
+
+        [TestMethod]
+        public void TestShrink()
+        {
+            IoBuffer buf = IoBuffer.Allocate(36);
+            buf.MinimumCapacity = 0;
+
+            buf.Limit = 18;
+            buf.Shrink();
+            Assert.AreEqual(18, buf.Capacity);
+
+            buf.Limit = 9;
+            buf.Shrink();
+            Assert.AreEqual(9, buf.Capacity);
+
+            buf.Limit = 4;
+            buf.Shrink();
+            Assert.AreEqual(4, buf.Capacity);
+
+            buf.Limit = 2;
+            buf.Shrink();
+            Assert.AreEqual(2, buf.Capacity);
+
+            buf.Limit = 1;
+            buf.Shrink();
+            Assert.AreEqual(1, buf.Capacity);
+
+            buf.Limit = 0;
+            buf.Shrink();
+            Assert.AreEqual(0, buf.Capacity);
+        }
     }
 }

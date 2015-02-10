@@ -214,6 +214,16 @@ namespace Mina.Core.Buffer
         public abstract IoBuffer Expand(Int32 position, Int32 expectedRemaining);
 
         /// <summary>
+        /// Changes the capacity of this buffer so this buffer occupies
+        /// as less memory as possible while retaining the position,
+        /// limit and the buffer content between the position and limit.
+        /// The capacity of the buffer never becomes less than <see cref="MinimumCapacity"/>.
+        /// The mark is discarded once the capacity changes.
+        /// </summary>
+        /// <returns>itself</returns>
+        public abstract IoBuffer Shrink();
+
+        /// <summary>
         ///  Clears this buffer and fills its content with zero. The position is
         ///  set to zero, the limit is set to the capacity, and the mark is discarded.
         /// </summary>

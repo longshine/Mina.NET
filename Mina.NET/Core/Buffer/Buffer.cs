@@ -157,6 +157,7 @@ namespace Mina.Core.Buffer
         protected Int32 MarkValue
         {
             get { return _mark; }
+            set { _mark = value; }
         }
 
         /// <summary>

@@ -102,6 +102,47 @@ namespace Mina.Core.Buffer
         }
 
         /// <inheritdoc/>
+        public override IoBuffer Shrink()
+        {
+            if (!RecapacityAllowed)
+                throw new InvalidOperationException("Derived buffers and their parent can't be shrinked.");
+
+            Int32 position = Position;
+            Int32 capacity = Capacity;
+            Int32 limit = Limit;
+            if (capacity == limit)
+                return this;
+
+            Int32 newCapacity = capacity;
+            Int32 minCapacity = Math.Max(MinimumCapacity, limit);
+            for (; ; )
+            {
+                if (newCapacity >> 1 < minCapacity)
+                    break;
+                newCapacity >>= 1;
+                if (minCapacity == 0)
+                    break;
+            }
+
+            newCapacity = Math.Max(minCapacity, newCapacity);
+
+            if (newCapacity == capacity)
+                return this;
+
+            // Shrink and compact:
+            Byte[] newHb = new Byte[newCapacity];
+            System.Buffer.BlockCopy(_hb, Offset(0), newHb, 0, limit);
+            _hb = newHb;
+            _offset = 0;
+
+            MarkValue = -1;
+
+            Recapacity(newCapacity);
+
+            return this;
+        }
+
+        /// <inheritdoc/>
         public override Boolean ReadOnly
         {
             get { return false; }
