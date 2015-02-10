@@ -109,11 +109,13 @@ namespace Mina.Transport.Socket
                     buf.Flip();
                     EndReceive(buf);
                 }
-                return;
             }
-
-            // closed
-            Processor.Remove(this);
+            else
+            {
+                // closed
+                //Processor.Remove(this);
+                this.FilterChain.FireInputClosed();
+            }
         }
 
         private void SendCallback(IAsyncResult ar)

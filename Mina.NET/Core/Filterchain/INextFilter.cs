@@ -29,7 +29,9 @@ namespace Mina.Core.Filterchain
         /// Forwards <code>ExceptionCaught</code> event to next filter.
         /// </summary>
         void ExceptionCaught(IoSession session, Exception cause);
-
+        /// <summary>
+        /// Forwards <code>InputClosed</code> event to next filter.
+        /// </summary>
         void InputClosed(IoSession session);
         /// <summary>
         /// Forwards <code>MessageReceived</code> event to next filter.

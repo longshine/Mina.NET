@@ -244,7 +244,8 @@ namespace Mina.Transport.Socket
                 else
                 {
                     // closed
-                    Processor.Remove(this);
+                    //Processor.Remove(this);
+                    this.FilterChain.FireInputClosed();
                 }
             }
             else if (e.SocketError != SocketError.OperationAborted

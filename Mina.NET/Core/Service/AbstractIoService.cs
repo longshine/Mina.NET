@@ -354,6 +354,8 @@ namespace Mina.Core.Service
                 EventHandler<IoSessionEventArgs> act = _service.InputClosed;
                 if (act != null)
                     act(_service, new IoSessionEventArgs(session));
+                else
+                    session.Close(true);
             }
         }
     }

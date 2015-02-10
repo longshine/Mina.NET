@@ -54,11 +54,14 @@ namespace Mina.Transport.Socket
         {
             ClearWriteRequestQueue(session);
 
-            try
+            if (session.Socket.Connected)
             {
-                session.Socket.Shutdown(System.Net.Sockets.SocketShutdown.Send);
+                try
+                {
+                    session.Socket.Shutdown(System.Net.Sockets.SocketShutdown.Send);
+                }
+                catch { /* the session has already closed */ }
             }
-            catch { /* the session has already closed */ }
             session.Socket.Close();
 
             IoServiceSupport support = session.Service as IoServiceSupport;
