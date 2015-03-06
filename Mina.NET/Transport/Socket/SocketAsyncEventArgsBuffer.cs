@@ -50,19 +50,18 @@ namespace Mina.Transport.Socket
         }
 
         /// <inheritdoc/>
-        public override Int32 Capacity
-        {
-            get { return _socketAsyncEventArgs.Count; }
-            set
-            {
-                base.Capacity = value;
-            }
-        }
-
-        /// <inheritdoc/>
         public override Boolean HasArray
         {
             get { return true; }
+        }
+
+        /// <summary>
+        /// Sets data buffer for inner <see cref="SocketAsyncEventArgs"/>.
+        /// </summary>
+        public void SetBuffer()
+        {
+            if (_socketAsyncEventArgs.Count != Limit)
+                _socketAsyncEventArgs.SetBuffer(_socketAsyncEventArgs.Offset, Limit);
         }
 
         /// <inheritdoc/>

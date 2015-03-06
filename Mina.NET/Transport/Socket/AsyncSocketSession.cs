@@ -82,12 +82,11 @@ namespace Mina.Transport.Socket
         /// <inheritdoc/>
         protected override void BeginSend(IWriteRequest request, IoBuffer buf)
         {
-            _writeBuffer.Clear();
-
             SocketAsyncEventArgs saea;
             SocketAsyncEventArgsBuffer saeaBuf = buf as SocketAsyncEventArgsBuffer;
             if (saeaBuf == null)
             {
+                _writeBuffer.Clear();
                 if (_writeBuffer.Remaining < buf.Remaining)
                 {
                     Int32 oldLimit = buf.Limit;
@@ -100,8 +99,8 @@ namespace Mina.Transport.Socket
                     _writeBuffer.Put(buf);
                 }
                 _writeBuffer.Flip();
+                _writeBuffer.SetBuffer();
                 saea = _writeBuffer.SocketAsyncEventArgs;
-                saea.SetBuffer(saea.Offset + _writeBuffer.Position, _writeBuffer.Limit);
             }
             else
             {

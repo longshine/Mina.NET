@@ -95,7 +95,13 @@ namespace Mina.Transport.Socket
             AsyncSocketSession s = e.Session as AsyncSocketSession;
             if (s != null && _readWritePool != null)
             {
+                // clear the buffer and reset its count to original capacity if changed
+                s.ReadBuffer.Clear();
+                s.ReadBuffer.SetBuffer();
                 _readWritePool.Push(s.ReadBuffer);
+
+                s.WriteBuffer.Clear();
+                s.WriteBuffer.SetBuffer();
                 _readWritePool.Push(s.WriteBuffer);
             }
         }
