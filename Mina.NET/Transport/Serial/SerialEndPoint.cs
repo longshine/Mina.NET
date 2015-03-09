@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !UNITY
+using System;
 using System.IO.Ports;
 using System.Net;
 
@@ -83,3 +84,4 @@ namespace Mina.Transport.Serial
         }
     }
 }
+#endif
