@@ -27,7 +27,9 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Mina.Util;
+#if UNITY
+using Interlocked = Mina.Util.InterlockedUtil;
+#endif
 
 namespace System.Collections.Concurrent
 {
@@ -297,7 +299,7 @@ namespace System.Collections.Concurrent
                 slim.EnterReadLock();
                 CheckSegment(index, true);
 
-                InterlockedUtil.CompareExchange(ref buckets[index], node, null);
+                Interlocked.CompareExchange(ref buckets[index], node, null);
                 return buckets[index];
             }
             finally
@@ -360,7 +362,7 @@ namespace System.Collections.Concurrent
                         return rightNode;
                 }
 
-                if (InterlockedUtil.CompareExchange(ref left.Next, rightNode, leftNodeNext) == leftNodeNext)
+                if (Interlocked.CompareExchange(ref left.Next, rightNode, leftNodeNext) == leftNodeNext)
                 {
                     if (rightNode != tail && rightNode.Next.Marked)
                         continue;
@@ -391,12 +393,12 @@ namespace System.Collections.Concurrent
                         markedNode = new Node();
                     markedNode.Init(rightNodeNext);
 
-                    if (InterlockedUtil.CompareExchange(ref rightNode.Next, markedNode, rightNodeNext) == rightNodeNext)
+                    if (Interlocked.CompareExchange(ref rightNode.Next, markedNode, rightNodeNext) == rightNodeNext)
                         break;
                 }
             } while (true);
 
-            if (InterlockedUtil.CompareExchange(ref leftNode.Next, rightNodeNext, rightNode) != rightNode)
+            if (Interlocked.CompareExchange(ref leftNode.Next, rightNodeNext, rightNode) != rightNode)
                 ListSearch(rightNode.Key, subKey, ref leftNode, startPoint);
 
             return true;
@@ -416,7 +418,7 @@ namespace System.Collections.Concurrent
                 newNode.Next = rightNode;
                 if (dataCreator != null)
                     newNode.Data = dataCreator();
-                if (InterlockedUtil.CompareExchange(ref leftNode.Next, newNode, rightNode) == rightNode)
+                if (Interlocked.CompareExchange(ref leftNode.Next, newNode, rightNode) == rightNode)
                     return true;
             } while (true);
         }

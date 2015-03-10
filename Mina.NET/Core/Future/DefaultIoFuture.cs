@@ -2,6 +2,9 @@
 using System.Threading;
 using Mina.Core.Session;
 using Mina.Util;
+#if UNITY
+using Interlocked = Mina.Util.InterlockedUtil;
+#endif
 
 namespace Mina.Core.Future
 {
@@ -39,7 +42,7 @@ namespace Mina.Core.Future
                 {
                     tmp = complete;
                     EventHandler<IoFutureEventArgs> newComplete = (EventHandler<IoFutureEventArgs>)Delegate.Combine(tmp, value);
-                    complete = InterlockedUtil.CompareExchange(ref _complete, newComplete, tmp);
+                    complete = Interlocked.CompareExchange(ref _complete, newComplete, tmp);
                 }
                 while (complete != tmp);
 
@@ -54,7 +57,7 @@ namespace Mina.Core.Future
                 {
                     tmp = complete;
                     EventHandler<IoFutureEventArgs> newComplete = (EventHandler<IoFutureEventArgs>)Delegate.Remove(tmp, value);
-                    complete = InterlockedUtil.CompareExchange(ref _complete, newComplete, tmp);
+                    complete = Interlocked.CompareExchange(ref _complete, newComplete, tmp);
                 }
                 while (complete != tmp);
             }
