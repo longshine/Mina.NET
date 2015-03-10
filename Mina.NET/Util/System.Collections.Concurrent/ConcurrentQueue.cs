@@ -27,6 +27,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Mina.Util;
 
 namespace System.Collections.Concurrent
 {
@@ -76,17 +77,17 @@ namespace System.Collections.Concurrent
                     if (oldNext == null)
                     {
                         // The place is for us
-                        update = Interlocked.CompareExchange(ref tail.Next, node, null) == null;
+                        update = InterlockedUtil.CompareExchange(ref tail.Next, node, null) == null;
                     }
                     else
                     {
                         // another Thread already used the place so give him a hand by putting tail where it should be
-                        Interlocked.CompareExchange(ref tail, oldNext, oldTail);
+                        InterlockedUtil.CompareExchange(ref tail, oldNext, oldTail);
                     }
                 }
             }
             // At this point we added correctly our node, now we have to update tail. If it fails then it will be done by another thread
-            Interlocked.CompareExchange(ref tail, node, oldTail);
+            InterlockedUtil.CompareExchange(ref tail, node, oldTail);
             Interlocked.Increment(ref count);
         }
 
@@ -116,7 +117,7 @@ namespace System.Collections.Concurrent
                         if (oldNext != null)
                         {
                             // If not then the linked list is mal formed, update tail
-                            Interlocked.CompareExchange(ref tail, oldNext, oldTail);
+                            InterlockedUtil.CompareExchange(ref tail, oldNext, oldTail);
                             continue;
                         }
                         result = default(T);
@@ -125,7 +126,7 @@ namespace System.Collections.Concurrent
                     else
                     {
                         result = oldNext.Value;
-                        advanced = Interlocked.CompareExchange(ref head, oldNext, oldHead) == oldHead;
+                        advanced = InterlockedUtil.CompareExchange(ref head, oldNext, oldHead) == oldHead;
                     }
                 }
             }

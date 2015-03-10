@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !UNITY
+using System;
 using Mina.Core.Session;
 
 namespace Mina.Transport.Serial
@@ -20,3 +21,4 @@ namespace Mina.Transport.Serial
         Boolean DtrEnable { get; set; }
     }
 }
+#endif

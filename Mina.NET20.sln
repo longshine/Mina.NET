@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mina.NET20", "Mina.NET\Mina.NET20.csproj", "{28ABBF94-0584-4254-A8B4-4843E6F4E867}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}"
@@ -41,10 +43,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{00F672
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mina.NET.Unity3D", "Mina.NET\Mina.NET.Unity3D.csproj", "{6455F461-9818-40DE-8D28-5EB904D1AD34}"
+EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Mina.NET.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -174,21 +175,34 @@ Global
 		{54ECE500-C2B1-412C-B9E9-4155F1FB4A54}.Release|Mixed Platforms.Build.0 = Release|x86
 		{54ECE500-C2B1-412C-B9E9-4155F1FB4A54}.Release|x86.ActiveCfg = Release|x86
 		{54ECE500-C2B1-412C-B9E9-4155F1FB4A54}.Release|x86.Build.0 = Release|x86
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6455F461-9818-40DE-8D28-5EB904D1AD34}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9AA23412-94F7-4DEB-BB38-EEBB6260A7CA} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
+		{18ABDB3D-FF4E-4EB9-912A-902EE739D127} = {9AA23412-94F7-4DEB-BB38-EEBB6260A7CA}
 		{F9B1B45A-EFDC-4DDB-9D47-E359A27A4D76} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
 		{0692C08A-51C1-4E47-A498-AF8A23E57273} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
 		{5742CE7A-3535-42BC-AE41-258A2F7D10CE} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
 		{87AA50D3-5DB7-4215-B0A2-7E07377B6192} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
 		{D89AD439-417D-4BFE-9DB7-E08CCFFF0690} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
+		{A9BA7394-10E1-4513-8746-B54E086407A3} = {9AA23412-94F7-4DEB-BB38-EEBB6260A7CA}
 		{82A118BA-3A79-4F1C-A0E2-04E863534705} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
 		{71C6F245-FBF1-40FC-95D8-0EDD1CAB03FD} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
 		{54ECE500-C2B1-412C-B9E9-4155F1FB4A54} = {67318DBC-A1A8-4017-A309-FBD0DBFDF6B1}
-		{18ABDB3D-FF4E-4EB9-912A-902EE739D127} = {9AA23412-94F7-4DEB-BB38-EEBB6260A7CA}
-		{A9BA7394-10E1-4513-8746-B54E086407A3} = {9AA23412-94F7-4DEB-BB38-EEBB6260A7CA}
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Mina.NET.vsmdi
 	EndGlobalSection
 EndGlobal

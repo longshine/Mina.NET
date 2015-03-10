@@ -39,7 +39,7 @@ namespace Mina.Core.Future
                 {
                     tmp = complete;
                     EventHandler<IoFutureEventArgs> newComplete = (EventHandler<IoFutureEventArgs>)Delegate.Combine(tmp, value);
-                    complete = Interlocked.CompareExchange(ref _complete, newComplete, tmp);
+                    complete = InterlockedUtil.CompareExchange(ref _complete, newComplete, tmp);
                 }
                 while (complete != tmp);
 
@@ -54,7 +54,7 @@ namespace Mina.Core.Future
                 {
                     tmp = complete;
                     EventHandler<IoFutureEventArgs> newComplete = (EventHandler<IoFutureEventArgs>)Delegate.Remove(tmp, value);
-                    complete = Interlocked.CompareExchange(ref _complete, newComplete, tmp);
+                    complete = InterlockedUtil.CompareExchange(ref _complete, newComplete, tmp);
                 }
                 while (complete != tmp);
             }
