@@ -840,6 +840,33 @@ namespace Mina.Core.Buffer
         }
 
         [TestMethod]
+        public void TestShrink2()
+        {
+            IoBuffer buf = IoBuffer.Allocate(36);
+            buf.Put(Encoding.Default.GetBytes("012345"));
+            buf.Flip();
+            buf.Position = 4;
+            buf.MinimumCapacity = 8;
+
+            IoBuffer newBuf = buf.Shrink();
+            Assert.AreEqual(4, newBuf.Position);
+            Assert.AreEqual(6, newBuf.Limit);
+            Assert.AreEqual(9, newBuf.Capacity);
+            Assert.AreEqual(8, newBuf.MinimumCapacity);
+
+            buf = IoBuffer.Allocate(6);
+            buf.Put(Encoding.Default.GetBytes("012345"));
+            buf.Flip();
+            buf.Position = 4;
+
+            newBuf = buf.Shrink();
+            Assert.AreEqual(4, newBuf.Position);
+            Assert.AreEqual(6, newBuf.Limit);
+            Assert.AreEqual(6, newBuf.Capacity);
+            Assert.AreEqual(6, newBuf.MinimumCapacity);
+        }
+
+        [TestMethod]
         public void TestCapacity()
         {
             IoBuffer buffer = IoBuffer.Allocate(10);
@@ -1012,6 +1039,21 @@ namespace Mina.Core.Buffer
             Assert.AreEqual(11, newBuffer.Limit);
             Assert.AreEqual(11, newBuffer.Capacity);
             Assert.AreEqual(4, newBuffer.Position);
+        }
+
+        [TestMethod]
+        public void TestAllocateNegative()
+        {
+            Exception expected = null;
+            try
+            {
+                IoBuffer.Allocate(-1);
+            }
+            catch (Exception e)
+            {
+                expected = e;
+            }
+            Assert.IsTrue(expected is ArgumentException);
         }
     }
 }
