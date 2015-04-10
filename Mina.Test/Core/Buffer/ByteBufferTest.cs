@@ -838,5 +838,180 @@ namespace Mina.Core.Buffer
             buf.Shrink();
             Assert.AreEqual(0, buf.Capacity);
         }
+
+        [TestMethod]
+        public void TestCapacity()
+        {
+            IoBuffer buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+
+            // See if we can decrease the capacity (we shouldn't be able to go under the minimul capacity)
+            buffer.Capacity = 7;
+            Assert.AreEqual(10, buffer.Capacity);
+
+            // See if we can increase the capacity
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            buffer.Capacity = 14;
+            Assert.AreEqual(14, buffer.Capacity);
+            buffer.Put(0, (byte)'9');
+            Assert.AreEqual((byte)'9', buffer.Get(0));
+            Assert.AreEqual((byte)'9', buffer.Get(0));
+
+            // See if we can go down when the minimum capacity is below the current capacity
+            // We should not.
+            buffer = IoBuffer.Allocate(10);
+            buffer.Capacity = 5;
+            Assert.AreEqual(10, buffer.MinimumCapacity);
+            Assert.AreEqual(10, buffer.Capacity);
+        }
+
+        [TestMethod]
+        public void TestExpand()
+        {
+            IoBuffer buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+
+            Assert.AreEqual(6, buffer.Remaining);
+
+            // See if we can expand with a lower number of remaining bytes. We should not.
+            IoBuffer newBuffer = buffer.Expand(2);
+            Assert.AreEqual(6, newBuffer.Limit);
+            Assert.AreEqual(10, newBuffer.Capacity);
+            Assert.AreEqual(0, newBuffer.Position);
+
+            // Now, let's expand the buffer above the number of current bytes but below the limit
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            newBuffer = buffer.Expand(8);
+            Assert.AreEqual(8, newBuffer.Limit);
+            Assert.AreEqual(10, newBuffer.Capacity);
+            Assert.AreEqual(0, newBuffer.Position);
+
+            // Last, expand the buffer above the limit
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            newBuffer = buffer.Expand(12);
+            Assert.AreEqual(12, newBuffer.Limit);
+            Assert.AreEqual(12, newBuffer.Capacity);
+            Assert.AreEqual(0, newBuffer.Position);
+
+            // Now, move forward in the buffer
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            buffer.Position = 4;
+
+            // See if we can expand with a lower number of remaining bytes. We should not.
+            newBuffer = buffer.Expand(2);
+            Assert.AreEqual(6, newBuffer.Limit);
+            Assert.AreEqual(10, newBuffer.Capacity);
+            Assert.AreEqual(4, newBuffer.Position);
+
+            // Expand above the current limit
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            buffer.Position = 4;
+            newBuffer = buffer.Expand(3);
+            Assert.AreEqual(7, newBuffer.Limit);
+            Assert.AreEqual(10, newBuffer.Capacity);
+            Assert.AreEqual(4, newBuffer.Position);
+
+            // Expand above the current capacity
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            buffer.Position = 4;
+            newBuffer = buffer.Expand(7);
+            Assert.AreEqual(11, newBuffer.Limit);
+            Assert.AreEqual(11, newBuffer.Capacity);
+            Assert.AreEqual(4, newBuffer.Position);
+        }
+
+        [TestMethod]
+        public void TestExpandPos()
+        {
+            IoBuffer buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+
+            Assert.AreEqual(6, buffer.Remaining);
+
+            // See if we can expand with a lower number of remaining bytes. We should not.
+            IoBuffer newBuffer = buffer.Expand(3, 2);
+            Assert.AreEqual(6, newBuffer.Limit);
+            Assert.AreEqual(10, newBuffer.Capacity);
+            Assert.AreEqual(0, newBuffer.Position);
+
+            // Now, let's expand the buffer above the number of current bytes but below the limit
+            buffer = IoBuffer.Allocate(10);
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+
+            newBuffer = buffer.Expand(3, 5);
+            Assert.AreEqual(8, newBuffer.Limit);
+            Assert.AreEqual(10, newBuffer.Capacity);
+            Assert.AreEqual(0, newBuffer.Position);
+
+            // Last, expand the buffer above the limit
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            newBuffer = buffer.Expand(3, 9);
+            Assert.AreEqual(12, newBuffer.Limit);
+            Assert.AreEqual(12, newBuffer.Capacity);
+            Assert.AreEqual(0, newBuffer.Position);
+
+            // Now, move forward in the buffer
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            buffer.Position = 4;
+
+            // See if we can expand with a lower number of remaining bytes. We should not be.
+            newBuffer = buffer.Expand(5, 1);
+            Assert.AreEqual(6, newBuffer.Limit);
+            Assert.AreEqual(10, newBuffer.Capacity);
+            Assert.AreEqual(4, newBuffer.Position);
+
+            // Expand above the current limit
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            buffer.Position = 4;
+            newBuffer = buffer.Expand(5, 2);
+            Assert.AreEqual(7, newBuffer.Limit);
+            Assert.AreEqual(10, newBuffer.Capacity);
+            Assert.AreEqual(4, newBuffer.Position);
+
+            // Expand above the current capacity
+            buffer = IoBuffer.Allocate(10);
+
+            buffer.Put(Encoding.Default.GetBytes("012345"));
+            buffer.Flip();
+            buffer.Position = 4;
+            newBuffer = buffer.Expand(5, 6);
+            Assert.AreEqual(11, newBuffer.Limit);
+            Assert.AreEqual(11, newBuffer.Capacity);
+            Assert.AreEqual(4, newBuffer.Position);
+        }
     }
 }
