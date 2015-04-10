@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Mina</id>
-        <version>2.0.9</version>
+        <version>2.0.10</version>
         <title>Mina.NET</title>
         <authors>Longshine</authors>
         <owners>Longshine</owners>
@@ -11,7 +11,10 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Mina.NET is the .NET implementation of Apache MINA, a network application framework which helps users develop high performance and high scalability network applications easily. It provides an abstract event-driven asynchronous API over various transports such as TCP/IP via async socket.</description>
         <summary>.NET implementation of Apache MINA</summary>
-        <releaseNotes>* 2.0.9   - Apache MINA 2.0.9
+        <releaseNotes> * 2.0.10
+  - Fixed potential performance degradation (thanks @gmav)
+  - Fixed IConnectFuture.Cancel()
+* 2.0.9   - Apache MINA 2.0.9
   - Added InputClosed event
   - Added support for UDP multicast
   - Added throughput calculation
@@ -40,15 +43,13 @@
             <frameworkAssembly assemblyName="System"/>
         </frameworkAssemblies>
         <dependencies>
-					<dependency id="Common.Logging" version="3.0.0" />
+					<dependency id="Common.Logging" version="3.1.0" />
         </dependencies>
     </metadata>
     <files>
         <file src="Mina.NET\bin\Release\NET20\Mina.NET.dll" target="lib\net20\Mina.NET.dll" />
-        <file src="Mina.NET\bin\Release\NET20\Mina.NET.pdb" target="lib\net20\Mina.NET.pdb" />
         <file src="Mina.NET\bin\Release\NET20\Mina.NET.xml" target="lib\net20\Mina.NET.xml" />
         <file src="Mina.NET\bin\Release\Mina.NET.dll" target="lib\net40\Mina.NET.dll" />
-        <file src="Mina.NET\bin\Release\Mina.NET.pdb" target="lib\net40\Mina.NET.pdb" />
         <file src="Mina.NET\bin\Release\Mina.NET.xml" target="lib\net40\Mina.NET.xml" />
         <file src="LICENSE" target="LICENSE" />
     </files>
