@@ -32,8 +32,12 @@ namespace Mina.Core.Future
         void SetSession(IoSession session);
         /// <summary>
         /// Cancels the connection attempt and notifies all threads waiting for this future.
+        /// <returns>
+        /// <code>true</code> if the future has been cancelled by this call,
+        /// <code>false</code>if the future was already cancelled.
+        /// </returns>
         /// </summary>
-        void Cancel();
+        Boolean Cancel();
         /// <inheritdoc/>
         new IConnectFuture Await();
     }

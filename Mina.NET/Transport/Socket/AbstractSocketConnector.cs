@@ -61,7 +61,7 @@ namespace Mina.Transport.Socket
                 socket.Bind(localEP);
             ConnectorContext ctx = new ConnectorContext(socket, remoteEP, sessionInitializer);
             BeginConnect(ctx);
-            return ctx.Future;
+            return ctx;
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Mina.Transport.Socket
         {
             try
             {
-                InitSession(session, connector.Future, connector.SessionInitializer);
+                InitSession(session, connector, connector.SessionInitializer);
                 session.Processor.Add(session);
             }
             catch (Exception ex)
@@ -104,7 +104,7 @@ namespace Mina.Transport.Socket
         /// <param name="connector">the context of current connector</param>
         protected void EndConnect(Exception cause, ConnectorContext connector)
         {
-            connector.Future.Exception = cause;
+            connector.Exception = cause;
             connector.Socket.Close();
         }
 
@@ -121,12 +121,11 @@ namespace Mina.Transport.Socket
         /// <summary>
         /// Provides context info for a socket connector.
         /// </summary>
-        protected class ConnectorContext : IDisposable
+        protected class ConnectorContext : DefaultConnectFuture
         {
             private readonly System.Net.Sockets.Socket _socket;
             private readonly EndPoint _remoteEP;
             private readonly Action<IoSession, IConnectFuture> _sessionInitializer;
-            private readonly DefaultConnectFuture _future = new DefaultConnectFuture();
 
             /// <summary>
             /// Instantiates.
@@ -158,14 +157,6 @@ namespace Mina.Transport.Socket
             }
 
             /// <summary>
-            /// Gets the <see cref="IConnectFuture"/>.
-            /// </summary>
-            public IConnectFuture Future
-            {
-                get { return _future; }
-            }
-
-            /// <summary>
             /// Gets the funciton to initialize session.
             /// </summary>
             public Action<IoSession, IConnectFuture> SessionInitializer
@@ -174,22 +165,24 @@ namespace Mina.Transport.Socket
             }
 
             /// <inheritdoc/>
-            public void Dispose()
+            public override Boolean Cancel()
             {
-                Dispose(true);
-                GC.SuppressFinalize(this);
+                Boolean justCancelled = base.Cancel();
+                if (justCancelled)
+                {
+                    _socket.Close();
+                }
+                return justCancelled;
             }
 
-            /// <summary>
-            /// Disposes.
-            /// </summary>
-            protected virtual void Dispose(Boolean disposing)
+            /// <inheritdoc/>
+            protected override void Dispose(Boolean disposing)
             {
                 if (disposing)
                 {
                     ((IDisposable)_socket).Dispose();
-                    _future.Dispose();
                 }
+                base.Dispose(disposing);
             }
         }
     }

@@ -95,6 +95,28 @@ namespace Mina.Core.Future
             }
         }
 
+        /// <summary>
+        /// Sets the result of the asynchronous operation, and mark it as finished.
+        /// </summary>
+        /// <param name="value">the result to store into the future</param>
+        /// <returns>
+        /// <code>true</code> if the value has been set,
+        /// <code>false</code> if the future already has a value (thus is in ready state).
+        /// </returns>
+        public Boolean SetValue(Object value)
+        {
+            lock (this)
+            {
+                if (_ready)
+                    return false;
+                _ready = true;
+                _value = value;
+                _readyEvent.Set();
+            }
+            OnComplete();
+            return true;
+        }
+
         /// <inheritdoc/>
         public IoFuture Await()
         {

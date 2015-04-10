@@ -80,9 +80,9 @@ namespace Mina.Core.Future
         }
 
         /// <inheritdoc/>
-        public void Cancel()
+        public virtual Boolean Cancel()
         {
-            Value = CANCELED;
+            return SetValue(CANCELED);
         }
 
         /// <inheritdoc/>
