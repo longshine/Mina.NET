@@ -14,6 +14,10 @@ using Mina.Core.Write;
 
 namespace Mina.Filter.Ssl
 {
+    /// <summary>
+    /// An SSL filter that encrypts and decrypts the data exchanged in the session.
+    /// Adding this filter triggers SSL handshake procedure immediately.
+    /// </summary>
     public class SslFilter : IoFilterAdapter
     {
         static readonly ILog log = LogManager.GetLogger(typeof(SslFilter));
@@ -24,25 +28,84 @@ namespace Mina.Filter.Ssl
         X509Certificate _serverCertificate = null;
         SslProtocols _sslProtocol = SslProtocols.Default;
 
+        /// <summary>
+        /// Creates a new SSL filter using the specified PKCS7 signed file.
+        /// </summary>
+        /// <param name="certFile">the path of the PKCS7 signed file from which to create the X.509 certificate</param>
         public SslFilter(String certFile)
             : this(X509Certificate.CreateFromCertFile(certFile))
         { }
 
+        /// <summary>
+        /// Creates a new SSL filter using the specified certificate.
+        /// </summary>
+        /// <param name="cert">the <see cref="X509Certificate"/> to use</param>
         public SslFilter(X509Certificate cert)
         {
             _serverCertificate = cert;
+            CheckCertificateRevocation = true;
         }
 
+        /// <summary>
+        /// Creates a new SSL filter to a server.
+        /// </summary>
+        /// <param name="targetHost">the name of the server that shares this SSL connection</param>
+        /// <param name="clientCertificates">the <see cref="X509CertificateCollection"/> containing client certificates</param>
+        public SslFilter(String targetHost, X509CertificateCollection clientCertificates)
+        {
+            TargetHost = targetHost;
+            ClientCertificates = clientCertificates;
+            UseClientMode = true;
+            CheckCertificateRevocation = true;
+        }
+
+        /// <summary>
+        /// Gets or sets the protocol used for authentication.
+        /// </summary>
         public SslProtocols SslProtocol
         {
             get { return _sslProtocol; }
             set { _sslProtocol = value; }
         }
 
+        /// <summary>
+        /// Gets the X.509 certificate.
+        /// </summary>
         public X509Certificate Certificate
         {
             get { return _serverCertificate; }
         }
+
+        /// <summary>
+        /// Gets or sets a <see cref="Boolean"/> value that specifies
+        /// whether the client must supply a certificate.
+        /// The default value is <code>false</code>.
+        /// </summary>
+        public Boolean ClientCertificateRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a <see cref="Boolean"/> value that specifies
+        /// whether the certificate revocation list is checked during authentication.
+        /// The default value is <code>true</code>.
+        /// </summary>
+        public Boolean CheckCertificateRevocation { get; set; }
+
+        /// <summary>
+        /// Gets or sets a <see cref="Boolean"/> value that specifies
+        /// whether to use client (or server) mode when handshaking.
+        /// The default value is <code>false</code> (server mode).
+        /// </summary>
+        public Boolean UseClientMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the server that shares this SSL connection.
+        /// </summary>
+        public String TargetHost { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="X509CertificateCollection"/> containing client certificates
+        /// </summary>
+        public X509CertificateCollection ClientCertificates { get; set; }
 
         /// <summary>
         /// Returns <code>true</code> if and only if the specified session is
@@ -296,8 +359,48 @@ namespace Mina.Filter.Ssl
             lock (this)
             {
                 _currentNextFilter = nextFilter;
-                _sslStream.BeginAuthenticateAsServer(_sslFilter.Certificate,
-                    false, _sslFilter.SslProtocol, true, AuthenticateCallback, null);
+
+                if (_sslFilter.UseClientMode)
+                {
+                    _sslStream.BeginAuthenticateAsClient(_sslFilter.TargetHost,
+                        _sslFilter.ClientCertificates, _sslFilter.SslProtocol,
+                        _sslFilter.CheckCertificateRevocation, AuthenticateAsClientCallback, null);
+                }
+                else
+                {
+                    _sslStream.BeginAuthenticateAsServer(_sslFilter.Certificate,
+                        _sslFilter.ClientCertificateRequired, _sslFilter.SslProtocol,
+                        _sslFilter.CheckCertificateRevocation, AuthenticateCallback, null);
+                }
+            }
+        }
+
+        private void AuthenticateAsClientCallback(IAsyncResult ar)
+        {
+            try
+            {
+                _sslStream.EndAuthenticateAsClient(ar);
+            }
+            catch (AuthenticationException e)
+            {
+                _sslFilter.ExceptionCaught(_currentNextFilter, _session, e);
+                return;
+            }
+            catch (Exception e)
+            {
+                _sslFilter.ExceptionCaught(_currentNextFilter, _session, e);
+                return;
+            }
+
+            Authenticated = true;
+
+            if (log.IsDebugEnabled)
+            {
+                // Display the properties and settings for the authenticated stream.
+                SslFilter.DisplaySecurityLevel(_sslStream);
+                SslFilter.DisplaySecurityServices(_sslStream);
+                SslFilter.DisplayCertificateInformation(_sslStream);
+                SslFilter.DisplayStreamProperties(_sslStream);
             }
         }
 
