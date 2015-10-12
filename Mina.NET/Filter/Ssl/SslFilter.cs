@@ -56,7 +56,7 @@ namespace Mina.Filter.Ssl
             TargetHost = targetHost;
             ClientCertificates = clientCertificates;
             UseClientMode = true;
-            CheckCertificateRevocation = true;
+            CheckCertificateRevocation = false;
         }
 
         /// <summary>
@@ -86,7 +86,8 @@ namespace Mina.Filter.Ssl
         /// <summary>
         /// Gets or sets a <see cref="Boolean"/> value that specifies
         /// whether the certificate revocation list is checked during authentication.
-        /// The default value is <code>true</code>.
+        /// The default value is <code>true</code> in server mode,
+        /// <code>false</code> in client mode.
         /// </summary>
         public Boolean CheckCertificateRevocation { get; set; }
 
@@ -446,6 +447,9 @@ namespace Mina.Filter.Ssl
             }
 
             IoBuffer buf = (IoBuffer)writeRequest.Message;
+            if (!buf.HasRemaining)
+                // empty message will break this SSL stream?
+                return;
             lock (this)
             {
                 ArraySegment<Byte> array = buf.GetRemaining();
@@ -507,7 +511,7 @@ namespace Mina.Filter.Ssl
             while (true)
             {
                 ArraySegment<Byte> array = buf.GetRemaining();
-                Int32 bytesRead = _sslStream.Read(array.Array, array.Offset, buf.Capacity);
+                Int32 bytesRead = _sslStream.Read(array.Array, array.Offset, array.Count);
                 if (bytesRead <= 0)
                     break;
                 buf.Position += bytesRead;
@@ -517,7 +521,7 @@ namespace Mina.Filter.Ssl
                 else
                 {
                     // We have to grow the target buffer, it's too small.
-                    buf.Capacity <<= buf.Capacity;
+                    buf.Capacity <<= 1;
                     buf.Limit = buf.Capacity;
                 }
             }

@@ -15,6 +15,7 @@ using TestMethod = NUnit.Framework.TestAttribute;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endif
 using Mina.Core.Filterchain;
+using Mina.Core.Buffer;
 using Mina.Filter.Codec;
 using Mina.Filter.Codec.TextLine;
 using Mina.Transport.Socket;
@@ -79,6 +80,10 @@ namespace Mina.Filter.Ssl
                     Debug.WriteLine("Server got: 'send', sending 'data'");
                     e.Session.Write("data");
                 }
+                else
+                {
+                    Debug.WriteLine("Server got: " + line);
+                }
             };
 
             acceptor.Bind(new IPEndPoint(IPAddress.Any, port));
@@ -89,6 +94,49 @@ namespace Mina.Filter.Ssl
             ConnectAndSend();
             
             ConnectAndSend();
+
+            ClientConnect();
+        }
+
+        private static void ClientConnect()
+        {
+            using (var client = new AsyncSocketConnector())
+            using (var ready = new System.Threading.ManualResetEventSlim(false))
+            {
+                client.FilterChain.AddLast("ssl", new SslFilter("TempCert", null));
+                client.FilterChain.AddLast("text", new ProtocolCodecFilter(new TextLineCodecFactory()));
+
+                client.MessageReceived += (s, e) =>
+                {
+                    Debug.WriteLine("Client got: " + e.Message);
+                    ready.Set();
+                };
+
+                var session = client.Connect(new IPEndPoint(IPAddress.Loopback, port)).Await().Session;
+
+                Debug.WriteLine("Client sending: hello");
+                session.Write("hello                      ");
+
+                Debug.WriteLine("Client sending: send");
+                session.Write("send");
+
+                ready.Wait(3000);
+                Assert.IsTrue(ready.IsSet);
+
+                ready.Reset();
+                Assert.IsFalse(ready.IsSet);
+
+                Debug.WriteLine("Client sending: hello");
+                session.Write(IoBuffer.Wrap(Encoding.UTF8.GetBytes("hello                      \n")));
+
+                Debug.WriteLine("Client sending: send");
+                session.Write(IoBuffer.Wrap(Encoding.UTF8.GetBytes("send\n")));
+
+                ready.Wait(3000);
+                Assert.IsTrue(ready.IsSet);
+
+                session.Close(true);
+            }
         }
 
         private static void ConnectAndSend()
@@ -104,7 +152,6 @@ namespace Mina.Filter.Ssl
             // The server name must match the name on the server certificate.
             sslStream.AuthenticateAsClient("TempCert");
 
-
             Debug.WriteLine("Client sending: hello");
             sslStream.Write(Encoding.UTF8.GetBytes("hello                      \n"));
             sslStream.Flush();
@@ -116,6 +163,7 @@ namespace Mina.Filter.Ssl
             String line = ReadMessage(sslStream);
             Debug.WriteLine("Client got: " + line);
             client.Close();
+            Assert.IsTrue(!String.IsNullOrEmpty(line));
         }
 
         static string ReadMessage(SslStream sslStream)
