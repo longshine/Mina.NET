@@ -90,6 +90,21 @@ namespace Mina.Transport.Socket
                 // do nothing
                 return;
             }
+            catch (SocketException ex)
+            {
+                if (ex.SocketErrorCode != SocketError.OperationAborted
+                    && ex.SocketErrorCode != SocketError.Interrupted
+                    && ex.SocketErrorCode != SocketError.ConnectionReset)
+                {
+                    EndReceive(ex);
+                }
+                else
+                {
+                    // closed
+                    Processor.Remove(this);
+                }
+                return;
+            }
             catch (Exception ex)
             {
                 EndReceive(ex);
