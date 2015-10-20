@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Common.Logging;
 using Mina.Core.Buffer;
 using Mina.Core.File;
@@ -16,15 +15,13 @@ namespace Mina.Filter.Codec
     /// message objects and vice versa using <see cref="IProtocolCodecFactory"/>,
     /// <see cref="IProtocolEncoder"/>, or <see cref="IProtocolDecoder"/>.
     /// </summary>
-    public class ProtocolCodecFilter : IoFilterAdapter, IDisposable
+    public class ProtocolCodecFilter : IoFilterAdapter
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ProtocolCodecFilter));
         private static readonly IoBuffer EMPTY_BUFFER = IoBuffer.Wrap(new Byte[0]);
         private readonly AttributeKey DECODER_OUT = new AttributeKey(typeof(ProtocolCodecFilter), "decoderOut");
         private readonly AttributeKey ENCODER_OUT = new AttributeKey(typeof(ProtocolCodecFilter), "encoderOut");
         private readonly IProtocolCodecFactory _factory;
-
-        private Semaphore _semaphore = new Semaphore(1, 1);
 
         /// <summary>
         /// Instantiates.
@@ -86,10 +83,12 @@ namespace Mina.Filter.Codec
                 Int32 oldPos = input.Position;
                 try
                 {
-                    _semaphore.WaitOne();
-
-                    // Call the decoder with the read bytes
-                    decoder.Decode(session, input, decoderOutput);
+                    // TODO may not need lock on UDP
+                    lock (session)
+                    {
+                        // Call the decoder with the read bytes
+                        decoder.Decode(session, input, decoderOutput);
+                    }
 
                     // Finish decoding if no exception was thrown.
                     decoderOutput.Flush(nextFilter, session);
@@ -117,10 +116,6 @@ namespace Mina.Filter.Codec
                     // infinite loop.
                     if (!(ex is RecoverableProtocolDecoderException) || input.Position == oldPos)
                         break;
-                }
-                finally
-                {
-                    _semaphore.Release();
                 }
             }
         }
@@ -229,24 +224,6 @@ namespace Mina.Filter.Codec
 
             // Call the next filter
             nextFilter.SessionClosed(session);
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Disposes.
-        /// </summary>
-        protected virtual void Dispose(Boolean disposing)
-        {
-            if (disposing)
-            {
-                ((IDisposable)_semaphore).Dispose();
-            }
         }
 
         private IProtocolDecoderOutput GetDecoderOut(IoSession session, INextFilter nextFilter)
