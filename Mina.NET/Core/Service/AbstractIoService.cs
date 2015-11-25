@@ -237,12 +237,12 @@ namespace Mina.Core.Service
             _stats.LastReadTime = _activationTime;
             _stats.LastWriteTime = _activationTime;
             _stats.LastThroughputCalculationTime = _activationTime;
-            DelegateUtils.SaveInvoke(Activated, this);
+            DelegateUtils.SafeInvoke(Activated, this);
         }
 
         void IoServiceSupport.FireServiceIdle(IdleStatus idleStatus)
         {
-            DelegateUtils.SaveInvoke(Idle, this, new IdleEventArgs(idleStatus));
+            DelegateUtils.SafeInvoke(Idle, this, new IdleEventArgs(idleStatus));
         }
 
         void IoServiceSupport.FireSessionCreated(IoSession session)
@@ -257,7 +257,7 @@ namespace Mina.Core.Service
             filterChain.FireSessionOpened();
 
             if (_hasHandler)
-                DelegateUtils.SaveInvoke(SessionCreated, this, new IoSessionEventArgs(session));
+                DelegateUtils.SafeInvoke(SessionCreated, this, new IoSessionEventArgs(session));
         }
 
         void IoServiceSupport.FireSessionDestroyed(IoSession session)
@@ -269,7 +269,7 @@ namespace Mina.Core.Service
             // Fire session events.
             session.FilterChain.FireSessionClosed();
 
-            DelegateUtils.SaveInvoke(SessionDestroyed, this, new IoSessionEventArgs(session));
+            DelegateUtils.SafeInvoke(SessionDestroyed, this, new IoSessionEventArgs(session));
 
             // Fire a virtual service deactivation event for the last session of the connector.
             if (session.Service is IoConnector)
@@ -285,7 +285,7 @@ namespace Mina.Core.Service
             if (Interlocked.CompareExchange(ref _active, 0, 1) == 0)
                 // The instance is already desactivated
                 return;
-            DelegateUtils.SaveInvoke(Deactivated, this);
+            DelegateUtils.SafeInvoke(Deactivated, this);
             DisconnectSessions();
         }
 

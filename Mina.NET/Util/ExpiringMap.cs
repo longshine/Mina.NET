@@ -151,7 +151,7 @@ namespace Mina.Util
                 if ((now - o.LastAccessTime).TotalMilliseconds >= _timeToLiveMillis)
                 {
                     _dict.TryRemove(o.Key, out dummy);
-                    DelegateUtils.SaveInvoke(Expired, this, new ExpirationEventArgs<TValue>(o.Value));
+                    DelegateUtils.SafeInvoke(Expired, this, new ExpirationEventArgs<TValue>(o.Value));
                 }
             }
         }   
