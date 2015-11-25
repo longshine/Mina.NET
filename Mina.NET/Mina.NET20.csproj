@@ -39,8 +39,7 @@
     <AssemblyOriginatorKeyFile>mina.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Common.Logging">
       <HintPath>lib\NET20\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging.Core">
