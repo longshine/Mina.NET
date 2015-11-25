@@ -14,10 +14,17 @@ namespace Mina.Filter.Executor
     {
         private readonly IoEventQueueHandler _queueHandler;
 
+        /// <summary>
+        /// Instantiates with an <see cref="IoEventQueueThrottle"/>.
+        /// </summary>
         public WriteRequestFilter()
             : this(new IoEventQueueThrottle())
         { }
 
+        /// <summary>
+        /// Instantiates with the given <see cref="IoEventQueueHandler"/>.
+        /// </summary>
+        /// <param name="queueHandler">the handler</param>
         public WriteRequestFilter(IoEventQueueHandler queueHandler)
         {
             if (queueHandler == null)
@@ -25,6 +32,9 @@ namespace Mina.Filter.Executor
             _queueHandler = queueHandler;
         }
 
+        /// <summary>
+        /// Gets the <see cref="IoEventQueueHandler"/>.
+        /// </summary>
         public IoEventQueueHandler QueueHandler
         {
             get { return _queueHandler; }

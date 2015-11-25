@@ -7,6 +7,14 @@ namespace Mina.Core.Session
     /// </summary>
     public interface IoSessionConfig
     {
+        /// <summary>
+        /// Gets or sets the size for the read buffer.
+        /// <remarks>
+        /// The default value depends on the transport.
+        /// For socket transport it is 2048.
+        /// For serial transport it is 0, indicating the system's default buffer size.
+        /// </remarks>
+        /// </summary>
         Int32 ReadBufferSize { get; set; }
         /// <summary>
         /// Gets or sets the interval (seconds) between each throughput calculation.

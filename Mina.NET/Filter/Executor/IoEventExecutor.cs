@@ -7,6 +7,10 @@ namespace Mina.Filter.Executor
     /// </summary>
     public interface IoEventExecutor
     {
+        /// <summary>
+        /// Executes an event.
+        /// </summary>
+        /// <param name="ioe">the event to run</param>
         void Execute(IoEvent ioe);
     }
 }

@@ -65,6 +65,10 @@ namespace Mina.Filter.Util
             Filter(new IoFilterEvent(nextFilter, IoEventType.Close, session, null));
         }
 
+        /// <summary>
+        /// Filters an <see cref="IoFilterEvent"/>.
+        /// </summary>
+        /// <param name="ioe">the event</param>
         protected abstract void Filter(IoFilterEvent ioe);
     }
 }

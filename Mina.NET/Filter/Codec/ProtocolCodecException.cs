@@ -101,6 +101,9 @@ namespace Mina.Filter.Codec
           System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
 
+        /// <summary>
+        /// Gets the current data in hex.
+        /// </summary>
         public String Hexdump
         {
             get { return _hexdump; }

@@ -20,18 +20,34 @@ namespace Mina.Filter.Executor
         private readonly IoEventType _eventTypes;
         private readonly IoEventExecutor _executor;
 
+        /// <summary>
+        /// Creates an executor filter with default <see cref="IoEventExecutor"/> on default event types.
+        /// </summary>
         public ExecutorFilter()
             : this(null, DefaultEventSet)
         { }
 
+        /// <summary>
+        /// Creates an executor filter with default <see cref="IoEventExecutor"/>.
+        /// </summary>
+        /// <param name="eventTypes">the event types interested</param>
         public ExecutorFilter(IoEventType eventTypes)
             : this(null, eventTypes)
         { }
 
+        /// <summary>
+        /// Creates an executor filter on default event types.
+        /// </summary>
+        /// <param name="executor">the <see cref="IoEventExecutor"/> to run events</param>
         public ExecutorFilter(IoEventExecutor executor)
             : this(executor, DefaultEventSet)
         { }
 
+        /// <summary>
+        /// Creates an executor filter.
+        /// </summary>
+        /// <param name="executor">the <see cref="IoEventExecutor"/> to run events</param>
+        /// <param name="eventTypes">the event types interested</param>
         public ExecutorFilter(IoEventExecutor executor, IoEventType eventTypes)
         {
             _eventTypes = eventTypes;
@@ -41,6 +57,9 @@ namespace Mina.Filter.Executor
                 _executor = executor;
         }
 
+        /// <summary>
+        /// Gets the <see cref="IoEventExecutor"/> to run events.
+        /// </summary>
         public IoEventExecutor Executor
         {
             get { return _executor; }
@@ -165,6 +184,10 @@ namespace Mina.Filter.Executor
             }
         }
 
+        /// <summary>
+        /// Fires an event.
+        /// </summary>
+        /// <param name="ioe"></param>
         protected void FireEvent(IoFilterEvent ioe)
         {
             _executor.Execute(ioe);

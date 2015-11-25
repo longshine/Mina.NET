@@ -13,15 +13,25 @@ namespace Mina.Filter.Executor
     {
         private readonly IoEventQueueHandler _queueHandler;
 
+        /// <summary>
+        /// Instantiates with a <see cref="NoopIoEventQueueHandler"/>.
+        /// </summary>
         public UnorderedThreadPoolExecutor()
             : this(null)
         { }
 
+        /// <summary>
+        /// Instantiates with the given <see cref="IoEventQueueHandler"/>.
+        /// </summary>
+        /// <param name="queueHandler">the handler</param>
         public UnorderedThreadPoolExecutor(IoEventQueueHandler queueHandler)
         {
             _queueHandler = queueHandler == null ? NoopIoEventQueueHandler.Instance : queueHandler;
         }
 
+        /// <summary>
+        /// Gets the <see cref="IoEventQueueHandler"/>.
+        /// </summary>
         public IoEventQueueHandler QueueHandler
         {
             get { return _queueHandler; }

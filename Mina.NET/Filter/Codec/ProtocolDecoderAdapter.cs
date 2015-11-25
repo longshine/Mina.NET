@@ -11,13 +11,16 @@ namespace Mina.Filter.Codec
     /// </summary>
     public abstract class ProtocolDecoderAdapter : IProtocolDecoder
     {
+        /// <inheritdoc/>
         public abstract void Decode(IoSession session, IoBuffer input, IProtocolDecoderOutput output);
 
+        /// <inheritdoc/>
         public virtual void FinishDecode(IoSession session, IProtocolDecoderOutput output)
         {
             // Do nothing
         }
 
+        /// <inheritdoc/>
         public virtual void Dispose(IoSession session)
         {
             // Do nothing

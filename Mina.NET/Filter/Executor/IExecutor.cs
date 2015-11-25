@@ -7,6 +7,10 @@ namespace Mina.Filter.Executor
     /// </summary>
     public interface IExecutor
     {
+        /// <summary>
+        /// Executes a task.
+        /// </summary>
+        /// <param name="task">the task to run</param>
         void Execute(Action task);
     }
 }

@@ -27,14 +27,28 @@ namespace Mina.Filter.Statistic
         private Boolean _profileSessionClosed;
         private TimerWorker _sessionClosedTimerWorker;
 
+        /// <summary>
+        /// Creates a profiler on event <see cref="IoEventType.MessageReceived"/>
+        /// and <see cref="IoEventType.MessageSent"/> in milliseconds.
+        /// </summary>
         public ProfilerTimerFilter()
             : this(TimeUnit.Milliseconds, IoEventType.MessageReceived | IoEventType.MessageSent)
         { }
 
+        /// <summary>
+        /// Creates a profiler on event <see cref="IoEventType.MessageReceived"/>
+        /// and <see cref="IoEventType.MessageSent"/>.
+        /// </summary>
+        /// <param name="timeUnit">the time unit being used</param>
         public ProfilerTimerFilter(TimeUnit timeUnit)
             : this(timeUnit, IoEventType.MessageReceived | IoEventType.MessageSent)
         { }
 
+        /// <summary>
+        /// Creates a profiler.
+        /// </summary>
+        /// <param name="timeUnit">the time unit being used</param>
+        /// <param name="eventTypes">the event types to profile</param>
         public ProfilerTimerFilter(TimeUnit timeUnit, IoEventType eventTypes)
         {
             _timeUnit = timeUnit;
@@ -50,6 +64,9 @@ namespace Mina.Filter.Statistic
             set { _timeUnit = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="IoEventType"/>s to profile.
+        /// </summary>
         public IoEventType EventsToProfile
         {
             get
@@ -289,10 +306,22 @@ namespace Mina.Filter.Statistic
         }
     }
 
+    /// <summary>
+    /// The unit of time
+    /// </summary>
     public enum TimeUnit
     {
+        /// <summary>
+        /// Seconds
+        /// </summary>
         Seconds,
+        /// <summary>
+        /// Milliseconds
+        /// </summary>
         Milliseconds,
+        /// <summary>
+        /// Ticks
+        /// </summary>
         Ticks
     }
 }

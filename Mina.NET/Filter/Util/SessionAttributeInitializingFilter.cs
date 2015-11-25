@@ -110,6 +110,7 @@ namespace Mina.Filter.Util
             return _attributes.ContainsKey(key);
         }
 
+        /// <inheritdoc/>
         public override void SessionCreated(INextFilter nextFilter, IoSession session)
         {
             foreach (KeyValuePair<String, Object> pair in _attributes)

@@ -21,6 +21,7 @@ namespace Mina.Filter.Stream
     /// </summary>
     public class StreamWriteFilter : AbstractStreamWriteFilter<System.IO.Stream>
     {
+        /// <inheritdoc/>
         protected override IoBuffer GetNextBuffer(System.IO.Stream stream)
         {
             Byte[] bytes = new Byte[WriteBufferSize];
