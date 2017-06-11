@@ -247,6 +247,14 @@ namespace Mina.Core.Service
 
         void IoServiceSupport.FireSessionCreated(IoSession session)
         {
+            if (session.Service is IoConnector)
+            {
+                // If the first connector session, fire a virtual service activation event.
+                Boolean firstSession = _managedSessions.IsEmpty;
+                if (firstSession)
+                    ((IoServiceSupport)this).FireServiceActivated();
+            }
+
             // If already registered, ignore.
             if (!_managedSessions.TryAdd(session.Id, session))
                 return;
