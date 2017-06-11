@@ -1055,5 +1055,18 @@ namespace Mina.Core.Buffer
             }
             Assert.IsTrue(expected is ArgumentException);
         }
+
+        [TestMethod]
+        public void TestFillByteSize()
+        {
+            int length = 1024 * 1020;
+            IoBuffer buffer = IoBuffer.Allocate(length);
+            buffer.Fill((byte)0x80, length);
+
+            buffer.Flip();
+            for (int i = 0; i<length; i++) {
+                Assert.AreEqual((byte)0x80, buffer.Get());
+            }
+        }
     }
 }
