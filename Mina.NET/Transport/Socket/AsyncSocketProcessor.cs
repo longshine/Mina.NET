@@ -66,7 +66,18 @@ namespace Mina.Transport.Socket
 
             IoServiceSupport support = session.Service as IoServiceSupport;
             if (support != null)
-                support.FireSessionDestroyed(session);
+            {
+                try
+                {
+                    support.FireSessionDestroyed(session);
+                }
+                catch (Exception e)
+                {
+                    // The session was either destroyed or not at this point.
+                    // We do not want any exception thrown from this "cleanup" code.
+                    session.FilterChain.FireExceptionCaught(e);
+                }
+            }
         }
 
         public void Write(SocketSession session, IWriteRequest writeRequest)
