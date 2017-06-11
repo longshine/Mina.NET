@@ -24,6 +24,8 @@ namespace Mina.Core.Future
         private EventHandler<IoFutureEventArgs> _complete;
         private Boolean _disposed;
 
+        private readonly object _syncRoot = new byte[0];
+
         /// <summary>
         /// </summary>
         public DefaultIoFuture(IoSession session)
@@ -83,7 +85,7 @@ namespace Mina.Core.Future
             get { return _value; }
             set
             {
-                lock (this)
+                lock (_syncRoot)
                 {
                     if (_ready)
                         return;
@@ -105,7 +107,7 @@ namespace Mina.Core.Future
         /// </returns>
         public Boolean SetValue(Object value)
         {
-            lock (this)
+            lock (_syncRoot)
             {
                 if (_ready)
                     return false;
