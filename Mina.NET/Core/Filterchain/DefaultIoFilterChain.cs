@@ -195,7 +195,11 @@ namespace Mina.Core.Filterchain
             {
                 // Please note that this place is not the only place that
                 // calls ConnectFuture.setException().
-                session.Close(true);
+                if (!session.Closing)
+                {
+                    // Call the CloseNow method only if needed
+                    session.CloseNow();
+                }
                 future.Exception = cause;
             }
         }
