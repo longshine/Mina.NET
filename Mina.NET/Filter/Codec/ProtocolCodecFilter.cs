@@ -156,8 +156,6 @@ namespace Mina.Filter.Codec
 
             if (encoder == null)
                 throw new ProtocolEncoderException("The encoder is null for the session " + session);
-            if (encoderOut == null)
-                throw new ProtocolEncoderException("The encoderOut is null for the session " + session);
 
             try
             {
