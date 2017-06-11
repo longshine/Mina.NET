@@ -235,9 +235,19 @@ namespace Mina.Core.Session
             {
                 if (Closing)
                     return _closeFuture;
+
                 _closing = true;
+
+                try
+                {
+                    Destroy();
+                }
+                catch (Exception e)
+                {
+                    FilterChain.FireExceptionCaught(e);
+                }
             }
-            this.FilterChain.FireFilterClose();
+            FilterChain.FireFilterClose();
             return _closeFuture;
         }
 
@@ -250,6 +260,32 @@ namespace Mina.Core.Session
                 Processor.Flush(this);
             }
             return _closeFuture;
+        }
+
+        /// <summary>
+        /// Destroy the session.
+        /// </summary>
+        protected void Destroy()
+        {
+            if (_writeRequestQueue != null)
+            {
+                while (!_writeRequestQueue.IsEmpty(this))
+                {
+                    IWriteRequest writeRequest = _writeRequestQueue.Poll(this);
+
+                    if (writeRequest != null)
+                    {
+                        IWriteFuture writeFuture = writeRequest.Future;
+
+                        // The WriteRequest may not always have a future:
+                        // the CLOSE_REQUEST and MESSAGE_SENT_REQUEST don't.
+                        if (writeFuture != null)
+                        {
+                            writeFuture.Written = true;
+                        }
+                    }
+                }
+            }
         }
 
         /// <inheritdoc/>
