@@ -201,7 +201,7 @@ namespace Mina.Core.Session
             }
             else if (rightNow)
             {
-                return Close();
+                return CloseNow();
             }
             else
             {
@@ -209,8 +209,16 @@ namespace Mina.Core.Session
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Closes this session immediately. This operation is asynchronous.
+        /// </summary>
+        [Obsolete("Use Close(bool) instead")]
         public ICloseFuture Close()
+        {
+            return CloseNow();
+        }
+
+        private ICloseFuture CloseNow()
         {
             lock (_syncRoot)
             {
@@ -818,7 +826,7 @@ namespace Mina.Core.Session
                 IWriteRequest answer = _queue.Poll(session);
                 if (Object.ReferenceEquals(answer, CLOSE_REQUEST))
                 {
-                    _session.Close();
+                    _session.Close(true);
                     Dispose(_session);
                     answer = null;
                 }
