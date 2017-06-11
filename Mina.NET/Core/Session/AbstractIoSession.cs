@@ -88,6 +88,16 @@ namespace Mina.Core.Session
         }
 
         /// <inheritdoc/>
+        public virtual bool Active
+        {
+            get
+            {
+                // Return true by default
+                return true;
+            }
+        }
+
+        /// <inheritdoc/>
         public Boolean Closing
         {
             get { return _closing || _closeFuture.Closed; }
@@ -218,7 +228,8 @@ namespace Mina.Core.Session
             return CloseNow();
         }
 
-        private ICloseFuture CloseNow()
+        /// <inheritdoc/>
+        public ICloseFuture CloseNow()
         {
             lock (_syncRoot)
             {
@@ -230,10 +241,14 @@ namespace Mina.Core.Session
             return _closeFuture;
         }
 
-        private ICloseFuture CloseOnFlush()
+        /// <inheritdoc/>
+        public ICloseFuture CloseOnFlush()
         {
-            WriteRequestQueue.Offer(this, CLOSE_REQUEST);
-            Processor.Flush(this);
+            if (!Closing)
+            {
+                WriteRequestQueue.Offer(this, CLOSE_REQUEST);
+                Processor.Flush(this);
+            }
             return _closeFuture;
         }
 
@@ -749,7 +764,10 @@ namespace Mina.Core.Session
         {
             foreach (IoSession s in sessions)
             {
-                NotifyIdleSession(s, currentTime);
+                if (!s.CloseFuture.Closed)
+                {
+                    NotifyIdleSession(s, currentTime);
+                }
             }
         }
 

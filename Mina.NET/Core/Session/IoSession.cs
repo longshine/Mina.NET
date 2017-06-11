@@ -46,6 +46,10 @@ namespace Mina.Core.Session
         /// </summary>
         Boolean Connected { get; }
         /// <summary>
+        /// Returns <code>true</code> if this session is active.
+        /// </summary>
+        bool Active { get; }
+        /// <summary>
         /// Returns <code>true</code> if and only if this session is being closed.
         /// </summary>
         Boolean Closing { get; }
@@ -85,8 +89,20 @@ namespace Mina.Core.Session
         /// <param name="rightNow">true to close this session immediately,
         /// discarding the pending write requests; false to close this session
         /// after all queued write requests are flushed.</param>
-        /// <returns></returns>
+        /// <returns><see cref="ICloseFuture"/></returns>
         ICloseFuture Close(Boolean rightNow);
+        /// <summary>
+        /// Closes this session immediately. This operation is asynchronous.
+        /// </summary>
+        /// <returns><see cref="ICloseFuture"/></returns>
+        ICloseFuture CloseNow();
+        /// <summary>
+        /// Closes this session after all queued write requests are flushed.
+        /// This operation is asynchronous.
+        /// Wait for the returned <see cref="ICloseFuture"/> if you want to wait for the session actually closed.
+        /// </summary>
+        /// <returns><see cref="ICloseFuture"/></returns>
+        ICloseFuture CloseOnFlush();
         /// <summary>
         /// Gets the value of the user-defined attribute of this session.
         /// </summary>

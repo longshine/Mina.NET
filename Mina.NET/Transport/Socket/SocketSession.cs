@@ -49,6 +49,12 @@ namespace Mina.Transport.Socket
         }
 
         /// <inheritdoc/>
+        public override bool Active
+        {
+            get { return _socket.Connected; }
+        }
+
+        /// <inheritdoc/>
         public override IoFilterChain FilterChain
         {
             get { return _filterChain; }
