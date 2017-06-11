@@ -13,14 +13,30 @@ namespace Mina.Filter.Codec
         private readonly AttributeKey BUFFER = new AttributeKey(typeof(CumulativeProtocolDecoder), "buffer");
 
         /// <summary>
+        /// A flag set to true if we handle fragmentation accordingly to the TransportMetadata setting.
+        /// It can be set to false if needed (UDP with fragments, for instance). The default value is <code>true</code>.
+        /// </summary>
+        private bool _transportMetadataFragmentation = true;
+
+        /// <summary>
         /// </summary>
         protected CumulativeProtocolDecoder()
         { }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to check the TransportMetadata fragmentation capability or not.
+        /// The default value is <code>true</code>.
+        /// </summary>
+        public bool TransportMetadataFragmentation
+        {
+            get { return _transportMetadataFragmentation; }
+            set { _transportMetadataFragmentation = value; }
+        }
+
         /// <inheritdoc/>
         public override void Decode(IoSession session, IoBuffer input, IProtocolDecoderOutput output)
         {
-            if (!session.TransportMetadata.HasFragmentation)
+            if (_transportMetadataFragmentation && !session.TransportMetadata.HasFragmentation)
             {
                 while (input.HasRemaining)
                 {
