@@ -1,7 +1,7 @@
 Mina.NET
 ========
 
-.NET implementation of [Apache MINA] (http://mina.apache.org/). I like the ideas in it, simple yet functional, but I failed to find one in .NET, finally I created one.
+.NET implementation of [Apache MINA](http://mina.apache.org/). I like the ideas in it, simple yet functional, but I failed to find one in .NET, finally I created one.
 
 Mina.NET is a network application framework which helps users develop high performance and high scalability network applications easily. It provides an abstract event-driven asynchronous API over various transports such as TCP/IP via **async socket**.
 
@@ -70,4 +70,4 @@ See https://mina.codeplex.com/documentation for more.
 License
 -------
 
-Licensed under the Apache License, Version 2.0. You may obtain a copy of the License at [LICENSE] (LICENSE) or http://www.apache.org/licenses/LICENSE-2.0.
+Licensed under the Apache License, Version 2.0. You may obtain a copy of the License at [LICENSE](LICENSE) or http://www.apache.org/licenses/LICENSE-2.0.
