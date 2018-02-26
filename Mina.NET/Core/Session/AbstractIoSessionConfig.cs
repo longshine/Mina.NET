@@ -115,6 +115,7 @@ namespace Mina.Core.Session
             if (config == null)
                 throw new ArgumentNullException("config");
             ReadBufferSize = config.ReadBufferSize;
+            WriteTimeout = config.WriteTimeout;
             SetIdleTime(IdleStatus.BothIdle, config.GetIdleTime(IdleStatus.BothIdle));
             SetIdleTime(IdleStatus.ReaderIdle, config.GetIdleTime(IdleStatus.ReaderIdle));
             SetIdleTime(IdleStatus.WriterIdle, config.GetIdleTime(IdleStatus.WriterIdle));
