@@ -118,6 +118,11 @@ namespace Mina.Transport.Socket
                 // do nothing
                 return;
             }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
+                return;
+            }
             catch (Exception ex)
             {
                 EndSend(ex);
@@ -147,6 +152,11 @@ namespace Mina.Transport.Socket
                 // do nothing
                 return;
             }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
+                return;
+            }
             catch (Exception ex)
             {
                 EndSend(ex);
@@ -174,16 +184,9 @@ namespace Mina.Transport.Socket
             {
                 EndSend(e.BytesTransferred);
             }
-            else if (e.SocketError != SocketError.OperationAborted
-                && e.SocketError != SocketError.Interrupted
-                && e.SocketError != SocketError.ConnectionReset)
-            {
-                EndSend(new SocketException((Int32)e.SocketError));
-            }
             else
             {
-                // closed
-                Processor.Remove(this);
+                EndSend(new SocketException((Int32)e.SocketError));
             }
         }
 
@@ -200,6 +203,11 @@ namespace Mina.Transport.Socket
             catch (ObjectDisposedException)
             {
                 // do nothing
+                return;
+            }
+            catch (SocketException ex)
+            {
+                EndReceive(ex);
                 return;
             }
             catch (Exception ex)
@@ -247,16 +255,9 @@ namespace Mina.Transport.Socket
                     this.FilterChain.FireInputClosed();
                 }
             }
-            else if (e.SocketError != SocketError.OperationAborted
-                && e.SocketError != SocketError.Interrupted
-                && e.SocketError != SocketError.ConnectionReset)
-            {
-                EndReceive(new SocketException((Int32)e.SocketError));
-            }
             else
             {
-                // closed
-                Processor.Remove(this);
+                EndReceive(new SocketException((Int32)e.SocketError));
             }
         }
     }

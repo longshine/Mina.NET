@@ -40,6 +40,14 @@ namespace Mina.Transport.Socket
             {
                 // do nothing
             }
+            catch (SocketException ex)
+            {
+                EndReceive(ex);
+            }
+            catch (Exception ex)
+            {
+                EndReceive(ex);
+            }
         }
 
         /// <inheritdoc/>
@@ -53,6 +61,10 @@ namespace Mina.Transport.Socket
             catch (ObjectDisposedException)
             {
                 // ignore
+            }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
             }
             catch (Exception ex)
             {
@@ -70,6 +82,10 @@ namespace Mina.Transport.Socket
             catch (ObjectDisposedException)
             {
                 // ignore
+            }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
             }
             catch (Exception ex)
             {
