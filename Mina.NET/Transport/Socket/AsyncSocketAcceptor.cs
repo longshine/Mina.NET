@@ -115,6 +115,7 @@ namespace Mina.Transport.Socket
                 acceptEventArg = new SocketAsyncEventArgs();
                 acceptEventArg.UserToken = listener;
                 acceptEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(AcceptEventArg_Completed);
+                listener.Tag = acceptEventArg;
             }
             else
             {
