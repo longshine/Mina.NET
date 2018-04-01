@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Mina.Core.Service;
 using Mina.Core.Session;
 using Mina.Util;
@@ -55,7 +56,9 @@ namespace Mina.Transport.Socket
 
         protected override IoSession NewSession(IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
         {
-            return new AsyncSocketSession(this, processor, socket, ReuseBuffer);
+            EndPoint localEP = socket.LocalEndPoint;
+            EndPoint remoteEP = socket.RemoteEndPoint;
+            return new AsyncSocketSession(this, processor, socket, localEP, remoteEP, ReuseBuffer);
         }
     }
 }

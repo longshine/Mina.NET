@@ -159,6 +159,9 @@ namespace Mina.Transport.Socket
         /// <inheritdoc/>
         protected override IoSession NewSession(IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket)
         {
+            EndPoint localEP = socket.LocalEndPoint;
+            EndPoint remoteEP = socket.RemoteEndPoint;
+
             SocketAsyncEventArgsBuffer readBuffer = _readWritePool.Pop();
             SocketAsyncEventArgsBuffer writeBuffer = _readWritePool.Pop();
 
@@ -176,7 +179,7 @@ namespace Mina.Transport.Socket
                 writeBuffer.SocketAsyncEventArgs.Completed += readWriteEventArg_Completed;
             }
 
-            return new AsyncSocketSession(this, processor, socket, readBuffer, writeBuffer, ReuseBuffer);
+            return new AsyncSocketSession(this, processor, socket, localEP, remoteEP, readBuffer, writeBuffer, ReuseBuffer);
         }
     }
 }

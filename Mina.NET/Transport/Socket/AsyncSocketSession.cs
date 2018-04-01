@@ -32,12 +32,14 @@ namespace Mina.Transport.Socket
         /// <param name="service">the service this session belongs to</param>
         /// <param name="processor">the processor to process this session</param>
         /// <param name="socket">the associated socket</param>
+        /// <param name="localEP">the local EndPoint</param>
+        /// <param name="remoteEP">the remote EndPoint</param>
         /// <param name="readBuffer">the <see cref="SocketAsyncEventArgsBuffer"/> as reading buffer</param>
         /// <param name="writeBuffer">the <see cref="SocketAsyncEventArgsBuffer"/> as writing buffer</param>
         /// <param name="reuseBuffer">whether or not reuse internal buffer, see <seealso cref="SocketSession.ReuseBuffer"/> for more</param>
         public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor, System.Net.Sockets.Socket socket,
-            SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
-            : base(service, processor, new SessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint, reuseBuffer)
+            EndPoint localEP, EndPoint remoteEP, SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
+            : base(service, processor, new SessionConfigImpl(socket), socket, localEP, remoteEP, reuseBuffer)
         {
             _readBuffer = readBuffer;
             _readBuffer.SocketAsyncEventArgs.UserToken = this;

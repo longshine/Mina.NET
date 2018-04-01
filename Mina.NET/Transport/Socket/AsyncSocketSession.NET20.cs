@@ -17,8 +17,8 @@ namespace Mina.Transport.Socket
         private readonly Byte[] _readBuffer;
 
         public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor,
-            System.Net.Sockets.Socket socket, Boolean reuseBuffer)
-            : base(service, processor, new SessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint, reuseBuffer)
+            System.Net.Sockets.Socket socket, EndPoint localEP, EndPoint remoteEP, Boolean reuseBuffer)
+            : base(service, processor, new SessionConfigImpl(socket), socket, localEP, remoteEP, reuseBuffer)
         {
             _readBuffer = new Byte[service.SessionConfig.ReadBufferSize];
         }
