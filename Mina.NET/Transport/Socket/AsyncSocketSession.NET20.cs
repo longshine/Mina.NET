@@ -108,17 +108,7 @@ namespace Mina.Transport.Socket
             }
             catch (SocketException ex)
             {
-                if (ex.SocketErrorCode != SocketError.OperationAborted
-                    && ex.SocketErrorCode != SocketError.Interrupted
-                    && ex.SocketErrorCode != SocketError.ConnectionReset)
-                {
-                    EndReceive(ex);
-                }
-                else
-                {
-                    // closed
-                    Processor.Remove(this);
-                }
+                EndReceive(ex);
                 return;
             }
             catch (Exception ex)
@@ -162,6 +152,11 @@ namespace Mina.Transport.Socket
                 // do nothing
                 return;
             }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
+                return;
+            }
             catch (Exception ex)
             {
                 EndSend(ex);
@@ -183,6 +178,11 @@ namespace Mina.Transport.Socket
             catch (ObjectDisposedException)
             {
                 // do nothing
+                return;
+            }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
                 return;
             }
             catch (Exception ex)
