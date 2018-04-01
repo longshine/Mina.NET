@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Mina.NET")]
-[assembly: AssemblyCopyright("Copyright © Longshine 2013-2015")]
+[assembly: AssemblyCopyright("Copyright © Longshine 2013-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
