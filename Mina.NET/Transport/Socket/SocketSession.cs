@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using Mina.Core.Buffer;
@@ -221,6 +221,23 @@ namespace Mina.Transport.Socket
         }
 
         /// <summary>
+        /// Ends send operation by a <see cref="SocketException"/>.
+        /// </summary>
+        protected void EndSend(SocketException ex)
+        {
+            // may be closed
+            if (ex.SocketErrorCode != SocketError.OperationAborted
+                && ex.SocketErrorCode != SocketError.Interrupted
+                && ex.SocketErrorCode != SocketError.ConnectionAborted
+                && ex.SocketErrorCode != SocketError.ConnectionReset)
+            {
+                this.FilterChain.FireExceptionCaught(ex);
+            }
+            // TODO should I check the SocketError code?
+            Processor.Remove(this);
+        }
+
+        /// <summary>
         /// Ends send operation.
         /// </summary>
         /// <param name="ex">the exception caught</param>
@@ -275,6 +292,24 @@ namespace Mina.Transport.Socket
                 if (Socket.Connected)
                     BeginReceive();
             }
+        }
+
+        /// <summary>
+        /// Ends receive operation by a <see cref="SocketException"/>.
+        /// </summary>
+        /// <param name="ex"></param>
+        protected void EndReceive(SocketException ex)
+        {
+            // may be closed
+            if (ex.SocketErrorCode != SocketError.OperationAborted
+                && ex.SocketErrorCode != SocketError.Interrupted
+                && ex.SocketErrorCode != SocketError.ConnectionAborted
+                && ex.SocketErrorCode != SocketError.ConnectionReset)
+            {
+                this.FilterChain.FireExceptionCaught(ex);
+            }
+            // TODO should I check the SocketError code?
+            Processor.Remove(this);
         }
 
         /// <summary>

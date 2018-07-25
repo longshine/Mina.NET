@@ -254,9 +254,9 @@ namespace Mina.Transport.Socket
         {
             if (socket != null)
             {
-                IoSession session = NewSession(_processor, socket);
                 try
                 {
+                    IoSession session = NewSession(_processor, socket);
                     InitSession<IoFuture>(session, null, null);
                     session.Processor.Add(session);
                 }

@@ -17,8 +17,8 @@ namespace Mina.Transport.Socket
         private readonly Byte[] _readBuffer;
 
         public AsyncSocketSession(IoService service, IoProcessor<SocketSession> processor,
-            System.Net.Sockets.Socket socket, Boolean reuseBuffer)
-            : base(service, processor, new SessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint, reuseBuffer)
+            System.Net.Sockets.Socket socket, EndPoint localEP, EndPoint remoteEP, Boolean reuseBuffer)
+            : base(service, processor, new SessionConfigImpl(socket), socket, localEP, remoteEP, reuseBuffer)
         {
             _readBuffer = new Byte[service.SessionConfig.ReadBufferSize];
         }
@@ -40,6 +40,14 @@ namespace Mina.Transport.Socket
             {
                 // do nothing
             }
+            catch (SocketException ex)
+            {
+                EndReceive(ex);
+            }
+            catch (Exception ex)
+            {
+                EndReceive(ex);
+            }
         }
 
         /// <inheritdoc/>
@@ -53,6 +61,10 @@ namespace Mina.Transport.Socket
             catch (ObjectDisposedException)
             {
                 // ignore
+            }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
             }
             catch (Exception ex)
             {
@@ -70,6 +82,10 @@ namespace Mina.Transport.Socket
             catch (ObjectDisposedException)
             {
                 // ignore
+            }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
             }
             catch (Exception ex)
             {
@@ -92,17 +108,7 @@ namespace Mina.Transport.Socket
             }
             catch (SocketException ex)
             {
-                if (ex.SocketErrorCode != SocketError.OperationAborted
-                    && ex.SocketErrorCode != SocketError.Interrupted
-                    && ex.SocketErrorCode != SocketError.ConnectionReset)
-                {
-                    EndReceive(ex);
-                }
-                else
-                {
-                    // closed
-                    Processor.Remove(this);
-                }
+                EndReceive(ex);
                 return;
             }
             catch (Exception ex)
@@ -146,6 +152,11 @@ namespace Mina.Transport.Socket
                 // do nothing
                 return;
             }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
+                return;
+            }
             catch (Exception ex)
             {
                 EndSend(ex);
@@ -167,6 +178,11 @@ namespace Mina.Transport.Socket
             catch (ObjectDisposedException)
             {
                 // do nothing
+                return;
+            }
+            catch (SocketException ex)
+            {
+                EndSend(ex);
                 return;
             }
             catch (Exception ex)

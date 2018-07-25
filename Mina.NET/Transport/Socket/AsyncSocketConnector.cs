@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using Mina.Core.Service;
 
@@ -79,7 +80,9 @@ namespace Mina.Transport.Socket
 
                 try
                 {
-                    EndConnect(new AsyncSocketSession(this, Processor, connector.Socket,
+                    EndPoint localEP = connector.Socket.LocalEndPoint;
+                    EndPoint remoteEP = connector.Socket.RemoteEndPoint;
+                    EndConnect(new AsyncSocketSession(this, Processor, connector.Socket, localEP, remoteEP,
                         new SocketAsyncEventArgsBuffer(readBuffer), new SocketAsyncEventArgsBuffer(writeBuffer),
                         ReuseBuffer), connector);
                 }
