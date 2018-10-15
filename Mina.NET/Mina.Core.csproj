@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyVersion>2.0.13.0</AssemblyVersion>
+    <FileVersion>2.0.13.0</FileVersion>
+    <Product>Mina.NET</Product>
+    <Description>Async socket library for high performance and high scalability network applications.</Description>
+    <Copyright>Copyright © Longshine 2013-2018</Copyright>
+    <Authors>Longshine</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="lib\**" />
+    <Compile Remove="Transport\Serial\**" />
+    <Compile Remove="Util\System.Collections.Concurrent\**" />
+    <Compile Remove="Util\System.Collections.Generic\**" />
+    <Compile Remove="Util\System\**" />
+    <EmbeddedResource Remove="lib\**" />
+    <EmbeddedResource Remove="Transport\Serial\**" />
+    <EmbeddedResource Remove="Util\System.Collections.Concurrent\**" />
+    <EmbeddedResource Remove="Util\System.Collections.Generic\**" />
+    <EmbeddedResource Remove="Util\System\**" />
+    <None Remove="lib\**" />
+    <None Remove="Transport\Serial\**" />
+    <None Remove="Util\System.Collections.Concurrent\**" />
+    <None Remove="Util\System.Collections.Generic\**" />
+    <None Remove="Util\System\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Filter\Executor\ThreadPoolExecutor.NET20.cs" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Compile Remove="Transport\Socket\AsyncDatagramAcceptor.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncDatagramConnector.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncDatagramSession.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncSocketAcceptor.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncSocketConnector.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncSocketSession.NET20.cs" />
+    <Compile Remove="Util\Delegates.cs" />
+    <Compile Remove="Util\InterlockedUtil.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="mina.snk" />
+    <None Remove="packages.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>
