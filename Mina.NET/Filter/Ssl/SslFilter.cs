@@ -26,7 +26,11 @@ namespace Mina.Filter.Ssl
         private static readonly AttributeKey SSL_HANDLER = new AttributeKey(typeof(SslFilter), "handler");
 
         X509Certificate _serverCertificate = null;
+#if !NETCore
         SslProtocols _sslProtocol = SslProtocols.Default;
+#else
+        SslProtocols _sslProtocol = SslProtocols.None;
+#endif
 
         /// <summary>
         /// Creates a new SSL filter using the specified PKCS7 signed file.

@@ -18,7 +18,9 @@ namespace Mina.Core.Service
         /// <summary>
         /// The lock for binding.
         /// </summary>
+#if !NETCore
         [CLSCompliant(false)]
+#endif
         protected Object _bindLock;
 
         /// <summary>
