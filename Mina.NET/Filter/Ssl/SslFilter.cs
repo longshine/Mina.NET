@@ -25,7 +25,7 @@ namespace Mina.Filter.Ssl
         private static readonly AttributeKey NEXT_FILTER = new AttributeKey(typeof(SslFilter), "nextFilter");
         private static readonly AttributeKey SSL_HANDLER = new AttributeKey(typeof(SslFilter), "handler");
 
-        X509Certificate _serverCertificate = null;
+        private readonly X509Certificate _serverCertificate = null;
 #if !NETCore
         SslProtocols _sslProtocol = SslProtocols.Default;
 #else
@@ -178,8 +178,7 @@ namespace Mina.Filter.Ssl
         /// <inheritdoc/>
         public override void MessageSent(INextFilter nextFilter, IoSession session, IWriteRequest writeRequest)
         {
-            EncryptedWriteRequest encryptedWriteRequest = writeRequest as EncryptedWriteRequest;
-            if (encryptedWriteRequest == null)
+            if (!(writeRequest is EncryptedWriteRequest encryptedWriteRequest))
             {
                 // ignore extra buffers used for handshaking
             }
@@ -217,17 +216,17 @@ namespace Mina.Filter.Ssl
             IWriteFuture future = null;
             try
             {
-                future = InitiateClosure(handler, nextFilter, session);
+                future = InitiateClosure(handler, session);
                 future.Complete += (s, e) => base.FilterClose(nextFilter, session);
             }
             finally
-            { 
+            {
                 if (future == null)
                     base.FilterClose(nextFilter, session);
             }
         }
 
-        private IWriteFuture InitiateClosure(SslHandler handler, INextFilter nextFilter, IoSession session)
+        private IWriteFuture InitiateClosure(SslHandler handler, IoSession session)
         {
             IWriteFuture future = DefaultWriteFuture.NewWrittenFuture(session);
             handler.Destroy();
@@ -481,8 +480,7 @@ namespace Mina.Filter.Ssl
         public void Destroy()
         {
             _sslStream.Close();
-            IoFilterEvent scheduledWrite;
-            while (_preHandshakeEventQueue.TryDequeue(out scheduledWrite))
+            while (_preHandshakeEventQueue.TryDequeue(out _))
             { }
         }
 
@@ -490,8 +488,7 @@ namespace Mina.Filter.Ssl
         {
             lock (this)
             {
-                IoFilterEvent scheduledWrite;
-                while (_preHandshakeEventQueue.TryDequeue(out scheduledWrite))
+                while (_preHandshakeEventQueue.TryDequeue(out IoFilterEvent scheduledWrite))
                 {
                     _sslFilter.FilterWrite(scheduledWrite.NextFilter, scheduledWrite.Session, (IWriteRequest)scheduledWrite.Parameter);
                 }

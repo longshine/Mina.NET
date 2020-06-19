@@ -27,7 +27,7 @@ namespace Mina.Core.Service
         /// </summary>
         protected AbstractIoAcceptor(IoSessionConfig sessionConfig)
             : base(sessionConfig)
-        { 
+        {
             _bindLock = ((ICollection)_boundEndPoints).SyncRoot;
         }
 
