@@ -1,0 +1,25 @@
+<Project>
+  <PropertyGroup>
+    <RootDir>$(SolutionDir)</RootDir>
+    <BinDir>$(SolutionDir)Bin</BinDir>
+    <CodeDir>$(SolutionDir)Source Code</CodeDir>
+    <IconDir>$(SolutionDir)Resource\Icon</IconDir>
+    <ResourceDir>$(SolutionDir)Resource</ResourceDir>
+    <MainProjectName></MainProjectName>
+    <ThirdLibDir>$(SolutionDir)Resource\3rdLib</ThirdLibDir>
+    <PublishDir>$(SolutionDir)Bin\Publish\$(MSBuildProjectName)</PublishDir>
+    <ImprotDir>$(SolutionDir)Resource\Build Support\CSProj Import</ImprotDir>
+    <ModulesOutputDir>$(SolutionDir)Bin\$(Configuration)\Modules</ModulesOutputDir>
+    <LibrariesOutputDir>$(SolutionDir)Bin\$(Configuration)\Libs</LibrariesOutputDir>
+    <ExeOutputDir>$(SolutionDir)Bin\$(Configuration)\$(MSBuildProjectName)</ExeOutputDir>
+    <PackingTool>"$(SolutionDir)Resource\Build Support\Tools\Packing Tool\Packing Tool.exe"</PackingTool>
+    <LibraryOutputDir>$(SolutionDir)Bin\$(Configuration)\Libs\$(MSBuildProjectName)</LibraryOutputDir>
+    <ModuleOutputDir>$(SolutionDir)Bin\$(Configuration)\Modules\$(MSBuildProjectName)</ModuleOutputDir>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(SolutionFileName)' == 'Mina.NET.Core.sln' ">
+    <BaseIntermediateOutputPath>$(BinDir)\#Build#\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <DefineConstants>NETCore</DefineConstants>
+  </PropertyGroup>
+</Project>

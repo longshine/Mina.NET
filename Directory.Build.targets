@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <OutputPath>$(ExeOutputDir)</OutputPath>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(SolutionFileName)' == 'Mina.NET.Core.sln' ">
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Choose>
+    <When Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+      <ItemGroup>
+        <ProjectReference Include="$(SolutionDir)Mina.NET\Mina.NET.Core.csproj" />
+      </ItemGroup>
+    </When>
+  </Choose>
+</Project>

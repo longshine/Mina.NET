@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>2.0.12</Version>
+    <Authors>Longshine</Authors>
+    <Description>Async socket library for high performance and high scalability network applications.</Description>
+    <Copyright>Copyright © Longshine 2013-2020</Copyright>
+    <PackageTags>2070ccbf-2ee3-476e-9715-54e97a5e26c7</PackageTags>
+    <OutputPath>$(LibraryOutputDir)</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="lib\**" />
+    <Compile Remove="Util\System.Collections.Concurrent\**" />
+    <Compile Remove="Util\System.Collections.Generic\**" />
+    <Compile Remove="Util\System\**" />
+    <EmbeddedResource Remove="lib\**" />
+    <EmbeddedResource Remove="Util\System.Collections.Concurrent\**" />
+    <EmbeddedResource Remove="Util\System.Collections.Generic\**" />
+    <EmbeddedResource Remove="Util\System\**" />
+    <None Remove="lib\**" />
+    <None Remove="Util\System.Collections.Concurrent\**" />
+    <None Remove="Util\System.Collections.Generic\**" />
+    <None Remove="Util\System\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Filter\Executor\ThreadPoolExecutor.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncDatagramAcceptor.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncDatagramConnector.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncDatagramSession.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncSocketAcceptor.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncSocketConnector.NET20.cs" />
+    <Compile Remove="Transport\Socket\AsyncSocketSession.NET20.cs" />
+    <Compile Remove="Util\Delegates.cs" />
+    <Compile Remove="Util\InterlockedUtil.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.0-preview.5.20278.1" />
+  </ItemGroup>
+
+</Project>
