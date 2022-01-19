@@ -19,7 +19,7 @@ namespace Mina.Transport.Socket
             System.Net.Sockets.Socket socket, EndPoint remoteEP,
             SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
             : base(service, processor, new DatagramSessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint ?? remoteEP, reuseBuffer)
-        {   
+        {
             _readBuffer = readBuffer;
             _readBuffer.SocketAsyncEventArgs.UserToken = this;
             _writeBuffer = writeBuffer;
