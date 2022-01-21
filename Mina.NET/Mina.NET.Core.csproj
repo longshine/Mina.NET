@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.12</Version>
+    <Version>2.0.13</Version>
     <Authors>Longshine</Authors>
     <Description>Async socket library for high performance and high scalability network applications.</Description>
-    <Copyright>Copyright © Longshine 2013-2020</Copyright>
-    <PackageTags>2070ccbf-2ee3-476e-9715-54e97a5e26c7</PackageTags>
+    <Copyright>Copyright © Longshine 2013-2022</Copyright>
+    <PackageTags>27d6430a-d2b6-4eb7-8026-6b106301d91f</PackageTags>
     <OutputPath>$(LibraryOutputDir)</OutputPath>
   </PropertyGroup>
 
