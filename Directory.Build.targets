@@ -1,7 +1,5 @@
+<!-- .targets 文件在生成顺序的后期导入 -->
 <Project>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-    <OutputPath>$(ExeOutputDir)</OutputPath>
-  </PropertyGroup>
   <ItemGroup Condition=" '$(SolutionFileName)' == 'Mina.NET.Core.sln' ">
     <Compile Remove="obj\**" />
     <EmbeddedResource Remove="obj\**" />
@@ -10,7 +8,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <Choose>
-    <When Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <When Condition=" '$(MSBuildProjectName)' != 'Mina.NET.Core' ">
       <ItemGroup>
         <ProjectReference Include="$(SolutionDir)Mina.NET\Mina.NET.Core.csproj" />
       </ItemGroup>

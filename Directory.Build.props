@@ -1,3 +1,4 @@
+<!-- .props 文件在导入顺序的早期导入 -->
 <Project>
   <PropertyGroup>
     <RootDir>$(SolutionDir)</RootDir>
@@ -21,5 +22,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <DefineConstants>NETCore</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(MSBuildProjectName)' != 'Mina.NET.Core' ">
+    <OutputPath>$(ExeOutputDir)</OutputPath>
   </PropertyGroup>
 </Project>
