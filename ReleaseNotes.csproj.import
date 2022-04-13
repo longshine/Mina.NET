@@ -1,6 +1,8 @@
 <Project>
   <PropertyGroup>
-    <PackageReleaseNotes>* 2.0.15
+    <PackageReleaseNotes>* 2.0.16
+  - Override the ToString method of SerialEndPoint for friendly logging.
+* 2.0.15
   - Added .NET Core support
   - Fix the problem that UDP does not work in mono
 * 2.0.12

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <PackageId>Mina.NET.Core</PackageId>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.15</Version>
+    <Version>2.0.16</Version>
     <Authors>Longshine</Authors>
     <Description>Async socket library for high performance and high scalability network applications.</Description>
     <Copyright>Copyright © Longshine 2013-2022</Copyright>
