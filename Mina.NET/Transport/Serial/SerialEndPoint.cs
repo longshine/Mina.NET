@@ -82,6 +82,11 @@ namespace Mina.Transport.Serial
         {
             get { return _stopBits; }
         }
+
+        public override string ToString()
+        {
+            return $"{_portName}:{_baudRate}";
+        }
     }
 }
 #endif
