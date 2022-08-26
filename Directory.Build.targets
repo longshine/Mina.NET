@@ -1,0 +1,17 @@
+<!-- .targets 文件在生成顺序的后期导入 -->
+<Project>
+  <ItemGroup Condition=" '$(SolutionFileName)' == 'Mina.NET.Core.sln' ">
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Choose>
+    <When Condition=" '$(MSBuildProjectName)' != 'Mina.NET.Core' ">
+      <ItemGroup>
+        <ProjectReference Include="$(SolutionDir)Mina.NET\Mina.NET.Core.csproj" />
+      </ItemGroup>
+    </When>
+  </Choose>
+</Project>

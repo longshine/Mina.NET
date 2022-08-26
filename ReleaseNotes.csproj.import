@@ -1,0 +1,44 @@
+<Project>
+  <PropertyGroup>
+    <PackageReleaseNotes>* 2.0.16
+  - Override the ToString method of SerialEndPoint for friendly logging.
+* 2.0.15
+  - Added .NET Core support
+  - Fix the problem that UDP does not work in mono
+* 2.0.12
+  - Fixed memory leak in SocketAcceptor
+  - Fixed unhandled exceptions in sending/receiving in SocketSession
+  - Fixed missing WriteTimeout in IoSessionConfig (thanks @UCan927)
+* 2.0.11
+  - Added client mode in SslFilter (thanks @ddfczm)
+  - Fixed invalid reading in SslFilter
+  - Fixed incorrect use of Semaphore in ProtocolCodecFilter
+* 2.0.10
+  - Fixed potential performance degradation (thanks @gmav)
+  - Fixed IConnectFuture.Cancel()
+* 2.0.9   - Apache MINA 2.0.9
+  - Added InputClosed event
+  - Added support for UDP multicast
+  - Added throughput calculation
+  - Updated Common.Logging to v3.0.0
+  - Fixed a lot
+* 2.0.7.1
+  - Added test for KeepAliveFilter
+  - Fixed incorrect IoEventType
+  - Fixed incorrect method calls in socket transport
+* 2.0.7   - First release based on Apache MINA 2.0.7
+  - Unified yet simple API for various transport types:
+  - TCP/IP &amp; UDP/IP via .NET asynchronous socket
+  - serial communication
+  - loopback (in-application pipe)
+  - Extensible filters
+  - Low-level and high-level API:
+  - low-level: uses IoBuffers
+  - high-level: uses user-defined message objects and codecs
+  - Highly customizable thread model
+  - Out-of-the-box SSL · TLS
+  - Overload shielding &amp; traffic throttling
+  - Stream-based I/O support via StreamIoHandler
+  - Tested</PackageReleaseNotes>
+  </PropertyGroup>
+</Project>

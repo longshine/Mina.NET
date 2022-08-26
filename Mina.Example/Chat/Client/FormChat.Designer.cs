@@ -64,20 +64,22 @@
             this.tableLayoutPanel1.Controls.Add(this.panel1, 5, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(464, 282);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(541, 400);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // buttonSend
             // 
             this.buttonSend.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonSend.Location = new System.Drawing.Point(391, 255);
+            this.buttonSend.Location = new System.Drawing.Point(456, 362);
+            this.buttonSend.Margin = new System.Windows.Forms.Padding(4);
             this.buttonSend.Name = "buttonSend";
-            this.buttonSend.Size = new System.Drawing.Size(70, 24);
+            this.buttonSend.Size = new System.Drawing.Size(81, 34);
             this.buttonSend.TabIndex = 7;
             this.buttonSend.Text = "Send";
             this.buttonSend.UseVisualStyleBackColor = true;
@@ -89,9 +91,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Location = new System.Drawing.Point(4, 0);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 30);
+            this.label1.Size = new System.Drawing.Size(78, 42);
             this.label1.TabIndex = 0;
             this.label1.Text = "Name:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -100,9 +103,10 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.textBoxUser, 2);
             this.textBoxUser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxUser.Location = new System.Drawing.Point(77, 3);
+            this.textBoxUser.Location = new System.Drawing.Point(90, 4);
+            this.textBoxUser.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxUser.Name = "textBoxUser";
-            this.textBoxUser.Size = new System.Drawing.Size(151, 21);
+            this.textBoxUser.Size = new System.Drawing.Size(175, 23);
             this.textBoxUser.TabIndex = 1;
             // 
             // label2
@@ -111,9 +115,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(234, 0);
+            this.label2.Location = new System.Drawing.Point(273, 0);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(68, 30);
+            this.label2.Size = new System.Drawing.Size(78, 42);
             this.label2.TabIndex = 2;
             this.label2.Text = "Server:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -122,9 +127,10 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.textBoxServer, 2);
             this.textBoxServer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxServer.Location = new System.Drawing.Point(308, 3);
+            this.textBoxServer.Location = new System.Drawing.Point(359, 4);
+            this.textBoxServer.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxServer.Name = "textBoxServer";
-            this.textBoxServer.Size = new System.Drawing.Size(153, 21);
+            this.textBoxServer.Size = new System.Drawing.Size(178, 23);
             this.textBoxServer.TabIndex = 3;
             this.textBoxServer.Text = "127.0.0.1:1234";
             // 
@@ -132,19 +138,21 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.textBoxChat, 5);
             this.textBoxChat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxChat.Location = new System.Drawing.Point(3, 33);
+            this.textBoxChat.Location = new System.Drawing.Point(4, 46);
+            this.textBoxChat.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxChat.Multiline = true;
             this.textBoxChat.Name = "textBoxChat";
-            this.textBoxChat.Size = new System.Drawing.Size(382, 216);
+            this.textBoxChat.Size = new System.Drawing.Size(444, 308);
             this.textBoxChat.TabIndex = 4;
             // 
             // textBoxInput
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.textBoxInput, 5);
             this.textBoxInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxInput.Location = new System.Drawing.Point(3, 255);
+            this.textBoxInput.Location = new System.Drawing.Point(4, 362);
+            this.textBoxInput.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxInput.Name = "textBoxInput";
-            this.textBoxInput.Size = new System.Drawing.Size(382, 21);
+            this.textBoxInput.Size = new System.Drawing.Size(444, 23);
             this.textBoxInput.TabIndex = 5;
             // 
             // panel1
@@ -154,17 +162,19 @@
             this.panel1.Controls.Add(this.buttonConnect);
             this.panel1.Controls.Add(this.checkBoxSSL);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(391, 33);
+            this.panel1.Location = new System.Drawing.Point(456, 46);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(70, 216);
+            this.panel1.Size = new System.Drawing.Size(81, 308);
             this.panel1.TabIndex = 6;
             // 
             // buttonQuit
             // 
             this.buttonQuit.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonQuit.Location = new System.Drawing.Point(0, 62);
+            this.buttonQuit.Location = new System.Drawing.Point(0, 87);
+            this.buttonQuit.Margin = new System.Windows.Forms.Padding(4);
             this.buttonQuit.Name = "buttonQuit";
-            this.buttonQuit.Size = new System.Drawing.Size(70, 23);
+            this.buttonQuit.Size = new System.Drawing.Size(81, 33);
             this.buttonQuit.TabIndex = 7;
             this.buttonQuit.Text = "Quit";
             this.buttonQuit.UseVisualStyleBackColor = true;
@@ -173,9 +183,10 @@
             // buttonDisconnect
             // 
             this.buttonDisconnect.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonDisconnect.Location = new System.Drawing.Point(0, 39);
+            this.buttonDisconnect.Location = new System.Drawing.Point(0, 54);
+            this.buttonDisconnect.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDisconnect.Name = "buttonDisconnect";
-            this.buttonDisconnect.Size = new System.Drawing.Size(70, 23);
+            this.buttonDisconnect.Size = new System.Drawing.Size(81, 33);
             this.buttonDisconnect.TabIndex = 6;
             this.buttonDisconnect.Text = "Close";
             this.buttonDisconnect.UseVisualStyleBackColor = true;
@@ -184,9 +195,10 @@
             // buttonConnect
             // 
             this.buttonConnect.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonConnect.Location = new System.Drawing.Point(0, 16);
+            this.buttonConnect.Location = new System.Drawing.Point(0, 21);
+            this.buttonConnect.Margin = new System.Windows.Forms.Padding(4);
             this.buttonConnect.Name = "buttonConnect";
-            this.buttonConnect.Size = new System.Drawing.Size(70, 23);
+            this.buttonConnect.Size = new System.Drawing.Size(81, 33);
             this.buttonConnect.TabIndex = 4;
             this.buttonConnect.Text = "Connect";
             this.buttonConnect.UseVisualStyleBackColor = true;
@@ -197,18 +209,20 @@
             this.checkBoxSSL.AutoSize = true;
             this.checkBoxSSL.Dock = System.Windows.Forms.DockStyle.Top;
             this.checkBoxSSL.Location = new System.Drawing.Point(0, 0);
+            this.checkBoxSSL.Margin = new System.Windows.Forms.Padding(4);
             this.checkBoxSSL.Name = "checkBoxSSL";
-            this.checkBoxSSL.Size = new System.Drawing.Size(70, 16);
+            this.checkBoxSSL.Size = new System.Drawing.Size(81, 21);
             this.checkBoxSSL.TabIndex = 3;
             this.checkBoxSSL.Text = "SSL";
             this.checkBoxSSL.UseVisualStyleBackColor = true;
             // 
             // FormChat
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(464, 282);
+            this.ClientSize = new System.Drawing.Size(541, 400);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormChat";
             this.Text = "Chat";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormChat_FormClosing);

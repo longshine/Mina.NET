@@ -18,7 +18,7 @@ namespace Mina.Transport.Socket
         public AsyncDatagramSession(IoService service, IoProcessor<SocketSession> processor,
             System.Net.Sockets.Socket socket, EndPoint remoteEP,
             SocketAsyncEventArgsBuffer readBuffer, SocketAsyncEventArgsBuffer writeBuffer, Boolean reuseBuffer)
-            : base(service, processor, new DatagramSessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint, reuseBuffer)
+            : base(service, processor, new DatagramSessionConfigImpl(socket), socket, socket.LocalEndPoint, socket.RemoteEndPoint ?? remoteEP, reuseBuffer)
         {
             _readBuffer = readBuffer;
             _readBuffer.SocketAsyncEventArgs.UserToken = this;
@@ -110,7 +110,7 @@ namespace Mina.Transport.Socket
             try
             {
                 if (_readBuffer.SocketAsyncEventArgs.RemoteEndPoint == null)
-                    _readBuffer.SocketAsyncEventArgs.RemoteEndPoint = Socket.RemoteEndPoint;
+                    _readBuffer.SocketAsyncEventArgs.RemoteEndPoint = Socket.RemoteEndPoint ?? this.RemoteEndPoint;
 
                 willRaiseEvent = Socket.ReceiveFromAsync(_readBuffer.SocketAsyncEventArgs);
             }
